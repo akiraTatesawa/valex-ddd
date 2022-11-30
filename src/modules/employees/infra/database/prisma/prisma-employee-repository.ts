@@ -1,28 +1,34 @@
+import { PrismaDatabase } from "@infra/database/prisma/config/prisma.database";
 import {
   EmployeeFindUniqueArgs,
   EmployeeRepository,
 } from "@modules/employees/app/ports/employee-repository";
 import { Employee } from "@modules/employees/domain/employee";
-import { InMemoryDatabase } from "@infra/database/in-memory/in-memory.database";
 import { EmployeeMapper } from "@modules/employees/mapper/employee-mapper";
 
-export class InMemoryEmployeeRepository implements EmployeeRepository {
-  private readonly database: InMemoryDatabase;
+export class PrismaEmployeeRepository implements EmployeeRepository {
+  private readonly prisma: PrismaDatabase;
 
-  constructor(database: InMemoryDatabase) {
-    this.database = database;
+  constructor(prisma: PrismaDatabase) {
+    this.prisma = prisma;
   }
 
   public async save(data: Employee): Promise<void> {
     const rawEmployee = EmployeeMapper.toPersistence(data);
 
-    this.database.employees.push(rawEmployee);
+    await this.prisma.employee.create({
+      data: rawEmployee,
+    });
   }
 
   public async findUnique({ id, cpf, email }: EmployeeFindUniqueArgs): Promise<Employee | null> {
-    const rawEmployee = this.database.employees.find(
-      (employee) => employee.id === id || employee.cpf === cpf || employee.email === email
-    );
+    const rawEmployee = await this.prisma.employee.findUnique({
+      where: {
+        id,
+        cpf,
+        email,
+      },
+    });
 
     if (!rawEmployee) return null;
 
