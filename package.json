@@ -4,7 +4,7 @@
   "description": "Valex is a voucher card API. The API is responsible for creating, reloading, activating, as well as processing purchases.",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "jest"
   },
   "repository": {
     "type": "git",
