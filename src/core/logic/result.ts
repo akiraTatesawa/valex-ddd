@@ -36,7 +36,7 @@ export class Result<Value, Error> {
     return new Result<null, U>(false, error, null);
   }
 
-  public static combine(results: Array<Result<null, null> | Result<null, ErrorInterface>>) {
+  public static combine(results: Array<Result<any, null> | Result<null, ErrorInterface>>) {
     const firstFailedResult = results.find((result) => result.isFailure);
 
     if (firstFailedResult) {
