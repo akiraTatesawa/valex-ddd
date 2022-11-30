@@ -66,4 +66,26 @@ export class Guard {
       message: "OK",
     };
   }
+
+  public static againstNonUUID(arg: string, argName: string): GuardResult {
+    const isStringResult = Guard.againstNonString(arg, argName);
+
+    if (!isStringResult.succeeded) {
+      return isStringResult;
+    }
+
+    const uuidRegex = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-5][0-9a-f]{3}-[089ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
+
+    if (!uuidRegex.test(arg)) {
+      return {
+        succeeded: false,
+        message: `${argName} must be a valid UUID`,
+      };
+    }
+
+    return {
+      succeeded: true,
+      message: "OK",
+    };
+  }
 }
