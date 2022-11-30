@@ -9,7 +9,7 @@ interface EmployeeNameProps {
 }
 
 type EmployeeNameCreateResult = Either<DomainErrors.InvalidPropsError, Result<EmployeeName, null>>;
-type EmployeeValidationResult = Either<DomainErrors.InvalidPropsError, Result<null, null>>;
+type EmployeeNameValidationResult = Either<DomainErrors.InvalidPropsError, Result<null, null>>;
 
 export class EmployeeName extends ValueObject<EmployeeNameProps> {
   private constructor(props: EmployeeNameProps) {
@@ -20,7 +20,7 @@ export class EmployeeName extends ValueObject<EmployeeNameProps> {
     return this.props.value;
   }
 
-  private static validate(name: string): EmployeeValidationResult {
+  private static validate(name: string): EmployeeNameValidationResult {
     const guardResult = Guard.againstNullOrUndefined(name, "Employee Name");
 
     if (!guardResult.succeeded) {
