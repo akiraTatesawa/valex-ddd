@@ -33,7 +33,7 @@ export class EmployeeName extends ValueObject<EmployeeNameProps> {
       );
     }
 
-    const nameRegex = /^[a-zA-Z ]+$/;
+    const nameRegex = /^[\p{L}\s]+$/gu;
 
     if (!nameRegex.test(name)) {
       return DomainErrors.InvalidPropsError.create("Employee Name must consist of only letters");
