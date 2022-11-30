@@ -1,6 +1,7 @@
 import { Company } from "@modules/companies/domain/company";
 import { CompanyMapper } from "@modules/companies/mappers/company-mapper";
-import { randCompanyName } from "@ngneat/falso";
+import { Employee } from "@modules/employees/domain/employee";
+import { EmployeeMapper } from "@modules/employees/mapper/employee-mapper";
 import { PrismaClient } from "@prisma/client";
 
 class Seed {
@@ -17,10 +18,21 @@ class Seed {
 
     await this.clean();
 
-    const company = Company.create({ name: randCompanyName() }).value!;
+    const company = Company.create({ name: "Example Company" }).value!;
 
     await this.prisma.prismaCompany.create({
       data: CompanyMapper.toPersistence(company),
+    });
+
+    const employee = Employee.create({
+      fullName: "Fake Person",
+      email: "fake@gmail.com",
+      companyId: company._id,
+      cpf: "12345678901",
+    }).value!;
+
+    await this.prisma.prismaEmployee.create({
+      data: EmployeeMapper.toPersistence(employee),
     });
 
     console.log("\nOK!");

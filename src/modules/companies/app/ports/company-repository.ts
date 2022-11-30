@@ -4,6 +4,7 @@ import { Company } from "@modules/companies/domain/company";
 export interface CompanyUniqueArgs {
   id?: string;
   name?: string;
+  apiKey?: string;
 }
 
 export interface CompanyRepository extends Repository<Company> {
