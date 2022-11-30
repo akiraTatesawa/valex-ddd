@@ -4,7 +4,13 @@
   "description": "Valex is a voucher card API. The API is responsible for creating, reloading, activating, as well as processing purchases.",
   "main": "index.js",
   "scripts": {
-    "test": "jest"
+    "test": "jest",
+    "dev:load-env": "dotenv -e .env.development",
+    "dev:generate": "npm run dev:load-env -- prisma generate",
+    "dev:migrate": "npm run dev:load-env -- prisma migrate dev"
+  },
+  "prisma": {
+    "schema": "./src/infra/database/prisma/schema.prisma"
   },
   "repository": {
     "type": "git",
