@@ -10,6 +10,10 @@ export class PrismaDatabase {
   public get company() {
     return this._prisma.prismaCompany;
   }
+
+  public get employee() {
+    return this._prisma.prismaEmployee;
+  }
 }
 
 export const prisma = new PrismaDatabase();

@@ -11,10 +11,23 @@ datasource db {
 }
 
 model PrismaCompany {
-  id        String   @id @default(uuid())
-  name      String   @unique
-  apiKey    String   @default(uuid())
-  createdAt DateTime
+  id             String           @id @default(uuid())
+  name           String           @unique
+  apiKey         String           @unique @default(uuid())
+  createdAt      DateTime
+  PrismaEmployee PrismaEmployee[]
 
   @@map("companies")
+}
+
+model PrismaEmployee {
+  id        String        @id @default(uuid())
+  fullName  String
+  cpf       String        @unique
+  email     String        @unique
+  company   PrismaCompany @relation(fields: [companyId], references: [id])
+  companyId String
+  createdAt DateTime
+
+  @@map("employees")
 }
