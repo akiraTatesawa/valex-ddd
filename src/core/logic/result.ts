@@ -1,3 +1,5 @@
+import { ErrorInterface } from "@core/domain/error";
+
 export class Result<Value, Error> {
   public readonly isSuccess: boolean;
 
@@ -32,5 +34,15 @@ export class Result<Value, Error> {
 
   public static fail<U>(error: U) {
     return new Result<null, U>(false, error, null);
+  }
+
+  public static combine(results: Array<Result<null, null> | Result<null, ErrorInterface>>) {
+    const firstFailedResult = results.find((result) => result.isFailure);
+
+    if (firstFailedResult) {
+      return firstFailedResult;
+    }
+
+    return Result.pass();
   }
 }

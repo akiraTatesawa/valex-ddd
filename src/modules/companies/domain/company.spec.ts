@@ -51,5 +51,41 @@ describe("Company Entity", () => {
       expect(result.value).toBeNull();
       expect(result.error?.message).toEqual("Company Name cannot be null or undefined");
     });
+
+    it("Should return an error if the company id is not an uuid", () => {
+      const name = randCompanyName();
+      const id = randCompanyName();
+
+      const result = Company.create({ name, id });
+
+      expect(result).toBeInstanceOf(DomainErrors.InvalidPropsError);
+      expect(result.isFailure).toEqual(true);
+      expect(result.value).toBeNull();
+      expect(result.error?.message).toEqual("Company ID must be a valid UUID");
+    });
+
+    it("Should return an error if the company api key is not an uuid", () => {
+      const name = randCompanyName();
+      const apiKey = randCompanyName();
+
+      const result = Company.create({ name, apiKey });
+
+      expect(result).toBeInstanceOf(DomainErrors.InvalidPropsError);
+      expect(result.isFailure).toEqual(true);
+      expect(result.value).toBeNull();
+      expect(result.error?.message).toEqual("Company API KEY must be a valid UUID");
+    });
+
+    it("Should return an error if the company api key is not a valid date", () => {
+      const name = randCompanyName();
+      const createdAt = randCompanyName() as any;
+
+      const result = Company.create({ name, createdAt });
+
+      expect(result).toBeInstanceOf(DomainErrors.InvalidPropsError);
+      expect(result.isFailure).toEqual(true);
+      expect(result.value).toBeNull();
+      expect(result.error?.message).toEqual("Company Created At must be a Date");
+    });
   });
 });

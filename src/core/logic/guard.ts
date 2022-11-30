@@ -67,7 +67,7 @@ export class Guard {
     };
   }
 
-  public static againstNonUUID(arg: string, argName: string): GuardResult {
+  public static againstNonUUID(arg: any, argName: string): GuardResult {
     const isStringResult = Guard.againstNonString(arg, argName);
 
     if (!isStringResult.succeeded) {
@@ -80,6 +80,20 @@ export class Guard {
       return {
         succeeded: false,
         message: `${argName} must be a valid UUID`,
+      };
+    }
+
+    return {
+      succeeded: true,
+      message: "OK",
+    };
+  }
+
+  public static againstNonDate(arg: any, argName: string): GuardResult {
+    if (!(arg instanceof Date)) {
+      return {
+        succeeded: false,
+        message: `${argName} must be a Date`,
       };
     }
 
