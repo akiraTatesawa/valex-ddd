@@ -1,10 +1,8 @@
 import { InMemoryDatabase } from "@infra/database/in-memory/in-memory.database";
-import {
-  CompanyRepository,
-  CompanyUniqueArgs,
-} from "@modules/companies/app/ports/company-repository";
-import { Company } from "@modules/companies/domain/company";
-import { CompanyMapper } from "@modules/companies/mappers/company-mapper";
+import { CompanyRepository, CompanyUniqueArgs } from "@shared/modules/companies/app/ports/company-repository";
+import { Company } from "@shared/modules/companies/domain/company";
+import { CompanyMapper } from "@shared/modules/companies/mappers/company-mapper";
+
 
 export class InMemoryCompanyRepository implements CompanyRepository {
   private readonly database: InMemoryDatabase;

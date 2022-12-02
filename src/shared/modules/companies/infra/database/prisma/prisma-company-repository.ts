@@ -2,9 +2,9 @@ import { PrismaDatabase } from "@infra/database/prisma/config/prisma.database";
 import {
   CompanyRepository,
   CompanyUniqueArgs,
-} from "@modules/companies/app/ports/company-repository";
-import { Company } from "@modules/companies/domain/company";
-import { CompanyMapper } from "@modules/companies/mappers/company-mapper";
+} from "@shared/modules/companies/app/ports/company-repository";
+import { Company } from "@shared/modules/companies/domain/company";
+import { CompanyMapper } from "@shared/modules/companies/mappers/company-mapper";
 
 export class PrismaCompanyRepository implements CompanyRepository {
   private readonly prisma: PrismaDatabase;

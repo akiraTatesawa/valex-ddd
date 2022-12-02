@@ -1,5 +1,5 @@
 import { Repository } from "@core/app/repository";
-import { Employee } from "@modules/employees/domain/employee";
+import { Employee } from "@shared/modules/employees/domain/employee";
 
 export interface EmployeeFindUniqueArgs {
   id?: string;

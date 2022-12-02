@@ -1,7 +1,8 @@
 import { InMemoryDatabase } from "@infra/database/in-memory/in-memory.database";
-import { CompanyRepository } from "@modules/companies/app/ports/company-repository";
-import { Company } from "@modules/companies/domain/company";
+
 import { randCompanyName } from "@ngneat/falso";
+import { CompanyRepository } from "@shared/modules/companies/app/ports/company-repository";
+import { Company } from "@shared/modules/companies/domain/company";
 import { InMemoryCompanyRepository } from "./in-memory-company-repository";
 
 describe("In Memory Company Repository", () => {

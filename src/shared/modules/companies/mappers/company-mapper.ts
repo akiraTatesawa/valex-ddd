@@ -1,4 +1,4 @@
-import { Company } from "@modules/companies/domain/company";
+import { Company } from "../domain/company";
 import { CompanyPersistence } from "../infra/database/company-persistence.interface";
 
 export class CompanyMapper {

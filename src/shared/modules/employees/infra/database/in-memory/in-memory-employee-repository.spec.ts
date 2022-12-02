@@ -1,7 +1,7 @@
 import { InMemoryDatabase } from "@infra/database/in-memory/in-memory.database";
-import { Employee } from "@modules/employees/domain/employee";
 import { randFullName, randEmail, randUuid } from "@ngneat/falso";
 import { InMemoryEmployeeRepository } from "./in-memory-employee-repository";
+import { Employee } from '@shared/modules/employees/domain/employee';
 
 describe("In Memory Employee Repository", () => {
   let employee: Employee;
