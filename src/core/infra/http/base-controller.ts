@@ -28,24 +28,48 @@ export abstract class BaseController {
   }
 
   // Error Methods
-  protected badRequest(res: Response, error?: APIError) {
-    if (error) {
-      return res.status(httpStatus.BAD_REQUEST).json(error);
-    }
-    return res.sendStatus(httpStatus.BAD_REQUEST);
+  protected badRequest(res: Response, message: string) {
+    const error: APIError = {
+      type: httpStatus[400],
+      message,
+    };
+
+    return res.status(httpStatus.BAD_REQUEST).json(error);
   }
 
-  protected notFound(res: Response, error?: APIError) {
-    if (error) {
-      return res.status(httpStatus.NOT_FOUND).json(error);
-    }
-    return res.sendStatus(httpStatus.NOT_FOUND);
+  protected notFound(res: Response, message: string) {
+    const error: APIError = {
+      type: httpStatus[404],
+      message,
+    };
+
+    return res.status(httpStatus.NOT_FOUND).json(error);
   }
 
-  protected conflict(res: Response, error?: APIError) {
-    if (error) {
-      return res.status(httpStatus.CONFLICT).json(error);
-    }
-    return res.sendStatus(httpStatus.CONFLICT);
+  protected conflict(res: Response, message: string) {
+    const error: APIError = {
+      type: httpStatus[409],
+      message,
+    };
+
+    return res.status(httpStatus.CONFLICT).json(error);
+  }
+
+  protected unprocessableEntity(res: Response, message: string) {
+    const error: APIError = {
+      type: httpStatus[422],
+      message,
+    };
+
+    return res.status(httpStatus.UNPROCESSABLE_ENTITY).json(error);
+  }
+
+  protected fail(res: Response, message: string) {
+    const error: APIError = {
+      type: httpStatus[409],
+      message,
+    };
+
+    return res.status(httpStatus.INTERNAL_SERVER_ERROR).json(error);
   }
 }
