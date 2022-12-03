@@ -15,6 +15,10 @@ export class PrismaDatabase {
     return this._prisma.prismaEmployee;
   }
 
+  public get card() {
+    return this._prisma.prismaCard;
+  }
+
   public async connect(): Promise<void> {
     await this._prisma.$connect();
 

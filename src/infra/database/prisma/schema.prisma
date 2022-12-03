@@ -21,13 +21,42 @@ model PrismaCompany {
 }
 
 model PrismaEmployee {
-  id        String        @id @default(uuid())
-  fullName  String
-  cpf       String        @unique
-  email     String        @unique
-  company   PrismaCompany @relation(fields: [companyId], references: [id])
-  companyId String
-  createdAt DateTime
+  id         String        @id @default(uuid())
+  fullName   String
+  cpf        String        @unique
+  email      String        @unique
+  company    PrismaCompany @relation(fields: [companyId], references: [id])
+  companyId  String
+  createdAt  DateTime
+  PrismaCard PrismaCard[]
 
   @@map("employees")
+}
+
+model PrismaCard {
+  id             String         @id @default(uuid())
+  employee       PrismaEmployee @relation(fields: [employeeId], references: [id])
+  employeeId     String
+  cardholderName String
+  type           VoucherType
+  number         String
+  securityCode   String
+  expirationDate DateTime
+  password       String?
+  isVirtual      Boolean
+  isBlocked      Boolean
+  originalCard   PrismaCard?    @relation("VirtualCards", fields: [originalCardId], references: [id])
+  originalCardId String?
+  virtualCards   PrismaCard[]   @relation("VirtualCards")
+
+  @@unique(fields: [employeeId, type], name: "employeeId_type")
+  @@map("cards")
+}
+
+enum VoucherType {
+  restaurant
+  health
+  transport
+  groceries
+  education
 }
