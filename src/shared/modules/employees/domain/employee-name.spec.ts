@@ -1,12 +1,12 @@
 import { Result } from "@core/logic/result";
-import { randFullName, randNumber, randText } from "@ngneat/falso";
+import { randNumber, randText, randWord } from "@ngneat/falso";
 import { DomainErrors } from "@core/domain/domain-error";
 import { EmployeeName } from "./employee-name";
 
 describe("Employee Name Value Object", () => {
   describe("Success", () => {
     it("Should create a Employee Name value object", () => {
-      const name = randFullName();
+      const name = randWord();
 
       const result = EmployeeName.create(name);
 

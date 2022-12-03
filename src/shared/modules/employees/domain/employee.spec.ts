@@ -1,4 +1,4 @@
-import { randFullName, randEmail, randUuid, randPastDate } from "@ngneat/falso";
+import { randEmail, randUuid, randPastDate, randWord } from "@ngneat/falso";
 import { Result } from "@core/logic/result";
 import { DomainErrors } from "@core/domain/domain-error";
 import { Employee, CreateEmployeeProps } from "./employee";
@@ -9,7 +9,7 @@ describe("Employee Entity", () => {
   describe("Success", () => {
     it("Should be able to create an Employee Entity", () => {
       employeeProps = {
-        fullName: randFullName(),
+        fullName: randWord(),
         cpf: "12345678901",
         email: randEmail(),
         companyId: randUuid(),
@@ -31,7 +31,7 @@ describe("Employee Entity", () => {
 
     it("Should be able to create an Employee Entity passing an 'id' and a 'createdAt'", () => {
       employeeProps = {
-        fullName: randFullName(),
+        fullName: randWord(),
         cpf: "12345678901",
         email: randEmail(),
         companyId: randUuid(),
@@ -57,7 +57,7 @@ describe("Employee Entity", () => {
   describe("Fail", () => {
     it("Should return an error if one of the value objects fail", () => {
       employeeProps = {
-        fullName: randFullName(),
+        fullName: randWord(),
         cpf: "invalid cpf",
         email: randEmail(),
         companyId: randUuid(),
@@ -78,7 +78,7 @@ describe("Employee Entity", () => {
 
     it("Should return an error if the ID is not an UUID", () => {
       employeeProps = {
-        fullName: randFullName(),
+        fullName: randWord(),
         cpf: "12345678901",
         email: randEmail(),
         companyId: randUuid(),
@@ -96,7 +96,7 @@ describe("Employee Entity", () => {
 
     it("Should return an error if the Company ID is not an UUID", () => {
       employeeProps = {
-        fullName: randFullName(),
+        fullName: randWord(),
         cpf: "12345678901",
         email: randEmail(),
         companyId: "invalid ID",
@@ -114,7 +114,7 @@ describe("Employee Entity", () => {
 
     it("Should return an error if the 'createdAt' is not a Date", () => {
       employeeProps = {
-        fullName: randFullName(),
+        fullName: randWord(),
         cpf: "12345678901",
         email: randEmail(),
         companyId: "invalid ID",

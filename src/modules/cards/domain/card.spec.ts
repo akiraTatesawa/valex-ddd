@@ -1,23 +1,15 @@
 import "dotenv/config";
 import Cryptr from "cryptr";
 import { Result } from "@core/logic/result";
-import { randUuid, randFullName, randEmail, randPastDate, randCreditCardCVV } from "@ngneat/falso";
-import { Employee } from "@modules/employees/domain/employee";
+import { randUuid, randEmail, randPastDate, randCreditCardCVV } from "@ngneat/falso";
 import { DomainErrors } from "@core/domain/domain-error";
+import { Employee } from "@shared/modules/employees/domain/employee";
+import { EmployeeFactory } from "@shared/modules/employees/factories/employee-factory";
 import { Card, CreateCardProps } from "./card";
 
 describe("Card Entity", () => {
-  let employee: Employee;
+  const employee: Employee = new EmployeeFactory().generate();
   const cryptr = new Cryptr(`${process.env.CRYPTR_SECRET}`);
-
-  beforeEach(() => {
-    employee = Employee.create({
-      fullName: randFullName(),
-      cpf: "12345678936",
-      companyId: randUuid(),
-      email: randEmail(),
-    }).value!;
-  });
 
   describe("Success", () => {
     it("Should be able to create a card", () => {
@@ -49,7 +41,7 @@ describe("Card Entity", () => {
       const cardProps: CreateCardProps = {
         id: randUuid(),
         employeeId: employee._id,
-        cardholderName: employee.fullName.value,
+        cardholderName: "NAME EMPLOYEE",
         expirationDate: randPastDate(),
         number: "1234567891234567",
         password: "1234",

@@ -140,7 +140,7 @@ export class Card extends Entity<CardProps> {
 
     const { type, employeeId, cardholderName } = props;
 
-    const cardholderNameOrError = CardholderName.create(cardholderName, true);
+    const cardholderNameOrError = CardholderName.create(cardholderName, false);
     const numberOrError = CardNumber.create(props.number);
     const securityCodeOrError = CardCVV.create(props.securityCode);
     const expirationDateOrError = CardExpirationDate.create(props.expirationDate);

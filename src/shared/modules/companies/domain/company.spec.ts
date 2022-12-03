@@ -1,4 +1,4 @@
-import { randCompanyName, randPastDate, randUuid } from "@ngneat/falso";
+import { randPastDate, randUuid, randText, randNumber } from "@ngneat/falso";
 import { Result } from "@core/logic/result";
 import { DomainErrors } from "@core/domain/domain-error";
 import { Company } from "./company";
@@ -7,7 +7,7 @@ import { CompanyName } from "./company-name";
 describe("Company Entity", () => {
   describe("Success", () => {
     it("Should be able to create a Company", () => {
-      const name = randCompanyName();
+      const name = randText({ charCount: randNumber({ min: 1, max: 29 }) });
 
       const result = Company.create({ name });
 
@@ -22,7 +22,7 @@ describe("Company Entity", () => {
     });
 
     it("Should be able to create a Company passing optional props", () => {
-      const name = randCompanyName();
+      const name = randText({ charCount: randNumber({ min: 1, max: 29 }) });
       const id = randUuid();
       const apiKey = randUuid();
       const createdAt = randPastDate();
@@ -53,8 +53,8 @@ describe("Company Entity", () => {
     });
 
     it("Should return an error if the company id is not an uuid", () => {
-      const name = randCompanyName();
-      const id = randCompanyName();
+      const name = randText({ charCount: randNumber({ min: 1, max: 29 }) });
+      const id = randText({ charCount: randNumber({ min: 1, max: 29 }) });
 
       const result = Company.create({ name, id });
 
@@ -65,8 +65,8 @@ describe("Company Entity", () => {
     });
 
     it("Should return an error if the company api key is not an uuid", () => {
-      const name = randCompanyName();
-      const apiKey = randCompanyName();
+      const name = randText({ charCount: randNumber({ min: 1, max: 29 }) });
+      const apiKey = randText({ charCount: randNumber({ min: 1, max: 29 }) });
 
       const result = Company.create({ name, apiKey });
 
@@ -76,9 +76,9 @@ describe("Company Entity", () => {
       expect(result.error?.message).toEqual("Company API KEY must be a valid UUID");
     });
 
-    it("Should return an error if the company api key is not a valid date", () => {
-      const name = randCompanyName();
-      const createdAt = randCompanyName() as any;
+    it("Should return an error if the company createdAt is not a valid date", () => {
+      const name = randText({ charCount: randNumber({ min: 1, max: 29 }) });
+      const createdAt = randText({ charCount: randNumber({ min: 1, max: 29 }) }) as any;
 
       const result = Company.create({ name, createdAt });
 

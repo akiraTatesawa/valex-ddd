@@ -1,7 +1,7 @@
 import { InMemoryDatabase } from "@infra/database/in-memory/in-memory.database";
-import { randFullName, randEmail, randUuid } from "@ngneat/falso";
+import { Employee } from "@shared/modules/employees/domain/employee";
+import { EmployeeFactory } from "@shared/modules/employees/factories/employee-factory";
 import { InMemoryEmployeeRepository } from "./in-memory-employee-repository";
-import { Employee } from '@shared/modules/employees/domain/employee';
 
 describe("In Memory Employee Repository", () => {
   let employee: Employee;
@@ -11,12 +11,7 @@ describe("In Memory Employee Repository", () => {
     const inMemoryDatabase = new InMemoryDatabase();
     sut = new InMemoryEmployeeRepository(inMemoryDatabase);
 
-    employee = Employee.create({
-      fullName: randFullName(),
-      cpf: "12345678901",
-      email: randEmail(),
-      companyId: randUuid(),
-    }).value!;
+    employee = new EmployeeFactory().generate();
   });
 
   it("Should be able to save an employee into database", async () => {
