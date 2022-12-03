@@ -7,6 +7,16 @@ jobs:
     runs-on: ubuntu-latest
     environment: TEST
 
+    services:
+      db_postgres:
+        image: postgres:13
+        ports:
+          - 2345:5432
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_DB: valex-test
+
     steps:
       - name: Checkout 
         uses: actions/checkout@v3
@@ -18,6 +28,15 @@ jobs:
 
       - name: Install Dependencies
         run: npm ci
+
+      - name: Create Test .env file
+        uses: SpicyPizza/create-envfile@v1
+        with:
+          envkey_DATABASE_URL: postgresql://postgres:postgres@localhost:2345/valex-test?schema=public
+          envkey_CRYPTR_SECRET: secret
+          file_name: .env.test
+          directory: .
+          fail_on_empty: true
 
       - name: Run all tests
         run: npm run ci:test
