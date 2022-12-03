@@ -24,6 +24,12 @@ export class PrismaDatabase {
 
     console.log("Prisma Connected!");
   }
+
+  public async cleanDb(): Promise<void> {
+    await this._prisma.$queryRaw`TRUNCATE TABLE companies CASCADE`;
+    await this._prisma.$queryRaw`TRUNCATE TABLE employees CASCADE`;
+    await this._prisma.$queryRaw`TRUNCATE TABLE cards CASCADE`;
+  }
 }
 
 export const prisma = new PrismaDatabase();
