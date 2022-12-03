@@ -96,6 +96,13 @@ export class Card extends Entity<CardProps> {
     this.props.isBlocked = false;
   }
 
+  public get isActive(): boolean {
+    if (this.props.password) {
+      return true;
+    }
+    return false;
+  }
+
   public activate(password: string): ActivateCardResult {
     if (this.props.password !== undefined) {
       return DomainErrors.InvalidPropsError.create("Card is already activated");
