@@ -31,6 +31,21 @@ Cenario: Empresa registrada falha ao criar um cartão para um funcionário que n
   Quando a empresa solicitar a criação de um cartão
   Entao o sistema deve mostrar um erro informando que o funcionário não existe
 
+Cenario: Empresa registrada falha ao criar um cartão para um funcionário com id inválido
+ Dado que a empresa esteja registrada
+ E a empresa forneça uma chave de api válida
+ Mas o id do funcionário esteja num formato inválido
+  Quando a empresa solicitar a criação de um cartão
+  Entao o sistema deve mostrar um erro informando o id do funcionário possui um formato errado
+
+Cenario: Empresa registrada falha ao criar um cartão para um funcionário que não trabalha nela
+ Dado que a empresa esteja registrada
+ E a empresa forneça uma chave de api válida
+ E o funcionário esteja cadastrado
+ Mas o funcionário não trabalha na empresa que solicitante
+  Quando a empresa solicitar a criação de um cartão
+  Entao o sistema deve mostrar um erro informando que o funcionário pertence à empresa
+
 Cenario: Empresa registrada falha ao criar um cartão para um funcionário que já possui um cartão do mesmo tipo
  Dado que a empresa esteja registrada
  E a empresa forneça uma chave de api válida
