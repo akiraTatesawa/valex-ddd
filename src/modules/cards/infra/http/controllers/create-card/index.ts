@@ -3,9 +3,8 @@ import { PrismaCompanyRepository } from "@shared/modules/companies/infra/databas
 import { PrismaEmployeeRepository } from "@shared/modules/employees/infra/database/prisma/prisma-employee-repository";
 import { GetEmployeeImpl } from "@shared/modules/employees/app/services/get-employee/get-employee.service";
 import { GetCompanyImpl } from "@shared/modules/companies/app/services/get-company/get-company.service";
-import { InMemoryCardRepository } from "@modules/cards/infra/database/in-memory/in-memory-card-repository";
-import { inMemoryDatabase } from "@infra/database/in-memory/in-memory.database";
 import { CreateCardImpl } from "@modules/cards/app/use-cases/create-card/create-card";
+import { PrismaCardRepository } from "@modules/cards/infra/database/prisma/prisma-card-repository";
 import { CreateCardController } from "./create-card.controller";
 
 function createCardControllerFactory(): CreateCardController {
@@ -15,7 +14,7 @@ function createCardControllerFactory(): CreateCardController {
   const getEmployeeService = new GetEmployeeImpl(employeeRepo);
   const getCompanyService = new GetCompanyImpl(companyRepo);
 
-  const cardRepo = new InMemoryCardRepository(inMemoryDatabase);
+  const cardRepo = new PrismaCardRepository(prisma);
 
   const useCase = new CreateCardImpl(getCompanyService, getEmployeeService, cardRepo);
 
