@@ -30,14 +30,14 @@ export class CardholderName extends ValueObject<CardholderNameProps> {
     const formattedNameArray: string[] = [];
 
     separatedNames.forEach((name, index) => {
-      if (name.length < 3) return;
-
       const upperCaseName = name.toUpperCase();
 
       if (index === 0 || index === separatedNames.length - 1) {
         formattedNameArray.push(upperCaseName);
         return;
       }
+
+      if (name.length < 3) return;
 
       formattedNameArray.push(upperCaseName.charAt(0));
     });
