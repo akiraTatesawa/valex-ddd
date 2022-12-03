@@ -11,6 +11,24 @@ export class PrismaCardRepository implements CardRepository {
     this.prisma = prisma;
   }
 
+  public async findById(id: string): Promise<Card | null> {
+    const rawCard = await this.prisma.card.findUnique({
+      where: {
+        id,
+      },
+    });
+
+    if (!rawCard) return null;
+
+    const rawCardPersistence: CardPersistence = {
+      ...rawCard,
+      password: rawCard.password ?? undefined,
+      originalCardId: rawCard.originalCardId ?? undefined,
+    };
+
+    return CardMapper.toDomain(rawCardPersistence);
+  }
+
   public async findByType({ employeeId, type }: CardFindByTypeArgs): Promise<Card | null> {
     const rawCard = await this.prisma.card.findUnique({
       where: {
