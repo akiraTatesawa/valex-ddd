@@ -20,11 +20,6 @@ Cenario: Funcionário falha ao ativar cartão que não existe
   Quando o funcionário solicitar a ativação do cartão
   Entao o funcionário recebe uma mensagem de erro informando que o cartão não existe
 
-Cenario: Funcionário falha ao ativar um cartão pertencente a outro funcionário
- Dado que o funcionário forneça um identificador de cartão pertencente a outra pessoa
-  Quando o funcionário solicitar a ativação do cartão
-  Entao o funcionário recebe uma mensagem de erro informando que o não pertence a ele
-
 Cenario: Funcionário falha ao ativar cartão que já está ativado
  Dado que o funcionário tenha um cartão
  Mas o cartão já está ativado
