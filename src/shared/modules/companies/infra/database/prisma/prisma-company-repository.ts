@@ -13,11 +13,12 @@ export class PrismaCompanyRepository implements CompanyRepository {
     this.prisma = prisma;
   }
 
-  public async findUnique({ id, name }: CompanyUniqueArgs): Promise<Company | null> {
+  public async findUnique({ id, name, apiKey }: CompanyUniqueArgs): Promise<Company | null> {
     const rawCompany = await this.prisma.company.findUnique({
       where: {
         id,
         name,
+        apiKey,
       },
     });
 

@@ -14,6 +14,12 @@ export class PrismaDatabase {
   public get employee() {
     return this._prisma.prismaEmployee;
   }
+
+  public async connect(): Promise<void> {
+    await this._prisma.$connect();
+
+    console.log("Prisma Connected!");
+  }
 }
 
 export const prisma = new PrismaDatabase();
