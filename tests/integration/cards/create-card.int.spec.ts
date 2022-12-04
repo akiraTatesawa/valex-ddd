@@ -12,11 +12,13 @@ import { EmployeeFactory } from "@shared/modules/employees/factories/employee-fa
 import { PrismaEmployeeRepository } from "@shared/modules/employees/infra/database/prisma/prisma-employee-repository";
 import { PrismaCardRepository } from "@modules/cards/infra/database/prisma/prisma-card-repository";
 import { CardFactory } from "@modules/cards/factories/card-factory";
+import { Employee } from "@shared/modules/employees/domain/employee";
+import { Company } from "@shared/modules/companies/domain/company";
 import { TestHelper } from "../helpers/test-helper";
 
 describe("POST /cards", () => {
-  const company = new CompanyFactory().generate();
-  const employee = new EmployeeFactory().generate({ companyId: company._id });
+  let employee: Employee;
+  let company: Company;
 
   const companyRepo = new PrismaCompanyRepository(prisma);
   const employeeRepo = new PrismaEmployeeRepository(prisma);
@@ -25,12 +27,13 @@ describe("POST /cards", () => {
   const server = supertest(new ExpressApp().app);
 
   beforeEach(async () => {
+    await TestHelper.cleanDB();
+
+    company = new CompanyFactory().generate();
+    employee = new EmployeeFactory().generate({ companyId: company._id });
+
     await companyRepo.save(company);
     await employeeRepo.save(employee);
-  });
-
-  afterEach(async () => {
-    await TestHelper.cleanDB();
   });
 
   describe("Success", () => {

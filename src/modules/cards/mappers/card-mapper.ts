@@ -21,12 +21,23 @@ export class CardMapper {
 
   public static toDomain(persistence: CardPersistence): Card {
     const cardOrError = Card.create({
-      ...persistence,
+      id: persistence.id,
+      cardholderName: persistence.cardholderName,
+      employeeId: persistence.employeeId,
+      type: persistence.type,
+      expirationDate: persistence.expirationDate,
+      isBlocked: persistence.isBlocked,
+      isVirtual: persistence.isVirtual,
+      number: persistence.number,
+      originalCardId: persistence.originalCardId,
+      securityCode: persistence.securityCode,
+      password: persistence.password,
     });
 
     if (cardOrError.error) {
       throw Error("Cannot create a card from persistence");
     }
+
     return cardOrError.value;
   }
 

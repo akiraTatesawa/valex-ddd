@@ -18,6 +18,14 @@ export class InMemoryCardRepository implements CardRepository {
     return true;
   }
 
+  public async findById(id: string): Promise<Card | null> {
+    const rawCard = this.database.cards.find((card) => card.id === id);
+
+    if (!rawCard) return null;
+
+    return CardMapper.toDomain(rawCard);
+  }
+
   public async findByType({ employeeId, type }: CardFindByTypeArgs): Promise<Card | null> {
     const rawCard = this.database.cards.find(
       (card) => card.employeeId === employeeId && card.type === type

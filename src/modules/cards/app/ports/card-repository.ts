@@ -9,4 +9,5 @@ export interface CardFindByTypeArgs {
 
 export interface CardRepository extends Repository<Card> {
   findByType(args: CardFindByTypeArgs): Promise<Card | null>;
+  findById(id: string): Promise<Card | null>;
 }

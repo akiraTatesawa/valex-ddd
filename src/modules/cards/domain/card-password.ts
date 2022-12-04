@@ -44,7 +44,7 @@ export class CardPassword extends ValueObject<CardPasswordProps> {
   public static create(password: string, isHashed: boolean = false): CreateCardPasswordResult {
     const validation = CardPassword.validate(password);
 
-    if (validation.error && validation.isFailure) {
+    if (validation.error && validation.isFailure && !isHashed) {
       return DomainErrors.InvalidPropsError.create(validation.error.message);
     }
 

@@ -37,6 +37,15 @@ export abstract class BaseController {
     return res.status(httpStatus.BAD_REQUEST).json(error);
   }
 
+  protected unauthorized(res: Response, message: string) {
+    const error: APIError = {
+      type: httpStatus[401],
+      message,
+    };
+
+    return res.status(httpStatus.UNAUTHORIZED).json(error);
+  }
+
   protected notFound(res: Response, message: string) {
     const error: APIError = {
       type: httpStatus[404],
