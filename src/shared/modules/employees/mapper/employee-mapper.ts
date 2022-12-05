@@ -3,9 +3,9 @@ import { EmployeePersistence } from "../infra/database/employee-persistence.inte
 
 export class EmployeeMapper {
   public static toDomain(persistence: EmployeePersistence): Employee {
-    const employee = Employee.create({ ...persistence }).value!;
+    const employee = Employee.create({ ...persistence });
 
-    return employee;
+    return employee.value.getValue()!;
   }
 
   public static toPersistence(domain: Employee): EmployeePersistence {
