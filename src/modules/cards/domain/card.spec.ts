@@ -5,6 +5,7 @@ import { randUuid, randEmail, randPastDate, randCreditCardCVV } from "@ngneat/fa
 import { DomainErrors } from "@core/domain/domain-error";
 import { Employee } from "@shared/modules/employees/domain/employee";
 import { EmployeeFactory } from "@shared/modules/employees/factories/employee-factory";
+import { Left, Right } from "@core/logic/either";
 import { Card, CreateCardProps } from "./card";
 
 describe("Card Entity", () => {
@@ -21,20 +22,22 @@ describe("Card Entity", () => {
 
       const result = Card.create(cardProps);
 
-      expect(result).toBeInstanceOf(Result);
-      expect(result.isSuccess).toEqual(true);
-      expect(result.value).toBeInstanceOf(Card);
-      expect(result.value).toHaveProperty("_id");
-      expect(result.value).toHaveProperty("number");
-      expect(result.value).toHaveProperty("cardholderName");
-      expect(result.value).toHaveProperty("securityCode");
-      expect(result.value).toHaveProperty("expirationDate");
-      expect(result.value).toHaveProperty("password", undefined);
-      expect(result.value).toHaveProperty("isVirtual", false);
-      expect(result.value).toHaveProperty("originalCardId", undefined);
-      expect(result.value).toHaveProperty("isBlocked", false);
-      expect(result.value).toHaveProperty("type", cardProps.type);
-      expect(result.value).toHaveProperty("employeeId", cardProps.employeeId);
+      expect(result).toBeInstanceOf(Right);
+      expect(result.isRight()).toEqual(true);
+      expect(result.value).toBeInstanceOf(Result);
+      expect(result.value.getError()).toBeNull();
+      expect(result.value.getValue()).toBeInstanceOf(Card);
+      expect(result.value.getValue()).toHaveProperty("_id");
+      expect(result.value.getValue()).toHaveProperty("number");
+      expect(result.value.getValue()).toHaveProperty("cardholderName");
+      expect(result.value.getValue()).toHaveProperty("securityCode");
+      expect(result.value.getValue()).toHaveProperty("expirationDate");
+      expect(result.value.getValue()).toHaveProperty("password", undefined);
+      expect(result.value.getValue()).toHaveProperty("isVirtual", false);
+      expect(result.value.getValue()).toHaveProperty("originalCardId", undefined);
+      expect(result.value.getValue()).toHaveProperty("isBlocked", false);
+      expect(result.value.getValue()).toHaveProperty("type", cardProps.type);
+      expect(result.value.getValue()).toHaveProperty("employeeId", cardProps.employeeId);
     });
 
     it("Should be able to reconstitute a card entity", () => {
@@ -54,20 +57,22 @@ describe("Card Entity", () => {
 
       const result = Card.create(cardProps);
 
-      expect(result).toBeInstanceOf(Result);
-      expect(result.isSuccess).toEqual(true);
-      expect(result.value).toBeInstanceOf(Card);
-      expect(result.value?._id).toEqual(cardProps.id);
-      expect(result.value?.number.value).toEqual(cardProps.number);
-      expect(result.value?.cardholderName.value).toEqual(cardProps.cardholderName);
-      expect(result.value?.securityCode.value).toEqual(cardProps.securityCode);
-      expect(result.value?.expirationDate.getDate()).toEqual(cardProps.expirationDate);
-      expect(result.value?.password?.value).toEqual(cardProps.password);
-      expect(result.value?.isVirtual).toEqual(cardProps.isVirtual);
-      expect(result.value?.originalCardId).toEqual(cardProps.originalCardId);
-      expect(result.value?.isBlocked).toEqual(cardProps.isBlocked);
-      expect(result.value?.type).toEqual(cardProps.type);
-      expect(result.value?.employeeId).toEqual(cardProps.employeeId);
+      expect(result).toBeInstanceOf(Right);
+      expect(result.isRight()).toEqual(true);
+      expect(result.value).toBeInstanceOf(Result);
+      expect(result.value.getError()).toBeNull();
+      expect(result.value.getValue()).toBeInstanceOf(Card);
+      expect(result.value.getValue()?._id).toEqual(cardProps.id);
+      expect(result.value.getValue()?.number.value).toEqual(cardProps.number);
+      expect(result.value.getValue()?.cardholderName.value).toEqual(cardProps.cardholderName);
+      expect(result.value.getValue()?.securityCode.value).toEqual(cardProps.securityCode);
+      expect(result.value.getValue()?.expirationDate.getDate()).toEqual(cardProps.expirationDate);
+      expect(result.value.getValue()?.password?.value).toEqual(cardProps.password);
+      expect(result.value.getValue()?.isVirtual).toEqual(cardProps.isVirtual);
+      expect(result.value.getValue()?.originalCardId).toEqual(cardProps.originalCardId);
+      expect(result.value.getValue()?.isBlocked).toEqual(cardProps.isBlocked);
+      expect(result.value.getValue()?.type).toEqual(cardProps.type);
+      expect(result.value.getValue()?.employeeId).toEqual(cardProps.employeeId);
     });
 
     it("Should be able to set 'isBlocked' to true", () => {
@@ -76,7 +81,7 @@ describe("Card Entity", () => {
         cardholderName: employee.fullName.value,
         type: "groceries",
       };
-      const card = Card.create(cardProps).value!;
+      const card = Card.create(cardProps).value.getValue()!;
 
       expect(() => {
         card.block();
@@ -91,12 +96,39 @@ describe("Card Entity", () => {
         type: "groceries",
         isBlocked: true,
       };
-      const card = Card.create(cardProps).value!;
+      const card = Card.create(cardProps).value.getValue()!;
 
       expect(() => {
         card.unblock();
       }).not.toThrow();
       expect(card.isBlocked).toEqual(false);
+    });
+
+    it("Should be able to call 'isActive' and return false if the card is not active", () => {
+      const cardProps: CreateCardProps = {
+        employeeId: employee._id,
+        cardholderName: employee.fullName.value,
+        type: "groceries",
+        isBlocked: true,
+      };
+      const card = Card.create(cardProps).value.getValue()!;
+
+      expect(card).toBeInstanceOf(Card);
+      expect(card.isActive).toEqual(false);
+    });
+
+    it("Should be able to call 'isActive' and return true if the card is active", () => {
+      const cardProps: CreateCardProps = {
+        employeeId: employee._id,
+        cardholderName: employee.fullName.value,
+        type: "groceries",
+        isBlocked: true,
+      };
+      const card = Card.create(cardProps).value.getValue()!;
+      card.activate("1234");
+
+      expect(card).toBeInstanceOf(Card);
+      expect(card.isActive).toEqual(true);
     });
 
     it("Should be able to activate the card by setting a password", () => {
@@ -106,14 +138,15 @@ describe("Card Entity", () => {
         type: "groceries",
       };
       const password = "1234";
-      const card = Card.create(cardProps).value!;
+      const card = Card.create(cardProps).value.getValue()!;
 
       const result = card.activate(password);
 
-      expect(result).toBeInstanceOf(Result);
-      expect(result.isSuccess).toEqual(true);
-      expect(result.error).toBeNull();
-      expect(result.value).toBeNull();
+      expect(result).toBeInstanceOf(Right);
+      expect(result.isRight()).toEqual(true);
+      expect(result.value).toBeInstanceOf(Result);
+      expect(result.value.getError()).toBeNull();
+      expect(result.value.getValue()).toBeNull();
       expect(card.password).toBeDefined();
       expect(card.password?.compare(password)).toEqual(true);
     });
@@ -129,11 +162,11 @@ describe("Card Entity", () => {
 
       const result = Card.create(cardProps);
 
-      expect(result).toBeInstanceOf(DomainErrors.InvalidPropsError);
-      expect(result.isFailure).toEqual(true);
-      expect(result.value).toBeNull();
-      expect(result.error).toBeDefined();
-      expect(result.error?.message).toEqual("Employee ID must be a valid UUID");
+      expect(result).toBeInstanceOf(Left);
+      expect(result.isLeft()).toEqual(true);
+      expect(result.value).toBeInstanceOf(DomainErrors.InvalidPropsError);
+      expect(result.value.getValue()).toBeNull();
+      expect(result.value.getError()?.message).toEqual("Employee ID must be a valid UUID");
     });
 
     it("Should return an error if the 'type' is not a valid Voucher Type", () => {
@@ -145,11 +178,11 @@ describe("Card Entity", () => {
 
       const result = Card.create(cardProps);
 
-      expect(result).toBeInstanceOf(DomainErrors.InvalidPropsError);
-      expect(result.isFailure).toEqual(true);
-      expect(result.value).toBeNull();
-      expect(result.error).toBeDefined();
-      expect(result.error?.message).toEqual(
+      expect(result).toBeInstanceOf(Left);
+      expect(result.isLeft()).toEqual(true);
+      expect(result.value).toBeInstanceOf(DomainErrors.InvalidPropsError);
+      expect(result.value.getValue()).toBeNull();
+      expect(result.value.getError()?.message).toEqual(
         "Card Type can only assume the values: 'restaurant' | 'health' | 'transport' | 'groceries' | 'education'"
       );
     });
@@ -163,11 +196,66 @@ describe("Card Entity", () => {
 
       const result = Card.create(cardProps);
 
-      expect(result).toBeInstanceOf(DomainErrors.InvalidPropsError);
-      expect(result.isFailure).toEqual(true);
-      expect(result.value).toBeNull();
-      expect(result.error).toBeDefined();
-      expect(result.error?.message).toEqual("Cardholder Name must consist of only letters");
+      expect(result).toBeInstanceOf(Left);
+      expect(result.isLeft()).toEqual(true);
+      expect(result.value).toBeInstanceOf(DomainErrors.InvalidPropsError);
+      expect(result.value.getValue()).toBeNull();
+      expect(result.value.getError()?.message).toEqual(
+        "Cardholder Name must consist of only letters"
+      );
+    });
+
+    it("Should return an error if the 'number' has an invalid format", () => {
+      const cardProps: CreateCardProps = {
+        employeeId: employee._id,
+        cardholderName: employee.fullName.value,
+        type: "education",
+        number: "abc",
+      };
+
+      const result = Card.create(cardProps);
+
+      expect(result).toBeInstanceOf(Left);
+      expect(result.isLeft()).toEqual(true);
+      expect(result.value).toBeInstanceOf(DomainErrors.InvalidPropsError);
+      expect(result.value.getValue()).toBeNull();
+      expect(result.value.getError()?.message).toEqual(
+        "Card Number must be a 13 to 16 numeric digits string"
+      );
+    });
+
+    it("Should return an error if the 'securityCode' has an invalid format", () => {
+      const cardProps: CreateCardProps = {
+        employeeId: employee._id,
+        cardholderName: employee.fullName.value,
+        type: "education",
+        securityCode: "123457",
+      };
+
+      const result = Card.create(cardProps);
+
+      expect(result).toBeInstanceOf(Left);
+      expect(result.isLeft()).toEqual(true);
+      expect(result.value).toBeInstanceOf(DomainErrors.InvalidPropsError);
+      expect(result.value.getValue()).toBeNull();
+      expect(result.value.getError()?.message).toEqual("Invalid CVV encryption");
+    });
+
+    it("Should return an error if the 'expirationDate' has an invalid format", () => {
+      const cardProps: CreateCardProps = {
+        employeeId: employee._id,
+        cardholderName: employee.fullName.value,
+        type: "education",
+        expirationDate: "1234" as any,
+      };
+
+      const result = Card.create(cardProps);
+
+      expect(result).toBeInstanceOf(Left);
+      expect(result.isLeft()).toEqual(true);
+      expect(result.value).toBeInstanceOf(DomainErrors.InvalidPropsError);
+      expect(result.value.getValue()).toBeNull();
+      expect(result.value.getError()?.message).toEqual("Card Expiration Date must be a Date");
     });
 
     it("Should return an error when trying to activate a card that is already activated", () => {
@@ -177,16 +265,16 @@ describe("Card Entity", () => {
         type: "groceries",
       };
       const password = "1234";
-      const card = Card.create(cardProps).value!;
+      const card = Card.create(cardProps).value.getValue()!;
       card.activate(password);
 
       const result = card.activate(password);
 
-      expect(result).toBeInstanceOf(DomainErrors.InvalidPropsError);
-      expect(result.isFailure).toEqual(true);
-      expect(result.value).toBeNull();
-      expect(result.error).toBeDefined();
-      expect(result.error?.message).toEqual("Card is already activated");
+      expect(result).toBeInstanceOf(Left);
+      expect(result.isLeft()).toEqual(true);
+      expect(result.value).toBeInstanceOf(DomainErrors.InvalidPropsError);
+      expect(result.value.getValue()).toBeNull();
+      expect(result.value.getError()?.message).toEqual("Card is already activated");
     });
 
     it("Should return an error when trying to activate a card with an invalid password", () => {
@@ -196,15 +284,17 @@ describe("Card Entity", () => {
         type: "groceries",
       };
       const password = "invalid password";
-      const card = Card.create(cardProps).value!;
+      const card = Card.create(cardProps).value.getValue()!;
 
       const result = card.activate(password);
 
-      expect(result).toBeInstanceOf(DomainErrors.InvalidPropsError);
-      expect(result.isFailure).toEqual(true);
-      expect(result.value).toBeNull();
-      expect(result.error).toBeDefined();
-      expect(result.error?.message).toEqual("Card Password must be a 4 numeric digits string");
+      expect(result).toBeInstanceOf(Left);
+      expect(result.isLeft()).toEqual(true);
+      expect(result.value).toBeInstanceOf(DomainErrors.InvalidPropsError);
+      expect(result.value.getValue()).toBeNull();
+      expect(result.value.getError()?.message).toEqual(
+        "Card Password must be a 4 numeric digits string"
+      );
     });
   });
 });

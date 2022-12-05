@@ -1,7 +1,7 @@
 import { VoucherType } from "@shared/domain/voucher-type";
 import { Entity } from "@core/domain/entity";
 import { Result } from "@core/logic/result";
-import { Either } from "@core/logic/either";
+import { Either, left, right } from "@core/logic/either";
 import { DomainErrors } from "@core/domain/domain-error";
 import { Guard } from "@core/logic/guard";
 import { CardholderName } from "./cardholder-name";
@@ -105,19 +105,20 @@ export class Card extends Entity<CardProps> {
 
   public activate(password: string): ActivateCardResult {
     if (this.props.password !== undefined) {
-      return DomainErrors.InvalidPropsError.create("Card is already activated");
+      return left(DomainErrors.InvalidPropsError.create("Card is already activated"));
     }
 
-    const passwordOrError = CardPassword.create(password);
+    const passwordResult = CardPassword.create(password);
 
-    if (passwordOrError.error) {
-      const { error } = passwordOrError;
-      return DomainErrors.InvalidPropsError.create(error.message);
+    if (passwordResult.isLeft()) {
+      const passwordError = passwordResult.value;
+
+      return left(passwordError);
     }
 
-    this.props.password = passwordOrError.value;
+    this.props.password = passwordResult.value.getValue();
 
-    return Result.pass();
+    return right(Result.pass());
   }
 
   private static validate(props: CreateCardProps): ValidateCardResult {
@@ -125,46 +126,64 @@ export class Card extends Entity<CardProps> {
 
     const guardResult = Guard.againstNonUUID(employeeId, "Employee ID");
     if (!guardResult.succeeded) {
-      return DomainErrors.InvalidPropsError.create(guardResult.message);
+      return left(DomainErrors.InvalidPropsError.create(guardResult.message));
     }
 
     const validTypes = ["education", "groceries", "health", "transport", "restaurant"];
     if (!validTypes.includes(type)) {
-      return DomainErrors.InvalidPropsError.create(
-        "Card Type can only assume the values: 'restaurant' | 'health' | 'transport' | 'groceries' | 'education'"
+      return left(
+        DomainErrors.InvalidPropsError.create(
+          "Card Type can only assume the values: 'restaurant' | 'health' | 'transport' | 'groceries' | 'education'"
+        )
       );
     }
 
-    return Result.pass();
+    return right(Result.pass());
   }
 
   public static create(props: CreateCardProps): CreateCardResult {
-    const validation = Card.validate(props);
+    const validationResult = Card.validate(props);
 
-    if (validation.error && validation.isFailure) {
-      return DomainErrors.InvalidPropsError.create(validation.error.message);
+    if (validationResult.isLeft()) {
+      const validationError = validationResult.value;
+
+      return left(validationError);
     }
 
     const { type, employeeId, cardholderName } = props;
 
-    const cardholderNameOrError = CardholderName.create(cardholderName, false);
-    const numberOrError = CardNumber.create(props.number);
-    const securityCodeOrError = CardCVV.create(props.securityCode);
-    const expirationDateOrError = CardExpirationDate.create(props.expirationDate);
+    const cardholderNameResult = CardholderName.create(cardholderName, false);
+    if (cardholderNameResult.isLeft()) {
+      const cardholderNameError = cardholderNameResult.value;
 
-    const combinedResult = Result.combine([
-      cardholderNameOrError,
-      numberOrError,
-      securityCodeOrError,
-      expirationDateOrError,
-    ]);
-
-    if (combinedResult.error && combinedResult.isFailure) {
-      const { error } = combinedResult;
-      return DomainErrors.InvalidPropsError.create(error.message);
+      return left(cardholderNameError);
     }
 
-    const password = props.password ? CardPassword.create(props.password, true).value! : undefined;
+    const numberResult = CardNumber.create(props.number);
+    if (numberResult.isLeft()) {
+      const numberError = numberResult.value;
+
+      return left(numberError);
+    }
+
+    const securityCodeResult = CardCVV.create(props.securityCode);
+    if (securityCodeResult.isLeft()) {
+      const securityCodeError = securityCodeResult.value;
+
+      return left(securityCodeError);
+    }
+
+    const expirationDateResult = CardExpirationDate.create(props.expirationDate);
+    if (expirationDateResult.isLeft()) {
+      const expirationDateError = expirationDateResult.value;
+
+      return left(expirationDateError);
+    }
+
+    const password = props.password
+      ? CardPassword.create(props.password, true).value.getValue()!
+      : undefined;
+
     const isVirtual = props.isVirtual ?? false;
     const originalCardId = props.originalCardId ?? undefined;
     const isBlocked = props.isBlocked ?? false;
@@ -172,10 +191,10 @@ export class Card extends Entity<CardProps> {
     const card = new Card(
       {
         employeeId,
-        number: numberOrError.value!,
-        cardholderName: cardholderNameOrError.value!,
-        securityCode: securityCodeOrError.value!,
-        expirationDate: expirationDateOrError.value!,
+        number: numberResult.value.getValue(),
+        cardholderName: cardholderNameResult.value.getValue(),
+        securityCode: securityCodeResult.value.getValue(),
+        expirationDate: expirationDateResult.value.getValue(),
         password,
         isVirtual,
         originalCardId,
@@ -185,6 +204,6 @@ export class Card extends Entity<CardProps> {
       props.id
     );
 
-    return Result.ok<Card>(card);
+    return right(Result.ok<Card>(card));
   }
 }
