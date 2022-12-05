@@ -18,6 +18,7 @@ import { randUuid, randFullName } from "@ngneat/falso";
 import { GetEmployeeErrors } from "@shared/modules/employees/app/services/get-employee/get-employee-errors/errors";
 import { DomainErrors } from "@core/domain/domain-error";
 import { VoucherType } from "@shared/domain/voucher-type";
+import { Right, Left } from "@core/logic/either";
 import { CreateCardImpl, CreateCardUseCase } from "./create-card";
 import { CreateCardErrors } from "./create-card-errors/errors";
 
@@ -58,15 +59,16 @@ describe("Create Card Use Case", () => {
 
       const result = await sut.execute(createCardReq);
 
-      expect(result).toBeInstanceOf(Result);
-      expect(result.isSuccess).toEqual(true);
-      expect(result.error).toBeNull();
-      expect(result.value).toHaveProperty("id");
-      expect(result.value).toHaveProperty("number");
-      expect(result.value).toHaveProperty("cardholderName");
-      expect(result.value).toHaveProperty("securityCode");
-      expect(result.value).toHaveProperty("expirationDate");
-      expect(result.value).toHaveProperty("type", createCardReq.type);
+      expect(result).toBeInstanceOf(Right);
+      expect(result.isRight()).toEqual(true);
+      expect(result.value).toBeInstanceOf(Result);
+      expect(result.value.getError()).toBeNull();
+      expect(result.value.getValue()).toHaveProperty("id");
+      expect(result.value.getValue()).toHaveProperty("number");
+      expect(result.value.getValue()).toHaveProperty("cardholderName");
+      expect(result.value.getValue()).toHaveProperty("securityCode");
+      expect(result.value.getValue()).toHaveProperty("expirationDate");
+      expect(result.value.getValue()).toHaveProperty("type", createCardReq.type);
     });
   });
 
@@ -80,11 +82,11 @@ describe("Create Card Use Case", () => {
 
       const result = await sut.execute(createCardReq);
 
-      expect(result).toBeInstanceOf(GetCompanyErrors.NotFoundError);
-      expect(result.isFailure).toEqual(true);
-      expect(result.value).toBeNull();
-      expect(result.error).toBeDefined();
-      expect(result.error?.message).toEqual("Company not found");
+      expect(result).toBeInstanceOf(Left);
+      expect(result.isLeft()).toEqual(true);
+      expect(result.value).toBeInstanceOf(GetCompanyErrors.NotFoundError);
+      expect(result.value.getValue()).toBeNull();
+      expect(result.value.getError()?.message).toEqual("Company not found");
     });
 
     it("Should return an error if the API KEY is not a valid UUID", async () => {
@@ -96,11 +98,11 @@ describe("Create Card Use Case", () => {
 
       const result = await sut.execute(createCardReq);
 
-      expect(result).toBeInstanceOf(GetCompanyErrors.InvalidApiKeyError);
-      expect(result.isFailure).toEqual(true);
-      expect(result.value).toBeNull();
-      expect(result.error).toBeDefined();
-      expect(result.error?.message).toEqual("Company API KEY must be a valid UUID");
+      expect(result).toBeInstanceOf(Left);
+      expect(result.isLeft()).toEqual(true);
+      expect(result.value).toBeInstanceOf(GetCompanyErrors.InvalidApiKeyError);
+      expect(result.value.getValue()).toBeNull();
+      expect(result.value.getError()?.message).toEqual("Company API KEY must be a valid UUID");
     });
 
     it("Should return an error if the employee does not exist", async () => {
@@ -112,11 +114,11 @@ describe("Create Card Use Case", () => {
 
       const result = await sut.execute(createCardReq);
 
-      expect(result).toBeInstanceOf(GetEmployeeErrors.NotFoundError);
-      expect(result.isFailure).toEqual(true);
-      expect(result.value).toBeNull();
-      expect(result.error).toBeDefined();
-      expect(result.error?.message).toEqual("Employee not found");
+      expect(result).toBeInstanceOf(Left);
+      expect(result.isLeft()).toEqual(true);
+      expect(result.value).toBeInstanceOf(GetEmployeeErrors.NotFoundError);
+      expect(result.value.getValue()).toBeNull();
+      expect(result.value.getError()?.message).toEqual("Employee not found");
     });
 
     it("Should return an error if the employee ID is not a valid UUID", async () => {
@@ -128,11 +130,11 @@ describe("Create Card Use Case", () => {
 
       const result = await sut.execute(createCardReq);
 
-      expect(result).toBeInstanceOf(GetEmployeeErrors.InvalidEmployeeIdError);
-      expect(result.isFailure).toEqual(true);
-      expect(result.value).toBeNull();
-      expect(result.error).toBeDefined();
-      expect(result.error?.message).toEqual("Employee ID must be a valid UUID");
+      expect(result).toBeInstanceOf(Left);
+      expect(result.isLeft()).toEqual(true);
+      expect(result.value).toBeInstanceOf(GetEmployeeErrors.InvalidEmployeeIdError);
+      expect(result.value.getValue()).toBeNull();
+      expect(result.value.getError()?.message).toEqual("Employee ID must be a valid UUID");
     });
 
     it("Should return an error if the employee is not related to the company", async () => {
@@ -146,11 +148,11 @@ describe("Create Card Use Case", () => {
 
       const result = await sut.execute(createCardReq);
 
-      expect(result).toBeInstanceOf(CreateCardErrors.EmployeeNotBelongToCompanyError);
-      expect(result.isFailure).toEqual(true);
-      expect(result.value).toBeNull();
-      expect(result.error).toBeDefined();
-      expect(result.error?.message).toEqual("Employee does not belong to the company");
+      expect(result).toBeInstanceOf(Left);
+      expect(result.isLeft()).toEqual(true);
+      expect(result.value).toBeInstanceOf(CreateCardErrors.EmployeeNotBelongToCompanyError);
+      expect(result.value.getValue()).toBeNull();
+      expect(result.value.getError()?.message).toEqual("Employee does not belong to the company");
     });
 
     it("Should return an error if the employee already has a card with the same type", async () => {
@@ -163,11 +165,11 @@ describe("Create Card Use Case", () => {
 
       const result = await sut.execute(createCardReq);
 
-      expect(result).toBeInstanceOf(CreateCardErrors.ConflictCardType);
-      expect(result.isFailure).toEqual(true);
-      expect(result.value).toBeNull();
-      expect(result.error).toBeDefined();
-      expect(result.error?.message).toEqual(
+      expect(result).toBeInstanceOf(Left);
+      expect(result.isLeft()).toEqual(true);
+      expect(result.value).toBeInstanceOf(CreateCardErrors.ConflictCardType);
+      expect(result.value.getValue()).toBeNull();
+      expect(result.value.getError()?.message).toEqual(
         `The employee already has a '${createCardReq.type}' voucher card`
       );
     });
@@ -181,11 +183,11 @@ describe("Create Card Use Case", () => {
 
       const result = await sut.execute(createCardReq);
 
-      expect(result).toBeInstanceOf(DomainErrors.InvalidPropsError);
-      expect(result.isFailure).toEqual(true);
-      expect(result.value).toBeNull();
-      expect(result.error).toBeDefined();
-      expect(result.error?.message).toEqual(
+      expect(result).toBeInstanceOf(Left);
+      expect(result.isLeft()).toEqual(true);
+      expect(result.value).toBeInstanceOf(DomainErrors.InvalidPropsError);
+      expect(result.value.getValue()).toBeNull();
+      expect(result.value.getError()?.message).toEqual(
         "Card Type can only assume the values: 'restaurant' | 'health' | 'transport' | 'groceries' | 'education'"
       );
     });

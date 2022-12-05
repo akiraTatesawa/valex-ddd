@@ -34,11 +34,7 @@ export class CardMapper {
       password: persistence.password,
     });
 
-    if (cardOrError.error) {
-      throw Error("Cannot create a card from persistence");
-    }
-
-    return cardOrError.value;
+    return cardOrError.value.getValue()!;
   }
 
   public static toDTO(domain: Card): CardDTO {
@@ -47,7 +43,7 @@ export class CardMapper {
       cardholderName: domain.cardholderName.value,
       number: domain.number.value,
       securityCode: domain.securityCode.decrypt(),
-      expirationDate: domain.expirationDate.getValue(),
+      expirationDate: domain.expirationDate.getStringExpirationDate(),
       type: domain.type,
     };
   }
