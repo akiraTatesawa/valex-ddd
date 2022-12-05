@@ -6,6 +6,7 @@ import { Company } from "@shared/modules/companies/domain/company";
 import { Result } from "@core/logic/result";
 import { randFullName, randUuid } from "@ngneat/falso";
 import { GetCompanyErrors } from "@shared/modules/companies/app/services/get-company/get-company-errors/errors";
+import { Left, Right } from "@core/logic/either";
 import { GetCompanyService } from "./get-company.interface";
 import { GetCompanyImpl } from "./get-company.service";
 
@@ -29,12 +30,13 @@ describe("Get Company By API KEY Service", () => {
 
       const result = await sut.getCompany(apiKey);
 
-      expect(result).toBeInstanceOf(Result);
-      expect(result.isSuccess).toEqual(true);
-      expect(result.error).toBeNull();
-      expect(result.value).toBeInstanceOf(Company);
-      expect(result.value?._id).toEqual(company._id);
-      expect(result.value?.apiKey).toEqual(company.apiKey);
+      expect(result).toBeInstanceOf(Right);
+      expect(result.isRight()).toEqual(true);
+      expect(result.value.getError()).toBeNull();
+      expect(result.value).toBeInstanceOf(Result);
+      expect(result.value.getValue()).toBeInstanceOf(Company);
+      expect(result.value.getValue()?._id).toEqual(company._id);
+      expect(result.value.getValue()?.apiKey).toEqual(company.apiKey);
     });
   });
 
@@ -44,11 +46,11 @@ describe("Get Company By API KEY Service", () => {
 
       const result = await sut.getCompany(apiKey);
 
-      expect(result).toBeInstanceOf(GetCompanyErrors.InvalidApiKeyError);
-      expect(result.isFailure).toEqual(true);
-      expect(result.value).toBeNull();
-      expect(result.error).toBeDefined();
-      expect(result.error?.message).toEqual("Company API KEY must be a valid UUID");
+      expect(result).toBeInstanceOf(Left);
+      expect(result.isLeft()).toEqual(true);
+      expect(result.value).toBeInstanceOf(GetCompanyErrors.InvalidApiKeyError);
+      expect(result.value.getValue()).toBeNull();
+      expect(result.value.getError()?.message).toEqual("Company API KEY must be a valid UUID");
     });
 
     it("Should return an error if the company does not exist", async () => {
@@ -56,11 +58,11 @@ describe("Get Company By API KEY Service", () => {
 
       const result = await sut.getCompany(apiKey);
 
-      expect(result).toBeInstanceOf(GetCompanyErrors.NotFoundError);
-      expect(result.isFailure).toEqual(true);
-      expect(result.value).toBeNull();
-      expect(result.error).toBeDefined();
-      expect(result.error?.message).toEqual("Company not found");
+      expect(result).toBeInstanceOf(Left);
+      expect(result.isLeft()).toEqual(true);
+      expect(result.value).toBeInstanceOf(GetCompanyErrors.NotFoundError);
+      expect(result.value.getValue()).toBeNull();
+      expect(result.value.getError()?.message).toEqual("Company not found");
     });
   });
 });
