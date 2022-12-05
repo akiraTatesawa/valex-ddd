@@ -1,6 +1,6 @@
 import { Entity } from "@core/domain/entity";
 import { Result } from "@core/logic/result";
-import { Either } from "@core/logic/either";
+import { Either, left, right } from "@core/logic/either";
 import { DomainErrors } from "@core/domain/domain-error";
 import { Guard, GuardResult } from "@core/logic/guard";
 import { EmployeeName } from "./employee-name";
@@ -70,38 +70,48 @@ export class Employee extends Entity<EmployeeProps> {
     const combinedResult = Guard.combineResults(guardResults);
 
     if (!combinedResult.succeeded) {
-      return DomainErrors.InvalidPropsError.create(combinedResult.message);
+      return left(DomainErrors.InvalidPropsError.create(combinedResult.message));
     }
 
-    return Result.pass();
+    return right(Result.pass());
   }
 
   public static create(props: CreateEmployeeProps): EmployeeCreateResult {
-    const validationOrError = Employee.validate(props);
+    const validationResult = Employee.validate(props);
 
-    if (validationOrError.isFailure && validationOrError.error) {
-      const { error } = validationOrError;
+    if (validationResult.isLeft()) {
+      const validationError = validationResult.value;
 
-      return DomainErrors.InvalidPropsError.create(error.message);
+      return left(validationError);
     }
 
     const employeeNameOrError = EmployeeName.create(props.fullName);
-    const employeeCpfOrError = EmployeeCPF.create(props.cpf);
-    const employeeEmailOrError = EmployeeEmail.create(props.email);
 
-    const combinedResult = Result.combine([
-      employeeNameOrError,
-      employeeEmailOrError,
-      employeeCpfOrError,
-    ]);
+    if (employeeNameOrError.isLeft()) {
+      const employeeNameError = employeeNameOrError.value;
 
-    if (combinedResult.isFailure && combinedResult.error) {
-      return DomainErrors.InvalidPropsError.create(combinedResult.error.message);
+      return left(employeeNameError);
     }
 
-    const fullName = employeeNameOrError.value!;
-    const email = employeeEmailOrError.value!;
-    const cpf = employeeCpfOrError.value!;
+    const employeeCpfOrError = EmployeeCPF.create(props.cpf);
+
+    if (employeeCpfOrError.isLeft()) {
+      const employeeCpfError = employeeCpfOrError.value;
+
+      return left(employeeCpfError);
+    }
+
+    const employeeEmailOrError = EmployeeEmail.create(props.email);
+
+    if (employeeEmailOrError.isLeft()) {
+      const employeeEmailError = employeeEmailOrError.value;
+
+      return left(employeeEmailError);
+    }
+
+    const fullName = employeeNameOrError.value.getValue();
+    const email = employeeEmailOrError.value.getValue();
+    const cpf = employeeCpfOrError.value.getValue();
 
     const employee = new Employee(
       {
@@ -114,6 +124,6 @@ export class Employee extends Entity<EmployeeProps> {
       props.id
     );
 
-    return Result.ok<Employee>(employee);
+    return right(Result.ok<Employee>(employee));
   }
 }
