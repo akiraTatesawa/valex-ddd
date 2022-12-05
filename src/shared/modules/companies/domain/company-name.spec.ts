@@ -1,6 +1,7 @@
 import { randCompanyName, randText } from "@ngneat/falso";
-import { Result } from "@core/logic/result";
 import { DomainErrors } from "@core/domain/domain-error";
+import { Left, Right } from "@core/logic/either";
+import { Result } from "@core/logic/result";
 import { CompanyName } from "./company-name";
 
 describe("Company Name Value Object", () => {
@@ -10,11 +11,12 @@ describe("Company Name Value Object", () => {
 
       const result = CompanyName.create(name);
 
-      expect(result).toBeInstanceOf(Result);
-      expect(result.isSuccess).toEqual(true);
-      expect(result.error).toBeNull();
-      expect(result.value).toBeInstanceOf(CompanyName);
-      expect(result.value?.value).toEqual(name);
+      expect(result).toBeInstanceOf(Right);
+      expect(result.isRight()).toEqual(true);
+      expect(result.value.getError()).toBeNull();
+      expect(result.value).toBeInstanceOf(Result);
+      expect(result.value.getValue()).toBeInstanceOf(CompanyName);
+      expect(result.value.getValue()?.value).toEqual(name);
     });
   });
 
@@ -24,10 +26,11 @@ describe("Company Name Value Object", () => {
 
       const result = CompanyName.create(name);
 
-      expect(result).toBeInstanceOf(DomainErrors.InvalidPropsError);
-      expect(result.isFailure).toEqual(true);
-      expect(result.value).toBeNull();
-      expect(result.error?.message).toEqual("Company Name must be a string");
+      expect(result).toBeInstanceOf(Left);
+      expect(result.value).toBeInstanceOf(DomainErrors.InvalidPropsError);
+      expect(result.isLeft()).toEqual(true);
+      expect(result.value.getValue()).toBeNull();
+      expect(result.value.getError()?.message).toEqual("Company Name must be a string");
     });
 
     it("Should return an error if the name is null", () => {
@@ -35,10 +38,11 @@ describe("Company Name Value Object", () => {
 
       const result = CompanyName.create(name);
 
-      expect(result).toBeInstanceOf(DomainErrors.InvalidPropsError);
-      expect(result.isFailure).toEqual(true);
-      expect(result.value).toBeNull();
-      expect(result.error?.message).toEqual("Company Name cannot be null or undefined");
+      expect(result).toBeInstanceOf(Left);
+      expect(result.value).toBeInstanceOf(DomainErrors.InvalidPropsError);
+      expect(result.isLeft()).toEqual(true);
+      expect(result.value.getValue()).toBeNull();
+      expect(result.value.getError()?.message).toEqual("Company Name cannot be null or undefined");
     });
 
     it("Should return an error if the name is an empty string", () => {
@@ -46,10 +50,11 @@ describe("Company Name Value Object", () => {
 
       const result = CompanyName.create(name);
 
-      expect(result).toBeInstanceOf(DomainErrors.InvalidPropsError);
-      expect(result.isFailure).toEqual(true);
-      expect(result.value).toBeNull();
-      expect(result.error?.message).toEqual("Company Name cannot be an empty string");
+      expect(result).toBeInstanceOf(Left);
+      expect(result.value).toBeInstanceOf(DomainErrors.InvalidPropsError);
+      expect(result.isLeft()).toEqual(true);
+      expect(result.value.getValue()).toBeNull();
+      expect(result.value.getError()?.message).toEqual("Company Name cannot be an empty string");
     });
 
     it("Should return an error if the name is longer than 30 characters", () => {
@@ -57,10 +62,13 @@ describe("Company Name Value Object", () => {
 
       const result = CompanyName.create(name);
 
-      expect(result).toBeInstanceOf(DomainErrors.InvalidPropsError);
-      expect(result.isFailure).toEqual(true);
-      expect(result.value).toBeNull();
-      expect(result.error?.message).toEqual("Company Name cannot be longer than 30 characters");
+      expect(result).toBeInstanceOf(Left);
+      expect(result.value).toBeInstanceOf(DomainErrors.InvalidPropsError);
+      expect(result.isLeft()).toEqual(true);
+      expect(result.value.getValue()).toBeNull();
+      expect(result.value.getError()?.message).toEqual(
+        "Company Name cannot be longer than 30 characters"
+      );
     });
   });
 });
