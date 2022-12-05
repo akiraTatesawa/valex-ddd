@@ -1,6 +1,7 @@
 import { randEmail } from "@ngneat/falso";
 import { Result } from "@core/logic/result";
 import { DomainErrors } from "@core/domain/domain-error";
+import { Left, Right } from "@core/logic/either";
 import { EmployeeEmail } from "./employee-email";
 
 describe("Employee Email Value Object", () => {
@@ -10,10 +11,12 @@ describe("Employee Email Value Object", () => {
 
       const result = EmployeeEmail.create(validEmail);
 
-      expect(result).toBeInstanceOf(Result);
-      expect(result.isSuccess).toEqual(true);
-      expect(result.error).toBeNull();
-      expect(result.value?.value).toEqual(validEmail);
+      expect(result).toBeInstanceOf(Right);
+      expect(result.isRight()).toEqual(true);
+      expect(result.value).toBeInstanceOf(Result);
+      expect(result.value.getError()).toBeNull();
+      expect(result.value.getValue()).toBeInstanceOf(EmployeeEmail);
+      expect(result.value.getValue()).toHaveProperty("value", validEmail);
     });
   });
 
@@ -23,10 +26,11 @@ describe("Employee Email Value Object", () => {
 
       const result = EmployeeEmail.create(invalidEmail);
 
-      expect(result).toBeInstanceOf(DomainErrors.InvalidPropsError);
-      expect(result.isFailure).toEqual(true);
-      expect(result.value).toBeNull();
-      expect(result.error?.message).toEqual("Employee Email must be a valid email");
+      expect(result).toBeInstanceOf(Left);
+      expect(result.isLeft()).toEqual(true);
+      expect(result.value).toBeInstanceOf(DomainErrors.InvalidPropsError);
+      expect(result.value.getValue()).toBeNull();
+      expect(result.value.getError()?.message).toEqual("Employee Email must be a valid email");
     });
 
     it("Should return an error if the email is null or undefined", () => {
@@ -34,10 +38,13 @@ describe("Employee Email Value Object", () => {
 
       const result = EmployeeEmail.create(invalidEmail);
 
-      expect(result).toBeInstanceOf(DomainErrors.InvalidPropsError);
-      expect(result.isFailure).toEqual(true);
-      expect(result.value).toBeNull();
-      expect(result.error?.message).toEqual("Employee Email cannot be null or undefined");
+      expect(result).toBeInstanceOf(Left);
+      expect(result.isLeft()).toEqual(true);
+      expect(result.value).toBeInstanceOf(DomainErrors.InvalidPropsError);
+      expect(result.value.getValue()).toBeNull();
+      expect(result.value.getError()?.message).toEqual(
+        "Employee Email cannot be null or undefined"
+      );
     });
   });
 });
