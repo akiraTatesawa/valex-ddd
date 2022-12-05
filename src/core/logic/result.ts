@@ -1,4 +1,4 @@
-import { ErrorInterface } from "@core/domain/error";
+import { Left, right, Right, left, Either } from "@core/logic/either";
 
 export class Result<Value, Error> {
   public readonly isSuccess: boolean;
@@ -32,13 +32,18 @@ export class Result<Value, Error> {
     return new Result<null, null>(true, null, null);
   }
 
-  public static combine(results: Array<Result<any, null> | Result<null, ErrorInterface>>) {
-    const firstFailedResult = results.find((result) => result.isFailure);
+  public static combine<
+    Error extends Result<unknown, unknown>,
+    Success extends Result<unknown, unknown>
+  >(results: Array<Left<Error, Success> | Right<Error, Success>>): Either<Error, unknown> {
+    const firstFailedResult = results.find((result) => result.isLeft());
 
-    if (firstFailedResult) {
-      return firstFailedResult;
+    if (firstFailedResult && firstFailedResult.isLeft()) {
+      const error = firstFailedResult.value;
+
+      return left(error);
     }
 
-    return Result.pass();
+    return right(Result.pass());
   }
 }
