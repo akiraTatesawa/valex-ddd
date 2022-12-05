@@ -1,6 +1,7 @@
 import { Result } from "@core/logic/result";
 import { randNumber, randText, randWord } from "@ngneat/falso";
 import { DomainErrors } from "@core/domain/domain-error";
+import { Left, Right } from "@core/logic/either";
 import { EmployeeName } from "./employee-name";
 
 describe("Employee Name Value Object", () => {
@@ -10,11 +11,12 @@ describe("Employee Name Value Object", () => {
 
       const result = EmployeeName.create(name);
 
-      expect(result).toBeInstanceOf(Result);
-      expect(result.isSuccess).toEqual(true);
-      expect(result.error).toBeNull();
-      expect(result.value).toBeInstanceOf(EmployeeName);
-      expect(result.value?.value).toEqual(name);
+      expect(result).toBeInstanceOf(Right);
+      expect(result.isRight()).toEqual(true);
+      expect(result.value).toBeInstanceOf(Result);
+      expect(result.value.getError()).toBeNull();
+      expect(result.value.getValue()).toBeInstanceOf(EmployeeName);
+      expect(result.value.getValue()).toHaveProperty("value", name);
     });
   });
 
@@ -24,10 +26,13 @@ describe("Employee Name Value Object", () => {
 
       const result = EmployeeName.create(name);
 
-      expect(result).toBeInstanceOf(DomainErrors.InvalidPropsError);
-      expect(result.isFailure).toEqual(true);
-      expect(result.value).toBeNull();
-      expect(result.error?.message).toEqual("Employee Name cannot be longer than 30 characters");
+      expect(result).toBeInstanceOf(Left);
+      expect(result.isLeft()).toEqual(true);
+      expect(result.value).toBeInstanceOf(DomainErrors.InvalidPropsError);
+      expect(result.value.getValue()).toBeNull();
+      expect(result.value.getError()?.message).toEqual(
+        "Employee Name cannot be longer than 30 characters"
+      );
     });
 
     it("Should return an error if the name does not consist of just letters", () => {
@@ -35,10 +40,13 @@ describe("Employee Name Value Object", () => {
 
       const result = EmployeeName.create(name);
 
-      expect(result).toBeInstanceOf(DomainErrors.InvalidPropsError);
-      expect(result.isFailure).toEqual(true);
-      expect(result.value).toBeNull();
-      expect(result.error?.message).toEqual("Employee Name must consist of only letters");
+      expect(result).toBeInstanceOf(Left);
+      expect(result.isLeft()).toEqual(true);
+      expect(result.value).toBeInstanceOf(DomainErrors.InvalidPropsError);
+      expect(result.value.getValue()).toBeNull();
+      expect(result.value.getError()?.message).toEqual(
+        "Employee Name must consist of only letters"
+      );
     });
 
     it("Should return an error if the name is null or undefined", () => {
@@ -46,10 +54,11 @@ describe("Employee Name Value Object", () => {
 
       const result = EmployeeName.create(name);
 
-      expect(result).toBeInstanceOf(DomainErrors.InvalidPropsError);
-      expect(result.isFailure).toEqual(true);
-      expect(result.value).toBeNull();
-      expect(result.error?.message).toEqual("Employee Name cannot be null or undefined");
+      expect(result).toBeInstanceOf(Left);
+      expect(result.isLeft()).toEqual(true);
+      expect(result.value).toBeInstanceOf(DomainErrors.InvalidPropsError);
+      expect(result.value.getValue()).toBeNull();
+      expect(result.value.getError()?.message).toEqual("Employee Name cannot be null or undefined");
     });
   });
 });
