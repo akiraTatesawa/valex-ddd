@@ -22,26 +22,26 @@ export class CreateCardController extends BaseController {
 
     const result = await this.useCase.execute({ apiKey, employeeId, type });
 
-    if (result.error) {
-      const { message } = result.error;
+    if (result.isLeft()) {
+      const error = result.value;
 
-      switch (result.constructor) {
+      switch (error.constructor) {
         case DomainErrors.InvalidPropsError:
         case GetCompanyErrors.InvalidApiKeyError:
         case GetEmployeeErrors.InvalidEmployeeIdError:
-          return this.badRequest(res, message);
+          return this.badRequest(res, error.getError().message);
         case GetEmployeeErrors.NotFoundError:
         case GetCompanyErrors.NotFoundError:
-          return this.notFound(res, message);
+          return this.notFound(res, error.getError().message);
         case CreateCardErrors.EmployeeNotBelongToCompanyError:
-          return this.unprocessableEntity(res, message);
+          return this.unprocessableEntity(res, error.getError().message);
         case CreateCardErrors.ConflictCardType:
-          return this.conflict(res, message);
+          return this.conflict(res, error.getError().message);
         default:
-          return this.fail(res, message);
+          return this.fail(res, error.getError().message);
       }
     }
 
-    return this.created<CardDTO>(res, result.value);
+    return this.created<CardDTO>(res, result.value.getValue());
   }
 }

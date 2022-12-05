@@ -19,20 +19,20 @@ export class ActivateCardController extends BaseController {
 
     const result = await this.useCase.execute({ cardId, cvv, password });
 
-    if (result.error) {
-      const { message } = result.error;
+    if (result.isLeft()) {
+      const error = result.value;
 
-      switch (result.constructor) {
+      switch (error.constructor) {
         case CardUseCaseErrors.ExpiredCardError:
         case ActivateCardErrors.InvalidPasswordError:
         case ActivateCardErrors.CardIsAlreadyActiveError:
-          return this.badRequest(res, message);
+          return this.badRequest(res, error.getError().message);
         case CardUseCaseErrors.NotFoundError:
-          return this.notFound(res, message);
+          return this.notFound(res, error.getError().message);
         case CardUseCaseErrors.IncorrectCVVError:
-          return this.unauthorized(res, message);
+          return this.unauthorized(res, error.getError().message);
         default:
-          return this.fail(res, message);
+          return this.fail(res, error.getError().message);
       }
     }
 
