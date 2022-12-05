@@ -1,6 +1,6 @@
 import { ValueObject } from "@core/domain/value-object";
 import { Result } from "@core/logic/result";
-import { Either } from "@core/logic/either";
+import { Either, left, right } from "@core/logic/either";
 import { DomainErrors } from "@core/domain/domain-error";
 import { Guard } from "@core/logic/guard";
 
@@ -21,7 +21,7 @@ export class CardExpirationDate extends ValueObject<CardExpirationDateProps> {
     super(props);
   }
 
-  public getValue(): string {
+  public getStringExpirationDate(): string {
     return this.props.value;
   }
 
@@ -37,7 +37,7 @@ export class CardExpirationDate extends ValueObject<CardExpirationDateProps> {
     const guardResult = Guard.againstNonDate(expirationDate, "Card Expiration Date");
 
     if (!guardResult.succeeded) {
-      return DomainErrors.InvalidPropsError.create(guardResult.message);
+      return left(DomainErrors.InvalidPropsError.create(guardResult.message));
     }
 
     const expirationMonthNumber = expirationDate.getMonth() + 1;
@@ -53,7 +53,7 @@ export class CardExpirationDate extends ValueObject<CardExpirationDateProps> {
 
     const expirationDateString = `${expirationMonthFormatted}/${expirationYear}`;
 
-    return Result.ok<string>(expirationDateString);
+    return right(Result.ok<string>(expirationDateString));
   }
 
   public static create(expirationDate?: Date): CreateExpirationDateResult {
@@ -67,21 +67,21 @@ export class CardExpirationDate extends ValueObject<CardExpirationDateProps> {
       expirationDateTimestamp = expirationDate;
     }
 
-    const expirationDateStringOrError = CardExpirationDate.validate(expirationDateTimestamp);
+    const validationResult = CardExpirationDate.validate(expirationDateTimestamp);
 
-    if (expirationDateStringOrError.error) {
-      const { error } = expirationDateStringOrError;
+    if (validationResult.isLeft()) {
+      const expirationDateError = validationResult.value;
 
-      return DomainErrors.InvalidPropsError.create(error.message);
+      return left(expirationDateError);
     }
 
-    const expirationDateString = expirationDateStringOrError.value;
+    const expirationDateString = validationResult.value.getValue();
 
     const expirationDateEntity = new CardExpirationDate({
       value: expirationDateString,
       timestamp: expirationDateTimestamp,
     });
 
-    return Result.ok<CardExpirationDate>(expirationDateEntity);
+    return right(Result.ok<CardExpirationDate>(expirationDateEntity));
   }
 }
