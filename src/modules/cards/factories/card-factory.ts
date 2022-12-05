@@ -13,6 +13,6 @@ export class CardFactory extends Factory<Card> {
       ...props,
     });
 
-    return cardOrError.value!;
+    return cardOrError.value.getValue()!;
   }
 }

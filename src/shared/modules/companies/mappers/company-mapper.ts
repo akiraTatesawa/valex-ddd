@@ -16,6 +16,6 @@ export class CompanyMapper {
       ...persistence,
     });
 
-    return companyOrError.value!;
+    return companyOrError.value.getValue()!;
   }
 }

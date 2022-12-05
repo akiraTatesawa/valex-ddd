@@ -1,6 +1,6 @@
 import { ValueObject } from "@core/domain/value-object";
 import { Result } from "@core/logic/result";
-import { Either } from "@core/logic/either";
+import { Either, left, right } from "@core/logic/either";
 import { DomainErrors } from "@core/domain/domain-error";
 import { randCreditCardNumber } from "@ngneat/falso";
 
@@ -25,31 +25,35 @@ export class CardNumber extends ValueObject<CardNumberProps> {
     if (cardNumber === undefined) {
       const creditCardNumber = randCreditCardNumber({ brand: "Mastercard" }).replaceAll(" ", "");
 
-      return Result.ok<string>(creditCardNumber);
+      return right(Result.ok<string>(creditCardNumber));
     }
 
     const cardNumberRegex = /^[0-9]{16}$/;
 
     if (!cardNumberRegex.test(cardNumber)) {
-      return DomainErrors.InvalidPropsError.create(
-        "Card Number must be a 13 to 16 numeric digits string"
+      return left(
+        DomainErrors.InvalidPropsError.create(
+          "Card Number must be a 13 to 16 numeric digits string"
+        )
       );
     }
 
-    return Result.ok<string>(cardNumber);
+    return right(Result.ok<string>(cardNumber));
   }
 
   public static create(cardNumber?: string): CreateCardNumberResult {
-    const cardNumberOrError = CardNumber.validate(cardNumber);
+    const validationResult = CardNumber.validate(cardNumber);
 
-    if (cardNumberOrError.isFailure && cardNumberOrError.error) {
-      return DomainErrors.InvalidPropsError.create(cardNumberOrError.error.message);
+    if (validationResult.isLeft()) {
+      const cardNumberError = validationResult.value;
+
+      return left(cardNumberError);
     }
 
-    const cardNumberValue = cardNumberOrError.value!;
+    const cardNumberValue = validationResult.value.getValue();
 
     const cardNumberEntity = new CardNumber({ value: cardNumberValue });
 
-    return Result.ok<CardNumber>(cardNumberEntity);
+    return right(Result.ok<CardNumber>(cardNumberEntity));
   }
 }

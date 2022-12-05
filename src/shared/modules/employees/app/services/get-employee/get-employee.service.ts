@@ -2,6 +2,7 @@ import { EmployeeRepository } from "@shared/modules/employees/app/ports/employee
 import { Guard } from "@core/logic/guard";
 import { Result } from "@core/logic/result";
 import { Employee } from "@shared/modules/employees/domain/employee";
+import { left, right } from "@core/logic/either";
 import { GetEmployeeService } from "./get-employee.interface";
 import { GetEmployeeResponse } from "./get-employee.response";
 import { GetEmployeeErrors } from "./get-employee-errors/errors";
@@ -17,15 +18,15 @@ export class GetEmployeeImpl implements GetEmployeeService {
     const guardResult = Guard.againstNonUUID(id, "Employee ID");
 
     if (!guardResult.succeeded) {
-      return GetEmployeeErrors.InvalidEmployeeIdError.create(guardResult.message);
+      return left(GetEmployeeErrors.InvalidEmployeeIdError.create(guardResult.message));
     }
 
     const employee = await this.employeeRepo.findUnique({ id });
 
     if (!employee) {
-      return GetEmployeeErrors.NotFoundError.create();
+      return left(GetEmployeeErrors.NotFoundError.create());
     }
 
-    return Result.ok<Employee>(employee);
+    return right(Result.ok<Employee>(employee));
   }
 }

@@ -6,6 +6,7 @@ import { Card } from "@modules/cards/domain/card";
 import { CardFactory } from "@modules/cards/factories/card-factory";
 import { InMemoryCardRepository } from "@modules/cards/infra/database/in-memory/in-memory-card-repository";
 import { InMemoryDatabase } from "@infra/database/in-memory/in-memory.database";
+import { Left, Right } from "@core/logic/either";
 import { ActivateCardImpl, ActivateCardUseCase } from "./activate-card";
 import { CardUseCaseErrors } from "../../card-shared-errors/card-shared-errors";
 import { ActivateCardErrors } from "./activate-card-errors/errors";
@@ -35,10 +36,11 @@ describe("Activate Card Use Case", () => {
 
       const result = await sut.execute(activateCardReq);
 
-      expect(result).toBeInstanceOf(Result);
-      expect(result.isSuccess).toEqual(true);
-      expect(result.value).toBeNull();
-      expect(result.error).toBeNull();
+      expect(result).toBeInstanceOf(Right);
+      expect(result.isRight()).toEqual(true);
+      expect(result.value).toBeInstanceOf(Result);
+      expect(result.value.getValue()).toBeNull();
+      expect(result.value.getError()).toBeNull();
     });
   });
 
@@ -52,11 +54,11 @@ describe("Activate Card Use Case", () => {
 
       const result = await sut.execute(activateCardReq);
 
-      expect(result).toBeInstanceOf(CardUseCaseErrors.NotFoundError);
-      expect(result.isFailure).toEqual(true);
-      expect(result.value).toBeNull();
-      expect(result.error).toBeDefined();
-      expect(result.error?.message).toEqual("Card not found");
+      expect(result).toBeInstanceOf(Left);
+      expect(result.isLeft()).toEqual(true);
+      expect(result.value).toBeInstanceOf(CardUseCaseErrors.NotFoundError);
+      expect(result.value.getValue()).toBeNull();
+      expect(result.value.getError()?.message).toEqual("Card not found");
     });
 
     it("Should return an error if the card is already active", async () => {
@@ -69,11 +71,11 @@ describe("Activate Card Use Case", () => {
 
       const result = await sut.execute(activateCardReq);
 
-      expect(result).toBeInstanceOf(ActivateCardErrors.CardIsAlreadyActiveError);
-      expect(result.isFailure).toEqual(true);
-      expect(result.value).toBeNull();
-      expect(result.error).toBeDefined();
-      expect(result.error?.message).toEqual("The card is already active");
+      expect(result).toBeInstanceOf(Left);
+      expect(result.isLeft()).toEqual(true);
+      expect(result.value).toBeInstanceOf(ActivateCardErrors.CardIsAlreadyActiveError);
+      expect(result.value.getValue()).toBeNull();
+      expect(result.value.getError()?.message).toEqual("The card is already active");
     });
 
     it("Should return an error if the card is expired", async () => {
@@ -88,11 +90,11 @@ describe("Activate Card Use Case", () => {
 
       const result = await sut.execute(activateCardReq);
 
-      expect(result).toBeInstanceOf(CardUseCaseErrors.ExpiredCardError);
-      expect(result.isFailure).toEqual(true);
-      expect(result.value).toBeNull();
-      expect(result.error).toBeDefined();
-      expect(result.error?.message).toEqual("The card is expired");
+      expect(result).toBeInstanceOf(Left);
+      expect(result.isLeft()).toEqual(true);
+      expect(result.value).toBeInstanceOf(CardUseCaseErrors.ExpiredCardError);
+      expect(result.value.getValue()).toBeNull();
+      expect(result.value.getError()?.message).toEqual("The card is expired");
     });
 
     it("Should return an error if the CVV is incorrect", async () => {
@@ -104,11 +106,11 @@ describe("Activate Card Use Case", () => {
 
       const result = await sut.execute(activateCardReq);
 
-      expect(result).toBeInstanceOf(CardUseCaseErrors.IncorrectCVVError);
-      expect(result.isFailure).toEqual(true);
-      expect(result.value).toBeNull();
-      expect(result.error).toBeDefined();
-      expect(result.error?.message).toEqual("Incorrect Card CVV");
+      expect(result).toBeInstanceOf(Left);
+      expect(result.isLeft()).toEqual(true);
+      expect(result.value).toBeInstanceOf(CardUseCaseErrors.IncorrectCVVError);
+      expect(result.value.getValue()).toBeNull();
+      expect(result.value.getError()?.message).toEqual("Incorrect Card CVV");
     });
 
     it("Should return an error if the password is not a 4 digits string", async () => {
@@ -120,11 +122,13 @@ describe("Activate Card Use Case", () => {
 
       const result = await sut.execute(activateCardReq);
 
-      expect(result).toBeInstanceOf(ActivateCardErrors.InvalidPasswordError);
-      expect(result.isFailure).toEqual(true);
-      expect(result.value).toBeNull();
-      expect(result.error).toBeDefined();
-      expect(result.error?.message).toEqual("Card Password must be a 4 numeric digits string");
+      expect(result).toBeInstanceOf(Left);
+      expect(result.isLeft()).toEqual(true);
+      expect(result.value).toBeInstanceOf(ActivateCardErrors.InvalidPasswordError);
+      expect(result.value.getValue()).toBeNull();
+      expect(result.value.getError()?.message).toEqual(
+        "Card Password must be a 4 numeric digits string"
+      );
     });
   });
 });

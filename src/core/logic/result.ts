@@ -1,4 +1,4 @@
-import { ErrorInterface } from "@core/domain/error";
+import { Left, right, Right, left, Either } from "@core/logic/either";
 
 export class Result<Value, Error> {
   public readonly isSuccess: boolean;
@@ -16,12 +16,12 @@ export class Result<Value, Error> {
     this._value = value;
   }
 
-  public get value(): Value {
-    return this._value as Value;
+  public getValue(): Value {
+    return this._value;
   }
 
-  public get error(): Error {
-    return this._error as Error;
+  public getError(): Error {
+    return this._error;
   }
 
   public static ok<T>(value: T) {
@@ -32,17 +32,18 @@ export class Result<Value, Error> {
     return new Result<null, null>(true, null, null);
   }
 
-  public static fail<U>(error: U) {
-    return new Result<null, U>(false, error, null);
-  }
+  public static combine<
+    Error extends Result<unknown, unknown>,
+    Success extends Result<unknown, unknown>
+  >(results: Array<Left<Error, Success> | Right<Error, Success>>): Either<Error, unknown> {
+    const firstFailedResult = results.find((result) => result.isLeft());
 
-  public static combine(results: Array<Result<any, null> | Result<null, ErrorInterface>>) {
-    const firstFailedResult = results.find((result) => result.isFailure);
+    if (firstFailedResult && firstFailedResult.isLeft()) {
+      const error = firstFailedResult.value;
 
-    if (firstFailedResult) {
-      return firstFailedResult;
+      return left(error);
     }
 
-    return Result.pass();
+    return right(Result.pass());
   }
 }

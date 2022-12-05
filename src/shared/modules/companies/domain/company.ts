@@ -1,8 +1,8 @@
-import { Either } from "@core/logic/either";
+import { randomUUID } from "crypto";
+import { Either, right, left } from "@core/logic/either";
 import { DomainErrors } from "@core/domain/domain-error";
 import { Result } from "@core/logic/result";
 import { Entity } from "@core/domain/entity";
-import { randomUUID } from "crypto";
 import { Guard } from "@core/logic/guard";
 import { CompanyName } from "./company-name";
 
@@ -42,52 +42,54 @@ export class Company extends Entity<CompanyProps> {
 
   private static validateId(id: string | undefined): ValidatePropsResult {
     if (id === undefined) {
-      return Result.pass();
+      return right(Result.pass());
     }
 
     const guardResult = Guard.againstNonUUID(id, "Company ID");
 
     if (!guardResult.succeeded) {
-      return DomainErrors.InvalidPropsError.create(guardResult.message);
+      return left(DomainErrors.InvalidPropsError.create(guardResult.message));
     }
 
-    return Result.pass();
+    return right(Result.pass());
   }
 
   private static validateApiKey(apiKey: string | undefined): ValidatePropsResult {
     if (apiKey === undefined) {
-      return Result.pass();
+      return right(Result.pass());
     }
 
     const guardResult = Guard.againstNonUUID(apiKey, "Company API KEY");
 
     if (!guardResult.succeeded) {
-      return DomainErrors.InvalidPropsError.create(guardResult.message);
+      return left(DomainErrors.InvalidPropsError.create(guardResult.message));
     }
 
-    return Result.pass();
+    return right(Result.pass());
   }
 
   private static validateCreatedAt(createdAt: Date | undefined): ValidatePropsResult {
     if (createdAt === undefined) {
-      return Result.pass();
+      return right(Result.pass());
     }
     const guardResult = Guard.againstNonDate(createdAt, "Company Created At");
 
     if (!guardResult.succeeded) {
-      return DomainErrors.InvalidPropsError.create(guardResult.message);
+      return left(DomainErrors.InvalidPropsError.create(guardResult.message));
     }
 
-    return Result.pass();
+    return right(Result.pass());
   }
 
   public static create(createProps: CreateCompanyProps): CreateCompanyResult {
     const { id, name, apiKey, createdAt } = createProps;
 
-    const companyNameOrError = CompanyName.create(name);
+    const companyNameResult = CompanyName.create(name);
 
-    if (companyNameOrError.isFailure && companyNameOrError.error) {
-      return companyNameOrError;
+    if (companyNameResult.isLeft()) {
+      const companyNameError = companyNameResult.value;
+
+      return left(companyNameError);
     }
 
     const results = [
@@ -98,11 +100,13 @@ export class Company extends Entity<CompanyProps> {
 
     const combinedResult = Result.combine(results);
 
-    if (combinedResult.isFailure && combinedResult.error) {
-      return combinedResult;
+    if (combinedResult.isLeft()) {
+      const error = combinedResult.value;
+
+      return left(error);
     }
 
-    const companyName = companyNameOrError.value!;
+    const companyName = companyNameResult.value.getValue();
     const companyAPIKey = apiKey ?? randomUUID();
     const companyCreatedAt = createdAt ?? new Date();
 
@@ -115,6 +119,6 @@ export class Company extends Entity<CompanyProps> {
       id
     );
 
-    return Result.ok<Company>(companyEntity);
+    return right(Result.ok<Company>(companyEntity));
   }
 }

@@ -1,5 +1,5 @@
 import { ValueObject } from "@core/domain/value-object";
-import { Either } from "@core/logic/either";
+import { Either, left, right } from "@core/logic/either";
 import { Result } from "@core/logic/result";
 import { DomainErrors } from "@core/domain/domain-error";
 
@@ -23,23 +23,27 @@ export class EmployeeCPF extends ValueObject<EmployeeCpfProps> {
     const cpfRegex = /^[0-9]{11}$/;
 
     if (!cpfRegex.test(cpf)) {
-      return DomainErrors.InvalidPropsError.create(
-        "Employee CPF must be an eleven numeric digits string"
+      return left(
+        DomainErrors.InvalidPropsError.create(
+          "Employee CPF must be an eleven numeric digits string"
+        )
       );
     }
 
-    return Result.pass();
+    return right(Result.pass());
   }
 
   public static create(cpf: string): EmployeeCPFCreateResult {
     const validationResult = EmployeeCPF.validate(cpf);
 
-    if (validationResult.isFailure && validationResult.error) {
-      return validationResult;
+    if (validationResult.isLeft()) {
+      const error = validationResult.value;
+
+      return left(error);
     }
 
     const employeeCpf = new EmployeeCPF({ value: cpf });
 
-    return Result.ok<EmployeeCPF>(employeeCpf);
+    return right(Result.ok<EmployeeCPF>(employeeCpf));
   }
 }

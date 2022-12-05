@@ -7,6 +7,7 @@ import { Card } from "@modules/cards/domain/card";
 import { Result } from "@core/logic/result";
 import { CardDTO } from "@modules/cards/dtos/card.dto";
 import { CardMapper } from "@modules/cards/mappers/card-mapper";
+import { left, right } from "@core/logic/either";
 import { CreateCardResponse } from "./create-card.response";
 import { CreateCardErrors } from "./create-card-errors/errors";
 
@@ -42,45 +43,53 @@ export class CreateCardImpl implements CreateCardUseCase {
   public async execute(reqData: CreateCardDTO): Promise<CreateCardResponse> {
     const { apiKey, employeeId, type } = reqData;
 
-    const companyOrError = await this.getCompanyService.getCompany(apiKey);
-    const { error: companyError, value: company } = companyOrError;
+    const getCompanyResult = await this.getCompanyService.getCompany(apiKey);
 
-    if (companyError) {
-      return companyOrError;
+    if (getCompanyResult.isLeft()) {
+      const getCompanyError = getCompanyResult.value;
+
+      return left(getCompanyError);
     }
 
-    const employeeOrError = await this.getEmployeeService.getEmployee(employeeId);
-    const { error: employeeError, value: employee } = employeeOrError;
+    const getEmployeeResult = await this.getEmployeeService.getEmployee(employeeId);
 
-    if (employeeError) {
-      return employeeOrError;
+    if (getEmployeeResult.isLeft()) {
+      const getEmployeeError = getEmployeeResult.value;
+
+      return left(getEmployeeError);
     }
+
+    const company = getCompanyResult.value.getValue();
+    const employee = getEmployeeResult.value.getValue();
 
     if (employee.companyId !== company._id) {
-      return CreateCardErrors.EmployeeNotBelongToCompanyError.create();
+      return left(CreateCardErrors.EmployeeNotBelongToCompanyError.create());
     }
 
     const isCardUnique = await this.isUnique({ employeeId, type });
 
     if (!isCardUnique) {
-      return CreateCardErrors.ConflictCardType.create(type);
+      return left(CreateCardErrors.ConflictCardType.create(type));
     }
 
-    const cardOrError = Card.create({
+    const cardEntityResult = Card.create({
       employeeId: employee._id,
       cardholderName: employee.fullName.value,
       type,
     });
-    const { error: cardError, value: card } = cardOrError;
 
-    if (cardError) {
-      return cardOrError;
+    if (cardEntityResult.isLeft()) {
+      const cardEntityError = cardEntityResult.value;
+
+      return left(cardEntityError);
     }
+
+    const card = cardEntityResult.value.getValue();
 
     await this.cardRepository.save(card);
 
     const cardDTO = CardMapper.toDTO(card);
 
-    return Result.ok<CardDTO>(cardDTO);
+    return right(Result.ok<CardDTO>(cardDTO));
   }
 }

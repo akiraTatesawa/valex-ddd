@@ -14,6 +14,6 @@ export class EmployeeFactory extends Factory<Employee> {
       ...props,
     });
 
-    return employeeOrError.value!;
+    return employeeOrError.value.getValue()!;
   }
 }

@@ -1,6 +1,6 @@
 import { DomainErrors } from "@core/domain/domain-error";
 import { ValueObject } from "@core/domain/value-object";
-import { Either } from "@core/logic/either";
+import { Either, left, right } from "@core/logic/either";
 import { Guard } from "@core/logic/guard";
 import { Result } from "@core/logic/result";
 
@@ -30,27 +30,29 @@ export class CompanyName extends ValueObject<CompanyNameProps> {
     const combinedResult = Guard.combineResults(guardResults);
 
     if (!combinedResult.succeeded) {
-      return DomainErrors.InvalidPropsError.create(combinedResult.message);
+      return left(DomainErrors.InvalidPropsError.create(combinedResult.message));
     }
 
     if (name.length > 30) {
-      return DomainErrors.InvalidPropsError.create(
-        "Company Name cannot be longer than 30 characters"
+      return left(
+        DomainErrors.InvalidPropsError.create("Company Name cannot be longer than 30 characters")
       );
     }
 
-    return Result.pass();
+    return right(Result.pass());
   }
 
   public static create(name: string): CompanyNameCreateResult {
-    const validationResultOrError = CompanyName.validate(name);
+    const validationResult = CompanyName.validate(name);
 
-    if (validationResultOrError.isFailure && validationResultOrError.error) {
-      return validationResultOrError;
+    if (validationResult.isLeft()) {
+      const domainError = validationResult.value;
+
+      return left(domainError);
     }
 
     const companyNameValueObject = new CompanyName({ value: name });
 
-    return Result.ok<CompanyName>(companyNameValueObject);
+    return right(Result.ok<CompanyName>(companyNameValueObject));
   }
 }

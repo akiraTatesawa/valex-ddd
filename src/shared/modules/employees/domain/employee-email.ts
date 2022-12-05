@@ -1,6 +1,6 @@
 import { ValueObject } from "@core/domain/value-object";
 import { Result } from "@core/logic/result";
-import { Either } from "@core/logic/either";
+import { Either, left, right } from "@core/logic/either";
 import { DomainErrors } from "@core/domain/domain-error";
 import { Guard } from "@core/logic/guard";
 
@@ -28,28 +28,30 @@ export class EmployeeEmail extends ValueObject<EmployeeEmailProps> {
     const guardResult = Guard.againstNullOrUndefined(email, "Employee Email");
 
     if (!guardResult.succeeded) {
-      return DomainErrors.InvalidPropsError.create(guardResult.message);
+      return left(DomainErrors.InvalidPropsError.create(guardResult.message));
     }
 
     const emailRegex =
       /[-!#$%&'*+/0-9=?A-Z^_a-z`{|}~](\.?[-!#$%&'*+/0-9=?A-Z^_a-z`{|}~])*@[a-zA-Z0-9](-*\.?[a-zA-Z0-9])*\.[a-zA-Z](-?[a-zA-Z0-9])+$/;
 
     if (!emailRegex.test(email)) {
-      return DomainErrors.InvalidPropsError.create("Employee Email must be a valid email");
+      return left(DomainErrors.InvalidPropsError.create("Employee Email must be a valid email"));
     }
 
-    return Result.pass();
+    return right(Result.pass());
   }
 
   public static create(email: string): EmployeeEmailCreateResult {
     const validationResult = EmployeeEmail.validate(email);
 
-    if (validationResult.isFailure && validationResult.error) {
-      return validationResult;
+    if (validationResult.isLeft()) {
+      const validationError = validationResult.value;
+
+      return left(validationError);
     }
 
     const employeeEmail = new EmployeeEmail({ value: email });
 
-    return Result.ok<EmployeeEmail>(employeeEmail);
+    return right(Result.ok<EmployeeEmail>(employeeEmail));
   }
 }

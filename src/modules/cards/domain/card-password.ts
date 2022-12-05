@@ -1,7 +1,7 @@
 import bcrypt from "bcrypt";
 import { ValueObject } from "@core/domain/value-object";
 import { Result } from "@core/logic/result";
-import { Either } from "@core/logic/either";
+import { Either, left, right } from "@core/logic/either";
 import { DomainErrors } from "@core/domain/domain-error";
 
 interface CardPasswordProps {
@@ -33,19 +33,21 @@ export class CardPassword extends ValueObject<CardPasswordProps> {
     const passwordRegex = /^[0-9]{4}$/;
 
     if (!passwordRegex.test(password)) {
-      return DomainErrors.InvalidPropsError.create(
-        "Card Password must be a 4 numeric digits string"
+      return left(
+        DomainErrors.InvalidPropsError.create("Card Password must be a 4 numeric digits string")
       );
     }
 
-    return Result.pass();
+    return right(Result.pass());
   }
 
   public static create(password: string, isHashed: boolean = false): CreateCardPasswordResult {
-    const validation = CardPassword.validate(password);
+    const validationResult = CardPassword.validate(password);
 
-    if (validation.error && validation.isFailure && !isHashed) {
-      return DomainErrors.InvalidPropsError.create(validation.error.message);
+    if (validationResult.isLeft() && !isHashed) {
+      const validationError = validationResult.value;
+
+      return left(validationError);
     }
 
     let hashedPassword: string = password;
@@ -56,6 +58,6 @@ export class CardPassword extends ValueObject<CardPasswordProps> {
 
     const cardPassword = new CardPassword({ value: hashedPassword });
 
-    return Result.ok<CardPassword>(cardPassword);
+    return right(Result.ok<CardPassword>(cardPassword));
   }
 }

@@ -1,8 +1,8 @@
 import { InMemoryDatabase } from "@infra/database/in-memory/in-memory.database";
 
-import { randCompanyName } from "@ngneat/falso";
 import { CompanyRepository } from "@shared/modules/companies/app/ports/company-repository";
 import { Company } from "@shared/modules/companies/domain/company";
+import { CompanyFactory } from "@shared/modules/companies/factories/company-factory";
 import { InMemoryCompanyRepository } from "./in-memory-company-repository";
 
 describe("In Memory Company Repository", () => {
@@ -14,9 +14,7 @@ describe("In Memory Company Repository", () => {
   });
 
   it("Should be able to save a company", async () => {
-    const company = Company.create({
-      name: randCompanyName(),
-    }).value!;
+    const company = new CompanyFactory().generate();
 
     const result = await sut.save(company);
 
@@ -24,9 +22,7 @@ describe("In Memory Company Repository", () => {
   });
 
   it("Should be able to get a company by name", async () => {
-    const company = Company.create({
-      name: randCompanyName(),
-    }).value!;
+    const company = new CompanyFactory().generate();
     await sut.save(company);
 
     const result = await sut.findUnique({ name: company.name.value });
@@ -36,9 +32,7 @@ describe("In Memory Company Repository", () => {
   });
 
   it("Should be able to get a company by ID", async () => {
-    const company = Company.create({
-      name: randCompanyName(),
-    }).value!;
+    const company = new CompanyFactory().generate();
     await sut.save(company);
 
     const result = await sut.findUnique({ id: company._id });
@@ -48,9 +42,7 @@ describe("In Memory Company Repository", () => {
   });
 
   it("Should return null if the company is not registered", async () => {
-    const company = Company.create({
-      name: randCompanyName(),
-    }).value!;
+    const company = new CompanyFactory().generate();
 
     const result = await sut.findUnique({ id: company._id });
 

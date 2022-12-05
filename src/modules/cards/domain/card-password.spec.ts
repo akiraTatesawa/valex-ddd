@@ -1,6 +1,7 @@
 import { Result } from "@core/logic/result";
 import { DomainErrors } from "@core/domain/domain-error";
 import { randFullName } from "@ngneat/falso";
+import { Left, Right } from "@core/logic/either";
 import { CardPassword } from "./card-password";
 
 describe("Card Password Value Object", () => {
@@ -10,11 +11,12 @@ describe("Card Password Value Object", () => {
 
       const result = CardPassword.create(password);
 
-      expect(result).toBeInstanceOf(Result);
-      expect(result.isSuccess).toEqual(true);
-      expect(result.error).toBeNull();
-      expect(result.value).toBeInstanceOf(CardPassword);
-      expect(result.value?.value).not.toEqual(password);
+      expect(result).toBeInstanceOf(Right);
+      expect(result.isRight()).toEqual(true);
+      expect(result.value).toBeInstanceOf(Result);
+      expect(result.value.getError()).toBeNull();
+      expect(result.value.getValue()).toBeInstanceOf(CardPassword);
+      expect(result.value.getValue()?.value).not.toEqual(password);
     });
 
     it("Should be able to create a card password without hashing", () => {
@@ -22,11 +24,12 @@ describe("Card Password Value Object", () => {
 
       const result = CardPassword.create(password, true);
 
-      expect(result).toBeInstanceOf(Result);
-      expect(result.isSuccess).toEqual(true);
-      expect(result.error).toBeNull();
-      expect(result.value).toBeInstanceOf(CardPassword);
-      expect(result.value?.value).toEqual(password);
+      expect(result).toBeInstanceOf(Right);
+      expect(result.isRight()).toEqual(true);
+      expect(result.value).toBeInstanceOf(Result);
+      expect(result.value.getError()).toBeNull();
+      expect(result.value.getValue()).toBeInstanceOf(CardPassword);
+      expect(result.value.getValue()?.value).toEqual(password);
     });
 
     it("Should be able to compare a value against the password an return 'true' if its correct", () => {
@@ -34,11 +37,12 @@ describe("Card Password Value Object", () => {
 
       const result = CardPassword.create(password);
 
-      expect(result).toBeInstanceOf(Result);
-      expect(result.isSuccess).toEqual(true);
-      expect(result.error).toBeNull();
-      expect(result.value).toBeInstanceOf(CardPassword);
-      expect(result.value?.compare(password)).toEqual(true);
+      expect(result).toBeInstanceOf(Right);
+      expect(result.isRight()).toEqual(true);
+      expect(result.value).toBeInstanceOf(Result);
+      expect(result.value.getError()).toBeNull();
+      expect(result.value.getValue()).toBeInstanceOf(CardPassword);
+      expect(result.value.getValue()?.compare(password)).toEqual(true);
     });
 
     it("Should be able to compare a value against the password an return 'false' if its incorrect", () => {
@@ -46,11 +50,12 @@ describe("Card Password Value Object", () => {
 
       const result = CardPassword.create(password);
 
-      expect(result).toBeInstanceOf(Result);
-      expect(result.isSuccess).toEqual(true);
-      expect(result.error).toBeNull();
-      expect(result.value).toBeInstanceOf(CardPassword);
-      expect(result.value?.compare("")).toEqual(false);
+      expect(result).toBeInstanceOf(Right);
+      expect(result.isRight()).toEqual(true);
+      expect(result.value).toBeInstanceOf(Result);
+      expect(result.value.getError()).toBeNull();
+      expect(result.value.getValue()).toBeInstanceOf(CardPassword);
+      expect(result.value.getValue()?.compare(" ")).toEqual(false);
     });
   });
 
@@ -60,8 +65,13 @@ describe("Card Password Value Object", () => {
 
       const result = CardPassword.create(invalidPassword);
 
-      expect(result).toBeInstanceOf(DomainErrors.InvalidPropsError);
-      expect(result.error?.message).toEqual("Card Password must be a 4 numeric digits string");
+      expect(result).toBeInstanceOf(Left);
+      expect(result.isLeft()).toEqual(true);
+      expect(result.value).toBeInstanceOf(DomainErrors.InvalidPropsError);
+      expect(result.value.getValue()).toBeNull();
+      expect(result.value.getError()?.message).toEqual(
+        "Card Password must be a 4 numeric digits string"
+      );
     });
   });
 });

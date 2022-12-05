@@ -1,5 +1,5 @@
 import { ValueObject } from "@core/domain/value-object";
-import { Either } from "@core/logic/either";
+import { Either, left, right } from "@core/logic/either";
 import { Result } from "@core/logic/result";
 import { DomainErrors } from "@core/domain/domain-error";
 import { Guard } from "@core/logic/guard";
@@ -49,16 +49,18 @@ export class CardholderName extends ValueObject<CardholderNameProps> {
     const guardResult = Guard.againstNullOrUndefined(cardholderName, "Cardholder Name");
 
     if (!guardResult.succeeded) {
-      return DomainErrors.InvalidPropsError.create(guardResult.message);
+      return left(DomainErrors.InvalidPropsError.create(guardResult.message));
     }
 
     const nameRegex = /^[\p{L}\s-]+$/gu;
 
     if (!nameRegex.test(cardholderName)) {
-      return DomainErrors.InvalidPropsError.create("Cardholder Name must consist of only letters");
+      return left(
+        DomainErrors.InvalidPropsError.create("Cardholder Name must consist of only letters")
+      );
     }
 
-    return Result.pass();
+    return right(Result.pass());
   }
 
   public static create(
@@ -67,8 +69,10 @@ export class CardholderName extends ValueObject<CardholderNameProps> {
   ): CreateCardholderNameResult {
     const validationResult = CardholderName.validate(cardholderName);
 
-    if (validationResult.isFailure && validationResult.error) {
-      return DomainErrors.InvalidPropsError.create(validationResult.error.message);
+    if (validationResult.isLeft()) {
+      const validationError = validationResult.value;
+
+      return left(validationError);
     }
 
     let formattedName: string = cardholderName;
@@ -79,6 +83,6 @@ export class CardholderName extends ValueObject<CardholderNameProps> {
 
     const cardholderNameEntity = new CardholderName({ value: formattedName });
 
-    return Result.ok<CardholderName>(cardholderNameEntity);
+    return right(Result.ok<CardholderName>(cardholderNameEntity));
   }
 }

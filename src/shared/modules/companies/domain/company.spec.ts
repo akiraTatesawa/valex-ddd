@@ -1,6 +1,7 @@
 import { randPastDate, randUuid, randText, randNumber } from "@ngneat/falso";
 import { Result } from "@core/logic/result";
 import { DomainErrors } from "@core/domain/domain-error";
+import { Left, Right } from "@core/logic/either";
 import { Company } from "./company";
 import { CompanyName } from "./company-name";
 
@@ -11,14 +12,16 @@ describe("Company Entity", () => {
 
       const result = Company.create({ name });
 
-      expect(result).toBeInstanceOf(Result);
-      expect(result.isSuccess).toEqual(true);
-      expect(result.error).toBeNull();
-      expect(result.value).toBeInstanceOf(Company);
-      expect(result.value).toHaveProperty("_id");
-      expect(result.value).toHaveProperty("createdAt");
-      expect(result.value).toHaveProperty("apiKey");
-      expect(result.value?.name).toBeInstanceOf(CompanyName);
+      expect(result).toBeInstanceOf(Right);
+      expect(result.isRight()).toEqual(true);
+      expect(result.value.getError()).toBeNull();
+      expect(result.value).toBeInstanceOf(Result);
+      expect(result.value.getValue()).toBeInstanceOf(Company);
+      expect(result.value.getValue()).toHaveProperty("_id");
+      expect(result.value.getValue()).toHaveProperty("createdAt");
+      expect(result.value.getValue()).toHaveProperty("apiKey");
+      expect(result.value.getValue()?.name).toBeInstanceOf(CompanyName);
+      expect(result.value.getValue()).toHaveProperty("name.value", name);
     });
 
     it("Should be able to create a Company passing optional props", () => {
@@ -29,14 +32,16 @@ describe("Company Entity", () => {
 
       const result = Company.create({ id, name, apiKey, createdAt });
 
-      expect(result).toBeInstanceOf(Result);
-      expect(result.isSuccess).toEqual(true);
-      expect(result.error).toBeNull();
-      expect(result.value).toBeInstanceOf(Company);
-      expect(result.value).toHaveProperty("_id", id);
-      expect(result.value).toHaveProperty("createdAt", createdAt);
-      expect(result.value).toHaveProperty("apiKey", apiKey);
-      expect(result.value?.name).toBeInstanceOf(CompanyName);
+      expect(result).toBeInstanceOf(Right);
+      expect(result.isRight()).toEqual(true);
+      expect(result.value.getError()).toBeNull();
+      expect(result.value).toBeInstanceOf(Result);
+      expect(result.value.getValue()).toBeInstanceOf(Company);
+      expect(result.value.getValue()).toHaveProperty("_id", id);
+      expect(result.value.getValue()).toHaveProperty("createdAt", createdAt);
+      expect(result.value.getValue()).toHaveProperty("apiKey", apiKey);
+      expect(result.value.getValue()?.name).toBeInstanceOf(CompanyName);
+      expect(result.value.getValue()).toHaveProperty("name.value", name);
     });
   });
 
@@ -46,10 +51,11 @@ describe("Company Entity", () => {
 
       const result = Company.create({ name });
 
-      expect(result).toBeInstanceOf(DomainErrors.InvalidPropsError);
-      expect(result.isFailure).toEqual(true);
-      expect(result.value).toBeNull();
-      expect(result.error?.message).toEqual("Company Name cannot be null or undefined");
+      expect(result).toBeInstanceOf(Left);
+      expect(result.isLeft()).toEqual(true);
+      expect(result.value).toBeInstanceOf(DomainErrors.InvalidPropsError);
+      expect(result.value.getValue()).toBeNull();
+      expect(result.value.getError()?.message).toEqual("Company Name cannot be null or undefined");
     });
 
     it("Should return an error if the company id is not an uuid", () => {
@@ -58,10 +64,11 @@ describe("Company Entity", () => {
 
       const result = Company.create({ name, id });
 
-      expect(result).toBeInstanceOf(DomainErrors.InvalidPropsError);
-      expect(result.isFailure).toEqual(true);
-      expect(result.value).toBeNull();
-      expect(result.error?.message).toEqual("Company ID must be a valid UUID");
+      expect(result).toBeInstanceOf(Left);
+      expect(result.isLeft()).toEqual(true);
+      expect(result.value).toBeInstanceOf(DomainErrors.InvalidPropsError);
+      expect(result.value.getValue()).toBeNull();
+      expect(result.value.getError()?.message).toEqual("Company ID must be a valid UUID");
     });
 
     it("Should return an error if the company api key is not an uuid", () => {
@@ -70,10 +77,11 @@ describe("Company Entity", () => {
 
       const result = Company.create({ name, apiKey });
 
-      expect(result).toBeInstanceOf(DomainErrors.InvalidPropsError);
-      expect(result.isFailure).toEqual(true);
-      expect(result.value).toBeNull();
-      expect(result.error?.message).toEqual("Company API KEY must be a valid UUID");
+      expect(result).toBeInstanceOf(Left);
+      expect(result.isLeft()).toEqual(true);
+      expect(result.value).toBeInstanceOf(DomainErrors.InvalidPropsError);
+      expect(result.value.getValue()).toBeNull();
+      expect(result.value.getError()?.message).toEqual("Company API KEY must be a valid UUID");
     });
 
     it("Should return an error if the company createdAt is not a valid date", () => {
@@ -82,10 +90,11 @@ describe("Company Entity", () => {
 
       const result = Company.create({ name, createdAt });
 
-      expect(result).toBeInstanceOf(DomainErrors.InvalidPropsError);
-      expect(result.isFailure).toEqual(true);
-      expect(result.value).toBeNull();
-      expect(result.error?.message).toEqual("Company Created At must be a Date");
+      expect(result).toBeInstanceOf(Left);
+      expect(result.isLeft()).toEqual(true);
+      expect(result.value).toBeInstanceOf(DomainErrors.InvalidPropsError);
+      expect(result.value.getValue()).toBeNull();
+      expect(result.value.getError()?.message).toEqual("Company Created At must be a Date");
     });
   });
 });

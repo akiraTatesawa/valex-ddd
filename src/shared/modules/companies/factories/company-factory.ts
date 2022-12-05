@@ -16,6 +16,6 @@ export class CompanyFactory extends Factory<Company> {
       ...props,
     });
 
-    return companyOrError.value!;
+    return companyOrError.value.getValue()!;
   }
 }

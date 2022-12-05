@@ -1,6 +1,7 @@
 import { randNumber } from "@ngneat/falso";
 import { Result } from "@core/logic/result";
 import { DomainErrors } from "@core/domain/domain-error";
+import { Right, Left } from "@core/logic/either";
 import { CardholderName } from "./cardholder-name";
 
 describe("Cardholder Name Value Object", () => {
@@ -11,10 +12,12 @@ describe("Cardholder Name Value Object", () => {
 
       const result = CardholderName.create(name);
 
-      expect(result).toBeInstanceOf(Result);
-      expect(result.isSuccess).toEqual(true);
-      expect(result.value).toBeInstanceOf(CardholderName);
-      expect(result.value?.value).toEqual(formattedNameExpect);
+      expect(result).toBeInstanceOf(Right);
+      expect(result.isRight()).toEqual(true);
+      expect(result.value).toBeInstanceOf(Result);
+      expect(result.value.getError()).toBeNull();
+      expect(result.value.getValue()).toBeInstanceOf(CardholderName);
+      expect(result.value.getValue()?.value).toEqual(formattedNameExpect);
     });
 
     it("Should be able to create a cardholder name without formatting the name", () => {
@@ -22,10 +25,12 @@ describe("Cardholder Name Value Object", () => {
 
       const result = CardholderName.create(name, true);
 
-      expect(result).toBeInstanceOf(Result);
-      expect(result.isSuccess).toEqual(true);
-      expect(result.value).toBeInstanceOf(CardholderName);
-      expect(result.value?.value).toEqual(name);
+      expect(result).toBeInstanceOf(Right);
+      expect(result.isRight()).toEqual(true);
+      expect(result.value).toBeInstanceOf(Result);
+      expect(result.value.getError()).toBeNull();
+      expect(result.value.getValue()).toBeInstanceOf(CardholderName);
+      expect(result.value.getValue()?.value).toEqual(name);
     });
   });
 
@@ -35,9 +40,13 @@ describe("Cardholder Name Value Object", () => {
 
       const result = CardholderName.create(name);
 
-      expect(result).toBeInstanceOf(DomainErrors.InvalidPropsError);
-      expect(result.isFailure).toEqual(true);
-      expect(result.error?.message).toEqual("Cardholder Name must consist of only letters");
+      expect(result).toBeInstanceOf(Left);
+      expect(result.isLeft()).toEqual(true);
+      expect(result.value).toBeInstanceOf(DomainErrors.InvalidPropsError);
+      expect(result.value.getValue()).toBeNull();
+      expect(result.value.getError()?.message).toEqual(
+        "Cardholder Name must consist of only letters"
+      );
     });
 
     it("Should not be able to create a cardholder name if the name is null", () => {
@@ -45,9 +54,13 @@ describe("Cardholder Name Value Object", () => {
 
       const result = CardholderName.create(name);
 
-      expect(result).toBeInstanceOf(DomainErrors.InvalidPropsError);
-      expect(result.isFailure).toEqual(true);
-      expect(result.error?.message).toEqual("Cardholder Name cannot be null or undefined");
+      expect(result).toBeInstanceOf(Left);
+      expect(result.isLeft()).toEqual(true);
+      expect(result.value).toBeInstanceOf(DomainErrors.InvalidPropsError);
+      expect(result.value.getValue()).toBeNull();
+      expect(result.value.getError()?.message).toEqual(
+        "Cardholder Name cannot be null or undefined"
+      );
     });
   });
 });

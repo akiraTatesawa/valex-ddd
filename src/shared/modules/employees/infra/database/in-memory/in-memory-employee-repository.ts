@@ -1,8 +1,10 @@
 import { InMemoryDatabase } from "@infra/database/in-memory/in-memory.database";
-import { EmployeeFindUniqueArgs, EmployeeRepository } from "@shared/modules/employees/app/ports/employee-repository";
-import { Employee } from '@shared/modules/employees/domain/employee';
+import {
+  EmployeeFindUniqueArgs,
+  EmployeeRepository,
+} from "@shared/modules/employees/app/ports/employee-repository";
+import { Employee } from "@shared/modules/employees/domain/employee";
 import { EmployeeMapper } from "@shared/modules/employees/mapper/employee-mapper";
-
 
 export class InMemoryEmployeeRepository implements EmployeeRepository {
   private readonly database: InMemoryDatabase;
