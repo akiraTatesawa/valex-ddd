@@ -28,7 +28,7 @@ A API é responsável pela criação, ativação e recarga de cartões, assim co
 
 ## 🚧 Status
 
-![status-ongoing](https://img.shields.io/badge/status-ongoing-yellow?style=for-the-badge)
+![status-ongoing](https://img.shields.io/badge/status-em%20andamento-yellow?style=for-the-badge)
 
 ## 🧰 Tecnologias
 
