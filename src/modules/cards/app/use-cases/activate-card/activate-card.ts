@@ -2,6 +2,7 @@ import { UseCase } from "@core/app/use-case";
 import { ActivateCardDTO } from "@modules/cards/dtos/activate-card.dto";
 import { CardRepository } from "@modules/cards/app/ports/card-repository";
 import { Result } from "@core/logic/result";
+import { left, right } from "@core/logic/either";
 import { ActivateCardResponse } from "./activate-card.response";
 import { CardUseCaseErrors } from "../../card-shared-errors/card-shared-errors";
 import { ActivateCardErrors } from "./activate-card-errors/errors";
@@ -21,31 +22,35 @@ export class ActivateCardImpl implements ActivateCardUseCase {
     const card = await this.cardRepository.findById(cardId);
 
     if (!card) {
-      return CardUseCaseErrors.NotFoundError.create();
+      return left(CardUseCaseErrors.NotFoundError.create());
     }
 
     if (card.isActive) {
-      return ActivateCardErrors.CardIsAlreadyActiveError.create();
+      return left(ActivateCardErrors.CardIsAlreadyActiveError.create());
     }
 
     if (card.expirationDate.isExpired()) {
-      return CardUseCaseErrors.ExpiredCardError.create();
+      return left(CardUseCaseErrors.ExpiredCardError.create());
     }
 
     const isCvvCorrect = card.securityCode.compare(cvv);
 
     if (!isCvvCorrect) {
-      return CardUseCaseErrors.IncorrectCVVError.create();
+      return left(CardUseCaseErrors.IncorrectCVVError.create());
     }
 
-    const activationOrError = card.activate(password);
+    const domainCardActivationResult = card.activate(password);
 
-    if (activationOrError.error) {
-      return ActivateCardErrors.InvalidPasswordError.create(activationOrError.error.message);
+    if (domainCardActivationResult.isLeft()) {
+      const domainCardActivationError = domainCardActivationResult.value;
+
+      return left(
+        ActivateCardErrors.InvalidPasswordError.create(domainCardActivationError.getError().message)
+      );
     }
 
     await this.cardRepository.save(card);
 
-    return Result.ok(null);
+    return right(Result.ok(null));
   }
 }
