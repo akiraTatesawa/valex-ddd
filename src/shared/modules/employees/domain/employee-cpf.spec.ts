@@ -1,4 +1,5 @@
 import { DomainErrors } from "@core/domain/domain-error";
+import { Left, Right } from "@core/logic/either";
 import { Result } from "@core/logic/result";
 import { EmployeeCPF } from "./employee-cpf";
 
@@ -9,11 +10,12 @@ describe("Employee CPF Value Object", () => {
 
       const result = EmployeeCPF.create(validCpf);
 
-      expect(result).toBeInstanceOf(Result);
-      expect(result.isSuccess).toEqual(true);
-      expect(result.error).toBeNull();
-      expect(result.value).toBeInstanceOf(EmployeeCPF);
-      expect(result.value?.value).toEqual(validCpf);
+      expect(result).toBeInstanceOf(Right);
+      expect(result.isRight()).toEqual(true);
+      expect(result.value).toBeInstanceOf(Result);
+      expect(result.value.getError()).toBeNull();
+      expect(result.value.getValue()).toBeInstanceOf(EmployeeCPF);
+      expect(result.value.getValue()).toHaveProperty("value", validCpf);
     });
   });
 
@@ -23,10 +25,13 @@ describe("Employee CPF Value Object", () => {
 
       const result = EmployeeCPF.create(invalidCpf);
 
-      expect(result).toBeInstanceOf(DomainErrors.InvalidPropsError);
-      expect(result.isFailure).toEqual(true);
-      expect(result.value).toBeNull();
-      expect(result.error?.message).toEqual("Employee CPF must be an eleven numeric digits string");
+      expect(result).toBeInstanceOf(Left);
+      expect(result.isLeft()).toEqual(true);
+      expect(result.value).toBeInstanceOf(DomainErrors.InvalidPropsError);
+      expect(result.value.getValue()).toBeNull();
+      expect(result.value.getError()?.message).toEqual(
+        "Employee CPF must be an eleven numeric digits string"
+      );
     });
   });
 });
