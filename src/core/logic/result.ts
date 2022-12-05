@@ -16,12 +16,12 @@ export class Result<Value, Error> {
     this._value = value;
   }
 
-  public get value(): Value {
-    return this._value as Value;
+  public getValue(): Value {
+    return this._value;
   }
 
-  public get error(): Error {
-    return this._error as Error;
+  public getError(): Error {
+    return this._error;
   }
 
   public static ok<T>(value: T) {
@@ -30,10 +30,6 @@ export class Result<Value, Error> {
 
   public static pass() {
     return new Result<null, null>(true, null, null);
-  }
-
-  public static fail<U>(error: U) {
-    return new Result<null, U>(false, error, null);
   }
 
   public static combine(results: Array<Result<any, null> | Result<null, ErrorInterface>>) {
