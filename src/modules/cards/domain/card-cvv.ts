@@ -3,7 +3,7 @@ import { randCreditCardCVV } from "@ngneat/falso";
 
 import { ValueObject } from "@core/domain/value-object";
 import { Result } from "@core/logic/result";
-import { Either } from "@core/logic/either";
+import { Either, left, right } from "@core/logic/either";
 import { DomainErrors } from "@core/domain/domain-error";
 import Cryptr from "cryptr";
 
@@ -44,7 +44,7 @@ export class CardCVV extends ValueObject<CardCVVProps> {
     if (cvv === undefined) {
       const encryptedCVV = CardCVV.encrypt(randCreditCardCVV());
 
-      return Result.ok<string>(encryptedCVV);
+      return right(Result.ok<string>(encryptedCVV));
     }
 
     try {
@@ -53,25 +53,29 @@ export class CardCVV extends ValueObject<CardCVVProps> {
       const cvvRegex = /^[0-9]{3}$/;
 
       if (!cvvRegex.test(decryptedPassword)) {
-        return DomainErrors.InvalidPropsError.create("Card CVV must be a 3 digits numeric string");
+        return left(
+          DomainErrors.InvalidPropsError.create("Card CVV must be a 3 digits numeric string")
+        );
       }
     } catch (err) {
-      return DomainErrors.InvalidPropsError.create("Invalid CVV encryption");
+      return left(DomainErrors.InvalidPropsError.create("Invalid CVV encryption"));
     }
 
-    return Result.ok<string>(cvv);
+    return right(Result.ok<string>(cvv));
   }
 
   public static create(cvv?: string): CreateCardCVVResult {
-    const cvvOrError = CardCVV.validate(cvv);
+    const cvvValidationResult = CardCVV.validate(cvv);
 
-    if (cvvOrError.isFailure && cvvOrError.error) {
-      return DomainErrors.InvalidPropsError.create(cvvOrError.error.message);
+    if (cvvValidationResult.isLeft()) {
+      const cvvError = cvvValidationResult.value;
+
+      return left(cvvError);
     }
 
-    const cvvValue = cvvOrError.value!;
+    const cvvValue = cvvValidationResult.value.getValue();
     const cardCVVEntity = new CardCVV({ value: cvvValue });
 
-    return Result.ok<CardCVV>(cardCVVEntity);
+    return right(Result.ok<CardCVV>(cardCVVEntity));
   }
 }
