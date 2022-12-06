@@ -24,7 +24,6 @@ Cenario: Funcionário falha ao bloquear cartão que não foi ativado
  Mas o cartão não esteja ativado
   Quando o funcionário solicitar o bloqueio de cartão
   Entao o funcionário recebe uma mensagem de erro informando que o cartão não está ativo
- 
 
 Cenario: Funcionário falha ao bloquear cartão com senha incorreta
  Dado que o funcionário tenha um cartão
