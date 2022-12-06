@@ -32,4 +32,24 @@ export namespace CardUseCaseErrors {
       return new IncorrectCVVError();
     }
   }
+
+  export class WrongPasswordError extends Result<null, ErrorInterface> {
+    private constructor() {
+      super(false, { message: "Wrong Password" }, null);
+    }
+
+    public static create(): WrongPasswordError {
+      return new WrongPasswordError();
+    }
+  }
+
+  export class InactiveCardError extends Result<null, ErrorInterface> {
+    private constructor() {
+      super(false, { message: "The card must be active" }, null);
+    }
+
+    public static create(): InactiveCardError {
+      return new InactiveCardError();
+    }
+  }
 }
