@@ -1,6 +1,7 @@
 import Joi from "joi";
 import { CreateCardBody } from "../controllers/create-card/request";
 import { ActivateCardRequestBody } from "../controllers/activate-card/request";
+import { BlockCardBody } from "../controllers/block-card/request";
 
 export namespace CardSchemas {
   export const createCardSchema = Joi.object<CreateCardBody>({
@@ -12,6 +13,10 @@ export namespace CardSchemas {
 
   export const activateCardSchema = Joi.object<ActivateCardRequestBody>({
     cvv: Joi.string().required(),
+    password: Joi.string().required(),
+  });
+
+  export const blockUnblockCardSchema = Joi.object<BlockCardBody>({
     password: Joi.string().required(),
   });
 }
