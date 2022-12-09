@@ -14,11 +14,11 @@ import { ExpressApp } from "@infra/http/app";
 import { CompanyFactory } from "@shared/modules/companies/factories/company-factory";
 import { EmployeeFactory } from "@shared/modules/employees/factories/employee-factory";
 import { CardFactory } from "@modules/cards/factories/card-factory";
+import { UnblockCardRequestBody } from "@modules/cards/infra/http/controllers/unblock-card/request";
 import { TestHelper } from "../helpers/test-helper";
-import { BlockCardBody } from "../../../src/modules/cards/infra/http/controllers/block-card/request";
 import { CardHelper } from "../helpers/card-helper";
 
-describe("PATCH /cards/:cardId/block", () => {
+describe("PATCH /cards/:cardId/unblock", () => {
   const company: Company = new CompanyFactory().generate();
   const employee: Employee = new EmployeeFactory().generate({ companyId: company._id });
 
@@ -41,11 +41,12 @@ describe("PATCH /cards/:cardId/block", () => {
   });
 
   describe("Success", () => {
-    it("[200::OK] Should be able to block a card", async () => {
+    it("[200::OK] Should be able to unblock a card", async () => {
+      card.block();
       await CardHelper.activateCard(card, cardPassword);
-      const request: BlockCardBody = { password: cardPassword };
+      const request: UnblockCardRequestBody = { password: cardPassword };
 
-      const result = await server.patch(`/cards/${card._id}/block`).send(request);
+      const result = await server.patch(`/cards/${card._id}/unblock`).send(request);
 
       expect(result.statusCode).toEqual(httpStatus.OK);
       expect(result.body).toEqual({});
@@ -56,17 +57,17 @@ describe("PATCH /cards/:cardId/block", () => {
     it("[400::UNPROCESSABLE_ENTITY] Should return an error if the request body is invalid", async () => {
       const request = { password: cardPassword, invalid: "invalid" };
 
-      const result = await server.patch(`/cards/${card._id}/block`).send(request);
+      const result = await server.patch(`/cards/${card._id}/unblock`).send(request);
 
       expect(result.statusCode).toEqual(httpStatus.BAD_REQUEST);
       expect(result.body).toHaveProperty("type", "Bad Request");
     });
 
-    it("[401::UNAUTHORIZED] Should return an error if the password is wrong", async () => {
+    it("[401::UNAUTHORIZED] Should return an error if password is wrong", async () => {
       await CardHelper.activateCard(card, cardPassword);
-      const request: BlockCardBody = { password: "4321" };
+      const request: UnblockCardRequestBody = { password: "4321" };
 
-      const result = await server.patch(`/cards/${card._id}/block`).send(request);
+      const result = await server.patch(`/cards/${card._id}/unblock`).send(request);
 
       expect(result.statusCode).toEqual(httpStatus.UNAUTHORIZED);
       expect(result.body).toHaveProperty("message", "Wrong Password");
@@ -74,9 +75,9 @@ describe("PATCH /cards/:cardId/block", () => {
     });
 
     it("[404::NOT_FOUND] Should return an error if the card does not exist", async () => {
-      const request: BlockCardBody = { password: "1234" };
+      const request: UnblockCardRequestBody = { password: "1234" };
 
-      const result = await server.patch(`/cards/${randUuid()}/block`).send(request);
+      const result = await server.patch(`/cards/${randUuid()}/unblock`).send(request);
 
       expect(result.statusCode).toEqual(httpStatus.NOT_FOUND);
       expect(result.body).toHaveProperty("message", "Card not found");
@@ -84,9 +85,9 @@ describe("PATCH /cards/:cardId/block", () => {
     });
 
     it("[422::UNPROCESSABLE_ENTITY] Should return an error if the card is not active", async () => {
-      const request: BlockCardBody = { password: "1234" };
+      const request: UnblockCardRequestBody = { password: "1234" };
 
-      const result = await server.patch(`/cards/${card._id}/block`).send(request);
+      const result = await server.patch(`/cards/${card._id}/unblock`).send(request);
 
       expect(result.statusCode).toEqual(httpStatus.UNPROCESSABLE_ENTITY);
       expect(result.body).toHaveProperty("message", "The card must be active");
@@ -100,24 +101,23 @@ describe("PATCH /cards/:cardId/block", () => {
         expirationDate: randPastDate({ years: 10 }),
       });
       await CardHelper.activateCard(expiredCard, cardPassword);
-      const request: BlockCardBody = { password: cardPassword };
+      const request: UnblockCardRequestBody = { password: cardPassword };
 
-      const result = await server.patch(`/cards/${expiredCard._id}/block`).send(request);
+      const result = await server.patch(`/cards/${expiredCard._id}/unblock`).send(request);
 
       expect(result.statusCode).toEqual(httpStatus.UNPROCESSABLE_ENTITY);
       expect(result.body).toHaveProperty("message", "The card is expired");
       expect(result.body).toHaveProperty("type", "Unprocessable Entity");
     });
 
-    it("[422::UNPROCESSABLE_ENTITY] Should return an error if the card is already blocked", async () => {
-      card.block();
+    it("[422::UNPROCESSABLE_ENTITY] Should return an error if the card is already unblocked", async () => {
       await CardHelper.activateCard(card, cardPassword);
-      const request: BlockCardBody = { password: cardPassword };
+      const request: UnblockCardRequestBody = { password: cardPassword };
 
-      const result = await server.patch(`/cards/${card._id}/block`).send(request);
+      const result = await server.patch(`/cards/${card._id}/unblock`).send(request);
 
       expect(result.statusCode).toEqual(httpStatus.UNPROCESSABLE_ENTITY);
-      expect(result.body).toHaveProperty("message", "The card is already blocked");
+      expect(result.body).toHaveProperty("message", "The card is already unblocked");
       expect(result.body).toHaveProperty("type", "Unprocessable Entity");
     });
   });

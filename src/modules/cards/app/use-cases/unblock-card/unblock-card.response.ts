@@ -6,7 +6,6 @@ import { UnblockCardErrors } from "./unblock-card-errors/errors";
 export type UnblockCardUseCaseResponse = Either<
   | CardUseCaseErrors.NotFoundError
   | CardUseCaseErrors.InactiveCardError
-  | CardUseCaseErrors.InactiveCardError
   | CardUseCaseErrors.WrongPasswordError
   | CardUseCaseErrors.ExpiredCardError
   | UnblockCardErrors.CardIsAlreadyUnblockedError,
