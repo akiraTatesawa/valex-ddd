@@ -1,59 +1,64 @@
 import { randUuid, randPastDate } from "@ngneat/falso";
-import { Card } from "@modules/cards/domain/card";
-import { CardRepository } from "@modules/cards/app/ports/card-repository";
 import { InMemoryDatabase } from "@infra/database/in-memory/in-memory.database";
-import { InMemoryCardRepository } from "@modules/cards/infra/database/in-memory/in-memory-card-repository";
+import { CardRepository } from "@modules/cards/app/ports/card-repository";
+import { Card } from "@modules/cards/domain/card";
+import { UnblockCardDTO } from "@modules/cards/dtos/block-unblock-card.dto";
 import { CardFactory } from "@modules/cards/factories/card-factory";
-import { Left, Right } from "@core/logic/either";
+import { InMemoryCardRepository } from "@modules/cards/infra/database/in-memory/in-memory-card-repository";
+import { Right, Left } from "@core/logic/either";
 import { Result } from "@core/logic/result";
 import { CardUseCaseErrors } from "@modules/cards/app/card-shared-errors/card-shared-errors";
-import { BlockCardDTO } from "@modules/cards/dtos/block-unblock-card.dto";
-import { BlockCardUseCase, BlockCardImpl } from "./block-card";
-import { BlockCardErrors } from "./block-card-errors/errors";
+import { UnblockCardImpl, UnblockCardUseCase } from "./unblock-card";
+import { UnblockCardErrors } from "./unblock-card-errors/errors";
 
-describe("Block Card Use Case", () => {
+describe("Unblock Card Use Case", () => {
+  let cardRepository: CardRepository;
+  let sut: UnblockCardUseCase;
+
   let card: Card;
-  let cardRepo: CardRepository;
-  let sut: BlockCardUseCase;
+  const cardPassword = "1234";
 
   beforeEach(async () => {
-    const inMemoryDatabase = new InMemoryDatabase();
-    cardRepo = new InMemoryCardRepository(inMemoryDatabase);
-    sut = new BlockCardImpl(cardRepo);
+    cardRepository = new InMemoryCardRepository(new InMemoryDatabase());
+    sut = new UnblockCardImpl(cardRepository);
 
     card = new CardFactory().generate();
 
-    await cardRepo.save(card);
+    await cardRepository.save(card);
   });
 
   describe("Success", () => {
-    it("Should be able to block a card", async () => {
-      const cardPassword = "1234";
+    beforeEach(async () => {
       card.activate(cardPassword);
-      await cardRepo.save(card);
-      const blockCardRequest: BlockCardDTO = {
+      card.block();
+
+      await cardRepository.save(card);
+    });
+
+    it("Should be able to unblock a card", async () => {
+      const sutRequest: UnblockCardDTO = {
         cardId: card._id,
         password: cardPassword,
       };
 
-      const result = await sut.execute(blockCardRequest);
+      const result = await sut.execute(sutRequest);
 
       expect(result).toBeInstanceOf(Right);
       expect(result.isRight()).toEqual(true);
       expect(result.value).toBeInstanceOf(Result);
-      expect(result.value.getValue()).toBeNull();
       expect(result.value.getError()).toBeNull();
+      expect(result.value.getValue()).toBeNull();
     });
   });
 
   describe("Fail", () => {
     it("Should return an error if the card does not exist", async () => {
-      const blockCardRequest: BlockCardDTO = {
+      const sutRequest: UnblockCardDTO = {
         cardId: randUuid(),
-        password: "2345",
+        password: cardPassword,
       };
 
-      const result = await sut.execute(blockCardRequest);
+      const result = await sut.execute(sutRequest);
 
       expect(result).toBeInstanceOf(Left);
       expect(result.isLeft()).toEqual(true);
@@ -62,13 +67,13 @@ describe("Block Card Use Case", () => {
       expect(result.value.getError()?.message).toEqual("Card not found");
     });
 
-    it("Should return an error if the card is not active", async () => {
-      const blockCardRequest: BlockCardDTO = {
+    it("Should return an error if the card has not been activated", async () => {
+      const sutRequest: UnblockCardDTO = {
         cardId: card._id,
-        password: "2345",
+        password: cardPassword,
       };
 
-      const result = await sut.execute(blockCardRequest);
+      const result = await sut.execute(sutRequest);
 
       expect(result).toBeInstanceOf(Left);
       expect(result.isLeft()).toEqual(true);
@@ -78,15 +83,15 @@ describe("Block Card Use Case", () => {
     });
 
     it("Should return an error if the password is incorrect", async () => {
-      const cardPassword = "1234";
       card.activate(cardPassword);
-      await cardRepo.save(card);
-      const blockCardRequest: BlockCardDTO = {
+      await cardRepository.save(card);
+
+      const sutRequest: UnblockCardDTO = {
         cardId: card._id,
         password: "4321",
       };
 
-      const result = await sut.execute(blockCardRequest);
+      const result = await sut.execute(sutRequest);
 
       expect(result).toBeInstanceOf(Left);
       expect(result.isLeft()).toEqual(true);
@@ -96,19 +101,19 @@ describe("Block Card Use Case", () => {
     });
 
     it("Should return an error if the card is expired", async () => {
-      const cardPassword = "1234";
       const expiredCard = new CardFactory().generate({
-        expirationDate: randPastDate({ years: 10 }),
+        expirationDate: randPastDate({
+          years: 10,
+        }),
       });
       expiredCard.activate(cardPassword);
-      await cardRepo.save(expiredCard);
-
-      const blockCardRequest: BlockCardDTO = {
+      await cardRepository.save(expiredCard);
+      const sutRequest: UnblockCardDTO = {
         cardId: expiredCard._id,
         password: cardPassword,
       };
 
-      const result = await sut.execute(blockCardRequest);
+      const result = await sut.execute(sutRequest);
 
       expect(result).toBeInstanceOf(Left);
       expect(result.isLeft()).toEqual(true);
@@ -117,23 +122,21 @@ describe("Block Card Use Case", () => {
       expect(result.value.getError()?.message).toEqual("The card is expired");
     });
 
-    it("Should return an error if the card is already blocked", async () => {
-      const cardPassword = "1234";
+    it("Should return an error if the card is not blocked", async () => {
       card.activate(cardPassword);
-      card.block();
-      await cardRepo.save(card);
-      const blockCardRequest: BlockCardDTO = {
+      await cardRepository.save(card);
+      const sutRequest: UnblockCardDTO = {
         cardId: card._id,
         password: cardPassword,
       };
 
-      const result = await sut.execute(blockCardRequest);
+      const result = await sut.execute(sutRequest);
 
       expect(result).toBeInstanceOf(Left);
       expect(result.isLeft()).toEqual(true);
-      expect(result.value).toBeInstanceOf(BlockCardErrors.CardIsAlreadyBlockedError);
+      expect(result.value).toBeInstanceOf(UnblockCardErrors.CardIsAlreadyUnblockedError);
       expect(result.value.getValue()).toBeNull();
-      expect(result.value.getError()?.message).toEqual("The card is already blocked");
+      expect(result.value.getError()?.message).toEqual("The card is already unblocked");
     });
   });
 });
