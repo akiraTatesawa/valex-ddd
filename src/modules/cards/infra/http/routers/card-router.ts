@@ -4,6 +4,7 @@ import { SchemaValidator } from "@shared/infra/http/middlewares/schema-validator
 import { activateCardController } from "../controllers/activate-card";
 import { blockCardController } from "../controllers/block-card";
 import { createCardController } from "../controllers/create-card";
+import { unblockCardController } from "../controllers/unblock-card";
 import { CardSchemas } from "../schemas/card-schemas";
 
 export class CardRouter extends ExpressRouter {
@@ -28,6 +29,13 @@ export class CardRouter extends ExpressRouter {
       "/:cardId/block",
       SchemaValidator.validateBody(CardSchemas.blockUnblockCardSchema),
       blockCardController.handle
+    );
+
+    // Unblock Voucher Card
+    this._expressRouter.patch(
+      "/:cardId/unblock",
+      SchemaValidator.validateBody(CardSchemas.blockUnblockCardSchema),
+      unblockCardController.handle
     );
   }
 }

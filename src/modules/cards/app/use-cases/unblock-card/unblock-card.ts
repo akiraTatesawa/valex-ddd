@@ -1,24 +1,22 @@
 import { UseCase } from "@core/app/use-case";
-import { CardRepository } from "@modules/cards/app/ports/card-repository";
+import { right, left } from "@core/logic/either";
 import { Result } from "@core/logic/result";
-import { left, right } from "@core/logic/either";
+import { BlockCardDTO, UnblockCardDTO } from "@modules/cards/dtos/block-unblock-card.dto";
+import { CardRepository } from "@modules/cards/app/ports/card-repository";
 import { CardUseCaseErrors } from "@modules/cards/app/card-shared-errors/card-shared-errors";
-import { BlockCardDTO } from "@modules/cards/dtos/block-unblock-card.dto";
-import { BlockCardResponse } from "./block-card.response";
-import { BlockCardErrors } from "./block-card-errors/errors";
+import { UnblockCardUseCaseResponse } from "./unblock-card.response";
+import { UnblockCardErrors } from "./unblock-card-errors/errors";
 
-export interface BlockCardUseCase extends UseCase<BlockCardDTO, BlockCardResponse> {}
+export interface UnblockCardUseCase extends UseCase<UnblockCardDTO, UnblockCardUseCaseResponse> {}
 
-export class BlockCardImpl implements BlockCardUseCase {
+export class UnblockCardImpl implements UnblockCardUseCase {
   private readonly cardRepository: CardRepository;
 
   constructor(cardRepository: CardRepository) {
     this.cardRepository = cardRepository;
   }
 
-  public async execute(reqData: BlockCardDTO): Promise<BlockCardResponse> {
-    const { cardId, password } = reqData;
-
+  public async execute({ cardId, password }: BlockCardDTO): Promise<UnblockCardUseCaseResponse> {
     const card = await this.cardRepository.findById(cardId);
 
     if (!card) {
@@ -37,11 +35,11 @@ export class BlockCardImpl implements BlockCardUseCase {
       return left(CardUseCaseErrors.ExpiredCardError.create());
     }
 
-    if (card.isBlocked) {
-      return left(BlockCardErrors.CardIsAlreadyBlockedError.create());
+    if (!card.isBlocked) {
+      return left(UnblockCardErrors.CardIsAlreadyUnblockedError.create());
     }
 
-    card.block();
+    card.unblock();
 
     await this.cardRepository.save(card);
 
