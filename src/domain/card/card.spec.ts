@@ -4,8 +4,8 @@ import { Result } from "@core/logic/result";
 import { randUuid, randEmail, randPastDate, randCreditCardCVV } from "@ngneat/falso";
 import { DomainErrors } from "@domain/errors/domain-error";
 import { Employee } from "@domain/employee/employee";
-import { EmployeeFactory } from "@shared/modules/employees/factories/employee-factory";
 import { Left, Right } from "@core/logic/either";
+import { EmployeeFactory } from "@tests/factories/employee-factory";
 import { Card, CreateCardProps } from "./card";
 
 describe("Card Entity", () => {

@@ -6,17 +6,17 @@ import { randUuid, randPastDate } from "@ngneat/falso";
 import { Employee } from "@domain/employee/employee";
 import { Company } from "@domain/company/company";
 import { Card } from "@domain/card/card";
-import { PrismaCompanyRepository } from "@shared/modules/companies/infra/database/prisma/prisma-company-repository";
-import { PrismaEmployeeRepository } from "@infra/data/repositories/prisma/prisma-employee-repository";
+import { CompanyFactory } from "@tests/factories/company-factory";
+import { EmployeeFactory } from "@tests/factories/employee-factory";
 import { prisma } from "@infra/data/databases/prisma/config/prisma.database";
-import { PrismaCardRepository } from "@modules/cards/infra/database/prisma/prisma-card-repository";
+import { PrismaCompanyRepository } from "@infra/data/repositories/prisma/prisma-company-repository";
+import { PrismaEmployeeRepository } from "@infra/data/repositories/prisma/prisma-employee-repository";
+import { PrismaCardRepository } from "@infra/data/repositories/prisma/prisma-card-repository";
 import { ExpressApp } from "@infra/http/app";
-import { CompanyFactory } from "@shared/modules/companies/factories/company-factory";
-import { EmployeeFactory } from "@shared/modules/employees/factories/employee-factory";
-import { CardFactory } from "@modules/cards/factories/card-factory";
-import { UnblockCardRequestBody } from "@modules/cards/infra/http/controllers/unblock-card/request";
-import { TestHelper } from "../helpers/test-helper";
+import { CardFactory } from "@tests/factories/card-factory";
+import { UnblockCardRequest } from "@infra/http/controllers/requests/block-unblock-card-request";
 import { CardHelper } from "../helpers/card-helper";
+import { TestHelper } from "../helpers/test-helper";
 
 describe("PATCH /cards/:cardId/unblock", () => {
   const company: Company = new CompanyFactory().generate();
@@ -44,7 +44,7 @@ describe("PATCH /cards/:cardId/unblock", () => {
     it("[200::OK] Should be able to unblock a card", async () => {
       card.block();
       await CardHelper.activateCard(card, cardPassword);
-      const request: UnblockCardRequestBody = { password: cardPassword };
+      const request: UnblockCardRequest = { password: cardPassword };
 
       const result = await server.patch(`/cards/${card._id}/unblock`).send(request);
 
@@ -65,7 +65,7 @@ describe("PATCH /cards/:cardId/unblock", () => {
 
     it("[401::UNAUTHORIZED] Should return an error if password is wrong", async () => {
       await CardHelper.activateCard(card, cardPassword);
-      const request: UnblockCardRequestBody = { password: "4321" };
+      const request: UnblockCardRequest = { password: "4321" };
 
       const result = await server.patch(`/cards/${card._id}/unblock`).send(request);
 
@@ -75,7 +75,7 @@ describe("PATCH /cards/:cardId/unblock", () => {
     });
 
     it("[404::NOT_FOUND] Should return an error if the card does not exist", async () => {
-      const request: UnblockCardRequestBody = { password: "1234" };
+      const request: UnblockCardRequest = { password: "1234" };
 
       const result = await server.patch(`/cards/${randUuid()}/unblock`).send(request);
 
@@ -85,7 +85,7 @@ describe("PATCH /cards/:cardId/unblock", () => {
     });
 
     it("[422::UNPROCESSABLE_ENTITY] Should return an error if the card is not active", async () => {
-      const request: UnblockCardRequestBody = { password: "1234" };
+      const request: UnblockCardRequest = { password: "1234" };
 
       const result = await server.patch(`/cards/${card._id}/unblock`).send(request);
 
@@ -101,7 +101,7 @@ describe("PATCH /cards/:cardId/unblock", () => {
         expirationDate: randPastDate({ years: 10 }),
       });
       await CardHelper.activateCard(expiredCard, cardPassword);
-      const request: UnblockCardRequestBody = { password: cardPassword };
+      const request: UnblockCardRequest = { password: cardPassword };
 
       const result = await server.patch(`/cards/${expiredCard._id}/unblock`).send(request);
 
@@ -112,7 +112,7 @@ describe("PATCH /cards/:cardId/unblock", () => {
 
     it("[422::UNPROCESSABLE_ENTITY] Should return an error if the card is already unblocked", async () => {
       await CardHelper.activateCard(card, cardPassword);
-      const request: UnblockCardRequestBody = { password: cardPassword };
+      const request: UnblockCardRequest = { password: cardPassword };
 
       const result = await server.patch(`/cards/${card._id}/unblock`).send(request);
 

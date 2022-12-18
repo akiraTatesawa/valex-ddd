@@ -2,18 +2,18 @@
 import supertest from "supertest";
 import httpStatus from "http-status";
 import { randUuid, randPastDate } from "@ngneat/falso";
-import { CompanyFactory } from "@shared/modules/companies/factories/company-factory";
-import { PrismaCompanyRepository } from "@shared/modules/companies/infra/database/prisma/prisma-company-repository";
-import { EmployeeFactory } from "@shared/modules/employees/factories/employee-factory";
 import { prisma } from "@infra/data/databases/prisma/config/prisma.database";
-import { PrismaCardRepository } from "@modules/cards/infra/database/prisma/prisma-card-repository";
 import { PrismaEmployeeRepository } from "@infra/data/repositories/prisma/prisma-employee-repository";
 import { ExpressApp } from "@infra/http/app";
-import { CardFactory } from "@modules/cards/factories/card-factory";
 import { Employee } from "@domain/employee/employee";
 import { Company } from "@domain/company/company";
 import { Card } from "@domain/card/card";
-import { ActivateCardRequestBody } from "@modules/cards/infra/http/controllers/activate-card/request";
+import { PrismaCompanyRepository } from "@infra/data/repositories/prisma/prisma-company-repository";
+import { PrismaCardRepository } from "@infra/data/repositories/prisma/prisma-card-repository";
+import { CompanyFactory } from "@tests/factories/company-factory";
+import { EmployeeFactory } from "@tests/factories/employee-factory";
+import { CardFactory } from "@tests/factories/card-factory";
+import { ActivateCardRequest } from "@infra/http/controllers/requests/activate-card-request";
 import { TestHelper } from "../helpers/test-helper";
 
 describe("PATCH /cards/:cardId/activate", () => {
@@ -41,7 +41,7 @@ describe("PATCH /cards/:cardId/activate", () => {
 
   describe("Success", () => {
     it("[200::OK] Should be able to activate a card", async () => {
-      const activateCardReq: ActivateCardRequestBody = {
+      const activateCardReq: ActivateCardRequest = {
         cvv: card.securityCode.decrypt(),
         password: "1234",
       };
@@ -55,7 +55,7 @@ describe("PATCH /cards/:cardId/activate", () => {
 
   describe("Fail", () => {
     it("[404::NOT_FOUND] Should return an error if the card does not exist", async () => {
-      const activateCardReq: ActivateCardRequestBody = {
+      const activateCardReq: ActivateCardRequest = {
         cvv: card.securityCode.decrypt(),
         password: "1234",
       };
@@ -69,7 +69,7 @@ describe("PATCH /cards/:cardId/activate", () => {
     it("[400:BAD_REQUEST] Should return an error if the card is already active", async () => {
       card.activate("1234");
       await cardRepo.save(card);
-      const activateCardReq: ActivateCardRequestBody = {
+      const activateCardReq: ActivateCardRequest = {
         cvv: card.securityCode.decrypt(),
         password: "1234",
       };
@@ -87,7 +87,7 @@ describe("PATCH /cards/:cardId/activate", () => {
         expirationDate: randPastDate({ years: 10 }),
       });
       await cardRepo.save(card);
-      const activateCardReq: ActivateCardRequestBody = {
+      const activateCardReq: ActivateCardRequest = {
         cvv: card.securityCode.decrypt(),
         password: "1234",
       };
@@ -99,7 +99,7 @@ describe("PATCH /cards/:cardId/activate", () => {
     });
 
     it("[400:BAD_REQUEST]", async () => {
-      const activateCardReq: ActivateCardRequestBody = {
+      const activateCardReq: ActivateCardRequest = {
         cvv: card.securityCode.decrypt(),
         password: "12345",
       };
@@ -114,7 +114,7 @@ describe("PATCH /cards/:cardId/activate", () => {
     });
 
     it("[401:UNAUTHORIZED] Should return an error if the CVV is wrong", async () => {
-      const activateCardReq: ActivateCardRequestBody = {
+      const activateCardReq: ActivateCardRequest = {
         cvv: "123",
         password: "1234",
       };

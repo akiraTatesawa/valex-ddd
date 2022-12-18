@@ -28,7 +28,7 @@ export class CardController extends BaseController {
     this.create = this.create.bind(this);
     this.activate = this.activate.bind(this);
     this.block = this.block.bind(this);
-    this.unblock = this.create.bind(this);
+    this.unblock = this.unblock.bind(this);
   }
 
   public async create(req: express.Request, res: express.Response) {

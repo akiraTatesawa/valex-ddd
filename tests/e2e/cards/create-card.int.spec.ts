@@ -5,15 +5,15 @@ import { randUuid } from "@ngneat/falso";
 
 import { prisma } from "@infra/data/databases/prisma/config/prisma.database";
 import { ExpressApp } from "@infra/http/app";
-import { CreateCardBody } from "@modules/cards/infra/http/controllers/create-card/request";
-import { CompanyFactory } from "@shared/modules/companies/factories/company-factory";
-import { PrismaCompanyRepository } from "@shared/modules/companies/infra/database/prisma/prisma-company-repository";
-import { EmployeeFactory } from "@shared/modules/employees/factories/employee-factory";
-import { PrismaEmployeeRepository } from "@infra/data/repositories/prisma/prisma-employee-repository";
-import { PrismaCardRepository } from "@modules/cards/infra/database/prisma/prisma-card-repository";
-import { CardFactory } from "@modules/cards/factories/card-factory";
 import { Employee } from "@domain/employee/employee";
 import { Company } from "@domain/company/company";
+import { PrismaCompanyRepository } from "@infra/data/repositories/prisma/prisma-company-repository";
+import { PrismaEmployeeRepository } from "@infra/data/repositories/prisma/prisma-employee-repository";
+import { PrismaCardRepository } from "@infra/data/repositories/prisma/prisma-card-repository";
+import { CompanyFactory } from "@tests/factories/company-factory";
+import { EmployeeFactory } from "@tests/factories/employee-factory";
+import { CreateCardRequest } from "@infra/http/controllers/requests/create-card-request";
+import { CardFactory } from "@tests/factories/card-factory";
 import { TestHelper } from "../helpers/test-helper";
 
 describe("POST /cards", () => {
@@ -38,7 +38,7 @@ describe("POST /cards", () => {
 
   describe("Success", () => {
     it("[201::CREATED] Should be able to create a card", async () => {
-      const createCardRequest: CreateCardBody = {
+      const createCardRequest: CreateCardRequest = {
         employeeId: employee._id,
         type: "education",
       };
@@ -60,7 +60,7 @@ describe("POST /cards", () => {
 
   describe("Fail", () => {
     it("[400::BAD_REQUEST]: Should return an error if the request payload is invalid", async () => {
-      const createCardRequest: CreateCardBody = {
+      const createCardRequest: CreateCardRequest = {
         employeeId: employee._id,
         type: "invalid" as any,
       };
@@ -77,7 +77,7 @@ describe("POST /cards", () => {
     });
 
     it("[400::BAD_REQUEST]: Should return an error if the API KEY is invalid", async () => {
-      const createCardRequest: CreateCardBody = {
+      const createCardRequest: CreateCardRequest = {
         employeeId: employee._id,
         type: "education",
       };
@@ -94,7 +94,7 @@ describe("POST /cards", () => {
     });
 
     it("[404::NOT_FOUND]: Should return an error if the company does not exist", async () => {
-      const createCardRequest: CreateCardBody = {
+      const createCardRequest: CreateCardRequest = {
         employeeId: employee._id,
         type: "education",
       };
@@ -111,7 +111,7 @@ describe("POST /cards", () => {
     });
 
     it("[404::NOT_FOUND]: Should return an error if the employee does not exist", async () => {
-      const createCardRequest: CreateCardBody = {
+      const createCardRequest: CreateCardRequest = {
         employeeId: randUuid(),
         type: "education",
       };
@@ -135,7 +135,7 @@ describe("POST /cards", () => {
         companyId: fakeCompany._id,
       });
       await employeeRepo.save(fakeEmployee);
-      const createCardRequest: CreateCardBody = {
+      const createCardRequest: CreateCardRequest = {
         employeeId: fakeEmployee._id,
         type: "education",
       };
@@ -154,7 +154,7 @@ describe("POST /cards", () => {
     it("[409]::CONFLICT]: Should return an error if the employee already has a card with the same type", async () => {
       const card = new CardFactory().generate({ employeeId: employee._id, type: "education" });
       await cardRepo.save(card);
-      const createCardRequest: CreateCardBody = {
+      const createCardRequest: CreateCardRequest = {
         employeeId: employee._id,
         type: "education",
       };

@@ -1,11 +1,11 @@
 import { randFullName, randUuid } from "@ngneat/falso";
-import { InMemoryCompanyRepository } from "@shared/modules/companies/infra/database/in-memory/in-memory-company-repository";
-import { CompanyFactory } from "@shared/modules/companies/factories/company-factory";
 import { Company } from "@domain/company/company";
 import { Result } from "@core/logic/result";
 import { Left, Right } from "@core/logic/either";
 import { CompanyRepository } from "@app/ports/repositories/company-repository";
 import { InMemoryDatabase } from "@infra/data/databases/in-memory/in-memory.database";
+import { InMemoryCompanyRepository } from "@infra/data/repositories/in-memory/in-memory-company-repository";
+import { CompanyFactory } from "@tests/factories/company-factory";
 import { GetCompanyService } from "./get-company.interface";
 import { GetCompanyImpl } from "./get-company.service";
 import { GetCompanyErrors } from "./get-company-errors/errors";

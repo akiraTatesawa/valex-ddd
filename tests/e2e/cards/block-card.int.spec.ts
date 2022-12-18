@@ -2,20 +2,19 @@
 import supertest from "supertest";
 import httpStatus from "http-status";
 import { randUuid, randPastDate } from "@ngneat/falso";
-
 import { Employee } from "@domain/employee/employee";
 import { Company } from "@domain/company/company";
 import { Card } from "@domain/card/card";
-import { PrismaCompanyRepository } from "@shared/modules/companies/infra/database/prisma/prisma-company-repository";
 import { PrismaEmployeeRepository } from "@infra/data/repositories/prisma/prisma-employee-repository";
 import { prisma } from "@infra/data/databases/prisma/config/prisma.database";
-import { PrismaCardRepository } from "@modules/cards/infra/database/prisma/prisma-card-repository";
 import { ExpressApp } from "@infra/http/app";
-import { CompanyFactory } from "@shared/modules/companies/factories/company-factory";
-import { EmployeeFactory } from "@shared/modules/employees/factories/employee-factory";
-import { CardFactory } from "@modules/cards/factories/card-factory";
+import { CompanyFactory } from "@tests/factories/company-factory";
+import { EmployeeFactory } from "@tests/factories/employee-factory";
+import { PrismaCompanyRepository } from "@infra/data/repositories/prisma/prisma-company-repository";
+import { PrismaCardRepository } from "@infra/data/repositories/prisma/prisma-card-repository";
+import { CardFactory } from "@tests/factories/card-factory";
+import { BlockCardRequest } from "@infra/http/controllers/requests/block-unblock-card-request";
 import { TestHelper } from "../helpers/test-helper";
-import { BlockCardBody } from "../../../src/modules/cards/infra/http/controllers/block-card/request";
 import { CardHelper } from "../helpers/card-helper";
 
 describe("PATCH /cards/:cardId/block", () => {
@@ -43,7 +42,7 @@ describe("PATCH /cards/:cardId/block", () => {
   describe("Success", () => {
     it("[200::OK] Should be able to block a card", async () => {
       await CardHelper.activateCard(card, cardPassword);
-      const request: BlockCardBody = { password: cardPassword };
+      const request: BlockCardRequest = { password: cardPassword };
 
       const result = await server.patch(`/cards/${card._id}/block`).send(request);
 
@@ -64,7 +63,7 @@ describe("PATCH /cards/:cardId/block", () => {
 
     it("[401::UNAUTHORIZED] Should return an error if the password is wrong", async () => {
       await CardHelper.activateCard(card, cardPassword);
-      const request: BlockCardBody = { password: "4321" };
+      const request: BlockCardRequest = { password: "4321" };
 
       const result = await server.patch(`/cards/${card._id}/block`).send(request);
 
@@ -74,7 +73,7 @@ describe("PATCH /cards/:cardId/block", () => {
     });
 
     it("[404::NOT_FOUND] Should return an error if the card does not exist", async () => {
-      const request: BlockCardBody = { password: "1234" };
+      const request: BlockCardRequest = { password: "1234" };
 
       const result = await server.patch(`/cards/${randUuid()}/block`).send(request);
 
@@ -84,7 +83,7 @@ describe("PATCH /cards/:cardId/block", () => {
     });
 
     it("[422::UNPROCESSABLE_ENTITY] Should return an error if the card is not active", async () => {
-      const request: BlockCardBody = { password: "1234" };
+      const request: BlockCardRequest = { password: "1234" };
 
       const result = await server.patch(`/cards/${card._id}/block`).send(request);
 
@@ -100,7 +99,7 @@ describe("PATCH /cards/:cardId/block", () => {
         expirationDate: randPastDate({ years: 10 }),
       });
       await CardHelper.activateCard(expiredCard, cardPassword);
-      const request: BlockCardBody = { password: cardPassword };
+      const request: BlockCardRequest = { password: cardPassword };
 
       const result = await server.patch(`/cards/${expiredCard._id}/block`).send(request);
 
@@ -112,7 +111,7 @@ describe("PATCH /cards/:cardId/block", () => {
     it("[422::UNPROCESSABLE_ENTITY] Should return an error if the card is already blocked", async () => {
       card.block();
       await CardHelper.activateCard(card, cardPassword);
-      const request: BlockCardBody = { password: cardPassword };
+      const request: BlockCardRequest = { password: cardPassword };
 
       const result = await server.patch(`/cards/${card._id}/block`).send(request);
 
