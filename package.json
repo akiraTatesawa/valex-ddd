@@ -13,11 +13,11 @@
     "dev:generate": "npm run dev:load-env -- prisma generate",
     "dev:migrate": "npm run dev:load-env -- prisma migrate dev",
     "dev:prisma-studio": "npm run dev:load-env -- prisma studio",
-    "dev:seed": "npm run dev:load-env -- -- ts-node -r tsconfig-paths/register ./src/infra/database/prisma/seeds/seed.ts",
+    "dev:seed": "npm run dev:load-env -- -- ts-node -r tsconfig-paths/register ./src/infra/data/databases/prisma/seeds/seed.ts",
     "dev": "npm run dev:load-env -- -- ts-node-dev --respawn --transpile-only --exit-child --ignore-watch node_modules -r tsconfig-paths/register ./src/infra/http/server.ts"
   },
   "prisma": {
-    "schema": "./src/infra/database/prisma/schema.prisma"
+    "schema": "./src/infra/data/databases/prisma/schema.prisma"
   },
   "repository": {
     "type": "git",

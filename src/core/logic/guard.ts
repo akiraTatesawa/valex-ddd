@@ -102,4 +102,25 @@ export class Guard {
       message: "OK",
     };
   }
+
+  public static againstNonInteger(arg: any, argName: string): GuardResult {
+    if (typeof arg !== "number") {
+      return {
+        succeeded: false,
+        message: `${argName} must be a number`,
+      };
+    }
+
+    if (arg % 1 !== 0) {
+      return {
+        succeeded: false,
+        message: `${argName} must be an integer`,
+      };
+    }
+
+    return {
+      succeeded: true,
+      message: "OK",
+    };
+  }
 }

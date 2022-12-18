@@ -12,10 +12,12 @@ const jestConfig: JestConfigWithTsJest = {
     "^.+\\.(t|j)sx?$": "@swc/jest",
   },
   moduleNameMapper: {
-    "^@modules/(.*)$": "<rootDir>/src/modules/$1",
     "^@core/(.*)$": "<rootDir>/src/core/$1",
     "^@shared/(.*)$": "<rootDir>/src/shared/$1",
     "^@infra/(.*)$": "<rootDir>/src/infra/$1",
+    "^@domain/(.*)$": "<rootDir>/src/domain/$1",
+    "^@app/(.*)$": "<rootDir>/src/app/$1",
+    "^@tests/(.*)$": "<rootDir>/tests/$1",
   },
 };
 

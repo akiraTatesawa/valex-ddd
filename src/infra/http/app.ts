@@ -4,7 +4,7 @@ import "express-async-errors";
 import cors from "cors";
 
 import { Application } from "@core/infra/http/application";
-import { prisma } from "@infra/database/prisma/config/prisma.database";
+import { prisma } from "@infra/data/databases/prisma/config/prisma.database";
 import { ServerRouter } from "./routers/server-router";
 import { ErrorHandler } from "./middlewares/error-handler";
 
