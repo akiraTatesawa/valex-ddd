@@ -1,14 +1,14 @@
-import { CompanyRepository } from "@shared/modules/companies/app/ports/company-repository";
-import { InMemoryCompanyRepository } from "@shared/modules/companies/infra/database/in-memory/in-memory-company-repository";
-import { InMemoryDatabase } from "@infra/data/in-memory/in-memory.database";
-import { CompanyFactory } from "@shared/modules/companies/factories/company-factory";
-import { Company } from "@shared/modules/companies/domain/company";
-import { Result } from "@core/logic/result";
 import { randFullName, randUuid } from "@ngneat/falso";
-import { GetCompanyErrors } from "@shared/modules/companies/app/services/get-company/get-company-errors/errors";
+import { InMemoryCompanyRepository } from "@shared/modules/companies/infra/database/in-memory/in-memory-company-repository";
+import { CompanyFactory } from "@shared/modules/companies/factories/company-factory";
+import { Company } from "@domain/company/company";
+import { Result } from "@core/logic/result";
 import { Left, Right } from "@core/logic/either";
+import { CompanyRepository } from "@app/ports/repositories/company-repository";
+import { InMemoryDatabase } from "@infra/data/databases/in-memory/in-memory.database";
 import { GetCompanyService } from "./get-company.interface";
 import { GetCompanyImpl } from "./get-company.service";
+import { GetCompanyErrors } from "./get-company-errors/errors";
 
 describe("Get Company By API KEY Service", () => {
   let companyRepo: CompanyRepository;

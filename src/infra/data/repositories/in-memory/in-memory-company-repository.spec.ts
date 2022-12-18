@@ -1,8 +1,8 @@
-import { InMemoryDatabase } from "@infra/data/in-memory/in-memory.database";
 
-import { CompanyRepository } from "@shared/modules/companies/app/ports/company-repository";
-import { Company } from "@shared/modules/companies/domain/company";
-import { CompanyFactory } from "@shared/modules/companies/factories/company-factory";
+import { CompanyRepository } from "@app/ports/repositories/company-repository";
+import { Company } from "@domain/company/company";
+import { InMemoryDatabase } from "@infra/data/databases/in-memory/in-memory.database";
+import { CompanyFactory } from "@tests/factories/company-factory";
 import { InMemoryCompanyRepository } from "./in-memory-company-repository";
 
 describe("In Memory Company Repository", () => {

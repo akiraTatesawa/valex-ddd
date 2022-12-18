@@ -1,10 +1,10 @@
-import { InMemoryDatabase } from "@infra/data/in-memory/in-memory.database";
 import {
   EmployeeFindUniqueArgs,
   EmployeeRepository,
 } from "@app/ports/repositories/employee-repository";
 import { Employee } from "@domain/employee/employee";
-import { EmployeeMapper } from "@shared/modules/employees/mapper/employee-mapper";
+import { InMemoryDatabase } from "@infra/data/databases/in-memory/in-memory.database";
+import { EmployeeDataMapper } from "@infra/data/mappers/employee-data-mapper";
 
 export class InMemoryEmployeeRepository implements EmployeeRepository {
   private readonly database: InMemoryDatabase;
@@ -14,7 +14,7 @@ export class InMemoryEmployeeRepository implements EmployeeRepository {
   }
 
   public async save(data: Employee): Promise<void> {
-    const rawEmployee = EmployeeMapper.toPersistence(data);
+    const rawEmployee = EmployeeDataMapper.toPersistence(data);
 
     this.database.employees.push(rawEmployee);
   }
@@ -26,6 +26,6 @@ export class InMemoryEmployeeRepository implements EmployeeRepository {
 
     if (!rawEmployee) return null;
 
-    return EmployeeMapper.toDomain(rawEmployee);
+    return EmployeeDataMapper.toDomain(rawEmployee);
   }
 }

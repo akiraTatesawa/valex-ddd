@@ -13,7 +13,7 @@ import { PrismaEmployeeRepository } from "@infra/data/repositories/prisma/prisma
 import { PrismaCardRepository } from "@modules/cards/infra/database/prisma/prisma-card-repository";
 import { CardFactory } from "@modules/cards/factories/card-factory";
 import { Employee } from "@domain/employee/employee";
-import { Company } from "@shared/modules/companies/domain/company";
+import { Company } from "@domain/company/company";
 import { TestHelper } from "../helpers/test-helper";
 
 describe("POST /cards", () => {

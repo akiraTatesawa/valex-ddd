@@ -1,10 +1,7 @@
-import { InMemoryDatabase } from "@infra/data/in-memory/in-memory.database";
-import {
-  CompanyRepository,
-  CompanyUniqueArgs,
-} from "@shared/modules/companies/app/ports/company-repository";
-import { Company } from "@shared/modules/companies/domain/company";
-import { CompanyMapper } from "@shared/modules/companies/mappers/company-mapper";
+import { CompanyRepository, CompanyUniqueArgs } from "@app/ports/repositories/company-repository";
+import { Company } from "@domain/company/company";
+import { InMemoryDatabase } from "@infra/data/databases/in-memory/in-memory.database";
+import { CompanyDataMapper } from "@infra/data/mappers/company-data-mapper";
 
 export class InMemoryCompanyRepository implements CompanyRepository {
   private readonly database: InMemoryDatabase;
@@ -14,7 +11,7 @@ export class InMemoryCompanyRepository implements CompanyRepository {
   }
 
   public async save(data: Company): Promise<void> {
-    const rawCompany = CompanyMapper.toPersistence(data);
+    const rawCompany = CompanyDataMapper.toPersistence(data);
 
     this.database.companies.push(rawCompany);
   }
@@ -26,6 +23,6 @@ export class InMemoryCompanyRepository implements CompanyRepository {
 
     if (!rawCompany) return null;
 
-    return CompanyMapper.toDomain(rawCompany);
+    return CompanyDataMapper.toDomain(rawCompany);
   }
 }

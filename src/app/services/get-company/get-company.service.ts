@@ -1,8 +1,8 @@
-import { CompanyRepository } from "@shared/modules/companies/app/ports/company-repository";
 import { Guard } from "@core/logic/guard";
 import { Result } from "@core/logic/result";
-import { Company } from "@shared/modules/companies/domain/company";
+import { Company } from "@domain/company/company";
 import { left, right } from "@core/logic/either";
+import { CompanyRepository } from "@app/ports/repositories/company-repository";
 import { GetCompanyService } from "./get-company.interface";
 import { GetCompanyServiceResponse } from "./get-company.response";
 import { GetCompanyErrors } from "./get-company-errors/errors";

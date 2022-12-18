@@ -1,5 +1,5 @@
-import { InMemoryDatabase } from "@infra/data/in-memory/in-memory.database";
 import { Employee } from "@domain/employee/employee";
+import { InMemoryDatabase } from "@infra/data/databases/in-memory/in-memory.database";
 import { EmployeeFactory } from "@tests/factories/employee-factory";
 import { InMemoryEmployeeRepository } from "./in-memory-employee-repository";
 

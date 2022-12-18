@@ -11,7 +11,7 @@ import { PrismaEmployeeRepository } from "@infra/data/repositories/prisma/prisma
 import { ExpressApp } from "@infra/http/app";
 import { CardFactory } from "@modules/cards/factories/card-factory";
 import { Employee } from "@domain/employee/employee";
-import { Company } from "@shared/modules/companies/domain/company";
+import { Company } from "@domain/company/company";
 import { Card } from "@modules/cards/domain/card";
 import { ActivateCardRequestBody } from "@modules/cards/infra/http/controllers/activate-card/request";
 import { TestHelper } from "../helpers/test-helper";

@@ -1,6 +1,6 @@
 import { Either } from "@core/logic/either";
 import { Result } from "@core/logic/result";
-import { Company } from "@shared/modules/companies/domain/company";
+import { Company } from "@domain/company/company";
 import { GetCompanyErrors } from "./get-company-errors/errors";
 
 export type GetCompanyServiceResponse = Either<

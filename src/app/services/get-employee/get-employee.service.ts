@@ -1,4 +1,4 @@
-import { EmployeeRepository } from "app/ports/repositories/employee-repository";
+import { EmployeeRepository } from "@app/ports/repositories/employee-repository";
 import { Guard } from "@core/logic/guard";
 import { Result } from "@core/logic/result";
 import { Employee } from "@domain/employee/employee";

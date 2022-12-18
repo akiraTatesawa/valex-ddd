@@ -1,11 +1,11 @@
 import { randFullName, randUuid } from "@ngneat/falso";
-import { EmployeeRepository } from "app/ports/repositories/employee-repository";
+import { EmployeeRepository } from "@app/ports/repositories/employee-repository";
 import { Employee } from "@domain/employee/employee";
-import { InMemoryDatabase } from "@infra/data/in-memory/in-memory.database";
-import { InMemoryEmployeeRepository } from "@shared/modules/employees/infra/database/in-memory/in-memory-employee-repository";
-import { EmployeeFactory } from "@shared/modules/employees/factories/employee-factory";
 import { Result } from "@core/logic/result";
 import { Right, Left } from "@core/logic/either";
+import { InMemoryDatabase } from "@infra/data/databases/in-memory/in-memory.database";
+import { InMemoryEmployeeRepository } from "@infra/data/repositories/in-memory/in-memory-employee-repository";
+import { EmployeeFactory } from "@tests/factories/employee-factory";
 import { GetEmployeeService } from "./get-employee.interface";
 import { GetEmployeeImpl } from "./get-employee.service";
 import { GetEmployeeErrors } from "./get-employee-errors/errors";

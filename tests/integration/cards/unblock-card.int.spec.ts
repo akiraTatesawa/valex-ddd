@@ -4,7 +4,7 @@ import httpStatus from "http-status";
 import { randUuid, randPastDate } from "@ngneat/falso";
 
 import { Employee } from "@domain/employee/employee";
-import { Company } from "@shared/modules/companies/domain/company";
+import { Company } from "@domain/company/company";
 import { Card } from "@modules/cards/domain/card";
 import { PrismaCompanyRepository } from "@shared/modules/companies/infra/database/prisma/prisma-company-repository";
 import { PrismaEmployeeRepository } from "@infra/data/repositories/prisma/prisma-employee-repository";

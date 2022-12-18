@@ -1,6 +1,6 @@
 import { randText, randNumber } from "@ngneat/falso";
 import { Factory } from "@core/app/factory";
-import { Company } from "../domain/company";
+import { Company } from "@domain/company/company";
 
 interface CompanyFactoryGenerateProps {
   id?: string;

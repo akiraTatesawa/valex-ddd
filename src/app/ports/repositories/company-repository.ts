@@ -1,5 +1,5 @@
 import { Repository } from "@core/app/repository";
-import { Company } from "../../domain/company";
+import { Company } from "@domain/company/company";
 
 export interface CompanyUniqueArgs {
   id?: string;
