@@ -1,6 +1,6 @@
-import { CardPersistence } from "@modules/cards/infra/database/card-persistence";
-import { CompanyPersistence } from "@shared/modules/companies/infra/database/company-persistence.interface";
-import { EmployeePersistence } from "@shared/modules/employees/infra/database/employee-persistence.interface";
+import { CardPersistence } from "@infra/data/persistence-model/card-persistence";
+import { CompanyPersistence } from "@infra/data/persistence-model/company-persistence";
+import { EmployeePersistence } from "@infra/data/persistence-model/employee-persistence";
 
 export class InMemoryDatabase {
   private _companies: CompanyPersistence[] = [];

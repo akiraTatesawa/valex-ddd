@@ -20,9 +20,6 @@
     "skipLibCheck": true,
     "baseUrl": ".",
     "paths": {
-      "@modules/*": [
-        "./src/modules/*"
-      ],
       "@core/*": [
         "./src/core/*"
       ],

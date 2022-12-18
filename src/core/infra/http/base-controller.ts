@@ -1,26 +1,17 @@
-import { Request, Response } from "express";
+import * as express from "express";
 import httpStatus from "http-status";
 import { APIError } from "./api-error";
 
 export abstract class BaseController {
-  constructor() {
-    this.handle = this.handle.bind(this);
-  }
-  protected abstract handleImpl(req: Request, res: Response): Promise<any>;
-
-  public async handle(req: Request, res: Response): Promise<void> {
-    await this.handleImpl(req, res);
-  }
-
   // Success Methods
-  protected ok<DTO>(res: Response, dto?: DTO) {
+  protected ok<DTO>(res: express.Response, dto?: DTO) {
     if (dto) {
       return res.status(httpStatus.OK).send(dto);
     }
     return res.sendStatus(httpStatus.OK);
   }
 
-  protected created<DTO>(res: Response, dto?: DTO) {
+  protected created<DTO>(res: express.Response, dto?: DTO) {
     if (dto) {
       return res.status(httpStatus.CREATED).send(dto);
     }
@@ -28,7 +19,7 @@ export abstract class BaseController {
   }
 
   // Error Methods
-  protected badRequest(res: Response, message: string) {
+  protected badRequest(res: express.Response, message: string) {
     const error: APIError = {
       type: httpStatus[400],
       message,
@@ -37,7 +28,7 @@ export abstract class BaseController {
     return res.status(httpStatus.BAD_REQUEST).json(error);
   }
 
-  protected unauthorized(res: Response, message: string) {
+  protected unauthorized(res: express.Response, message: string) {
     const error: APIError = {
       type: httpStatus[401],
       message,
@@ -46,7 +37,7 @@ export abstract class BaseController {
     return res.status(httpStatus.UNAUTHORIZED).json(error);
   }
 
-  protected notFound(res: Response, message: string) {
+  protected notFound(res: express.Response, message: string) {
     const error: APIError = {
       type: httpStatus[404],
       message,
@@ -55,7 +46,7 @@ export abstract class BaseController {
     return res.status(httpStatus.NOT_FOUND).json(error);
   }
 
-  protected conflict(res: Response, message: string) {
+  protected conflict(res: express.Response, message: string) {
     const error: APIError = {
       type: httpStatus[409],
       message,
@@ -64,7 +55,7 @@ export abstract class BaseController {
     return res.status(httpStatus.CONFLICT).json(error);
   }
 
-  protected unprocessableEntity(res: Response, message: string) {
+  protected unprocessableEntity(res: express.Response, message: string) {
     const error: APIError = {
       type: httpStatus[422],
       message,
@@ -73,7 +64,7 @@ export abstract class BaseController {
     return res.status(httpStatus.UNPROCESSABLE_ENTITY).json(error);
   }
 
-  protected fail(res: Response, message: string) {
+  protected fail(res: express.Response, message: string) {
     const error: APIError = {
       type: httpStatus[409],
       message,
