@@ -1,4 +1,4 @@
-import { InMemoryDatabase } from "@infra/database/in-memory/in-memory.database";
+import { InMemoryDatabase } from "@infra/data/in-memory/in-memory.database";
 import { CardFindByTypeArgs, CardRepository } from "@modules/cards/app/ports/card-repository";
 import { Card } from "@modules/cards/domain/card";
 import { CardMapper } from "@modules/cards/mappers/card-mapper";

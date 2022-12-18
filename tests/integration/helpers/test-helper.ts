@@ -1,4 +1,4 @@
-import { prisma } from "@infra/database/prisma/config/prisma.database";
+import { prisma } from "@infra/data/databases/prisma/config/prisma.database";
 
 export class TestHelper {
   public static async cleanDB(): Promise<void> {

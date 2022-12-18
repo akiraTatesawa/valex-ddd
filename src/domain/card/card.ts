@@ -2,7 +2,7 @@ import { VoucherType } from "@shared/domain/voucher-type";
 import { Entity } from "@core/domain/entity";
 import { Result } from "@core/logic/result";
 import { Either, left, right } from "@core/logic/either";
-import { DomainErrors } from "@core/domain/domain-error";
+import { DomainErrors } from "@domain/errors/domain-error";
 import { Guard } from "@core/logic/guard";
 import { CardholderName } from "./cardholder-name";
 import { CardNumber } from "./card-number";

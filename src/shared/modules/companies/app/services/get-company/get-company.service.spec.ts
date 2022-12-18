@@ -1,6 +1,6 @@
 import { CompanyRepository } from "@shared/modules/companies/app/ports/company-repository";
 import { InMemoryCompanyRepository } from "@shared/modules/companies/infra/database/in-memory/in-memory-company-repository";
-import { InMemoryDatabase } from "@infra/database/in-memory/in-memory.database";
+import { InMemoryDatabase } from "@infra/data/in-memory/in-memory.database";
 import { CompanyFactory } from "@shared/modules/companies/factories/company-factory";
 import { Company } from "@shared/modules/companies/domain/company";
 import { Result } from "@core/logic/result";

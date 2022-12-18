@@ -3,12 +3,12 @@ import supertest from "supertest";
 import httpStatus from "http-status";
 import { randUuid, randPastDate } from "@ngneat/falso";
 
-import { Employee } from "@shared/modules/employees/domain/employee";
+import { Employee } from "@domain/employee/employee";
 import { Company } from "@shared/modules/companies/domain/company";
 import { Card } from "@modules/cards/domain/card";
 import { PrismaCompanyRepository } from "@shared/modules/companies/infra/database/prisma/prisma-company-repository";
-import { PrismaEmployeeRepository } from "@shared/modules/employees/infra/database/prisma/prisma-employee-repository";
-import { prisma } from "@infra/database/prisma/config/prisma.database";
+import { PrismaEmployeeRepository } from "@infra/data/repositories/prisma/prisma-employee-repository";
+import { prisma } from "@infra/data/databases/prisma/config/prisma.database";
 import { PrismaCardRepository } from "@modules/cards/infra/database/prisma/prisma-card-repository";
 import { ExpressApp } from "@infra/http/app";
 import { CompanyFactory } from "@shared/modules/companies/factories/company-factory";

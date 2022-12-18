@@ -1,4 +1,4 @@
-import { prisma } from "@infra/database/prisma/config/prisma.database";
+import { prisma } from "@infra/data/databases/prisma/config/prisma.database";
 import { Card } from "@modules/cards/domain/card";
 import { PrismaCardRepository } from "@modules/cards/infra/database/prisma/prisma-card-repository";
 

@@ -1,6 +1,6 @@
 import { randNumber } from "@ngneat/falso";
 import { Result } from "@core/logic/result";
-import { DomainErrors } from "@core/domain/domain-error";
+import { DomainErrors } from "@domain/errors/domain-error";
 import { Right, Left } from "@core/logic/either";
 import { CardholderName } from "./cardholder-name";
 

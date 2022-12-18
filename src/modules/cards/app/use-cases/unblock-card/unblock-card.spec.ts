@@ -1,5 +1,5 @@
 import { randUuid, randPastDate } from "@ngneat/falso";
-import { InMemoryDatabase } from "@infra/database/in-memory/in-memory.database";
+import { InMemoryDatabase } from "@infra/data/in-memory/in-memory.database";
 import { CardRepository } from "@modules/cards/app/ports/card-repository";
 import { Card } from "@modules/cards/domain/card";
 import { UnblockCardDTO } from "@modules/cards/dtos/block-unblock-card.dto";

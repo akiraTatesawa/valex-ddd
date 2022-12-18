@@ -1,6 +1,6 @@
 import { randEmail, randUuid, randPastDate, randWord } from "@ngneat/falso";
 import { Result } from "@core/logic/result";
-import { DomainErrors } from "@core/domain/domain-error";
+import { DomainErrors } from "@domain/errors/domain-error";
 import { Left, Right } from "@core/logic/either";
 import { Employee, CreateEmployeeProps } from "./employee";
 

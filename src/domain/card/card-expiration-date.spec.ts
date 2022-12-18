@@ -1,6 +1,6 @@
-import { DomainErrors } from "@core/domain/domain-error";
 import { Left, Right } from "@core/logic/either";
 import { Result } from "@core/logic/result";
+import { DomainErrors } from "@domain/errors/domain-error";
 import { randFutureDate, randPastDate } from "@ngneat/falso";
 import { CardExpirationDate } from "./card-expiration-date";
 

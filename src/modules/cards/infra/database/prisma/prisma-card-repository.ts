@@ -1,4 +1,4 @@
-import { PrismaDatabase } from "@infra/database/prisma/config/prisma.database";
+import { PrismaDatabase } from "@infra/data/databases/prisma/config/prisma.database";
 import { CardFindByTypeArgs, CardRepository } from "@modules/cards/app/ports/card-repository";
 import { Card } from "@modules/cards/domain/card";
 import { CardMapper } from "@modules/cards/mappers/card-mapper";

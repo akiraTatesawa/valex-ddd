@@ -1,6 +1,6 @@
 import { ValueObject } from "@core/domain/value-object";
 import { Result } from "@core/logic/result";
-import { DomainErrors } from "@core/domain/domain-error";
+import { DomainErrors } from "@domain/errors/domain-error";
 import { Either, left, right } from "@core/logic/either";
 import { Guard } from "@core/logic/guard";
 

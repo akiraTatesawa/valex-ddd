@@ -3,16 +3,16 @@ import supertest from "supertest";
 import httpStatus from "http-status";
 import { randUuid } from "@ngneat/falso";
 
-import { prisma } from "@infra/database/prisma/config/prisma.database";
+import { prisma } from "@infra/data/databases/prisma/config/prisma.database";
 import { ExpressApp } from "@infra/http/app";
 import { CreateCardBody } from "@modules/cards/infra/http/controllers/create-card/request";
 import { CompanyFactory } from "@shared/modules/companies/factories/company-factory";
 import { PrismaCompanyRepository } from "@shared/modules/companies/infra/database/prisma/prisma-company-repository";
 import { EmployeeFactory } from "@shared/modules/employees/factories/employee-factory";
-import { PrismaEmployeeRepository } from "@shared/modules/employees/infra/database/prisma/prisma-employee-repository";
+import { PrismaEmployeeRepository } from "@infra/data/repositories/prisma/prisma-employee-repository";
 import { PrismaCardRepository } from "@modules/cards/infra/database/prisma/prisma-card-repository";
 import { CardFactory } from "@modules/cards/factories/card-factory";
-import { Employee } from "@shared/modules/employees/domain/employee";
+import { Employee } from "@domain/employee/employee";
 import { Company } from "@shared/modules/companies/domain/company";
 import { TestHelper } from "../helpers/test-helper";
 

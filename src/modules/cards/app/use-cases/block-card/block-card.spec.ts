@@ -1,7 +1,7 @@
 import { randUuid, randPastDate } from "@ngneat/falso";
 import { Card } from "@modules/cards/domain/card";
 import { CardRepository } from "@modules/cards/app/ports/card-repository";
-import { InMemoryDatabase } from "@infra/database/in-memory/in-memory.database";
+import { InMemoryDatabase } from "@infra/data/in-memory/in-memory.database";
 import { InMemoryCardRepository } from "@modules/cards/infra/database/in-memory/in-memory-card-repository";
 import { CardFactory } from "@modules/cards/factories/card-factory";
 import { Left, Right } from "@core/logic/either";

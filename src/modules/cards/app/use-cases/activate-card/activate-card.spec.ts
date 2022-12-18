@@ -5,7 +5,7 @@ import { CardRepository } from "@modules/cards/app/ports/card-repository";
 import { Card } from "@modules/cards/domain/card";
 import { CardFactory } from "@modules/cards/factories/card-factory";
 import { InMemoryCardRepository } from "@modules/cards/infra/database/in-memory/in-memory-card-repository";
-import { InMemoryDatabase } from "@infra/database/in-memory/in-memory.database";
+import { InMemoryDatabase } from "@infra/data/in-memory/in-memory.database";
 import { Left, Right } from "@core/logic/either";
 import { ActivateCardImpl, ActivateCardUseCase } from "./activate-card";
 import { CardUseCaseErrors } from "../../card-shared-errors/card-shared-errors";

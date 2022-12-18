@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import { DomainErrors } from "@core/domain/domain-error";
+import { DomainErrors } from "@domain/errors/domain-error";
 import { BaseController } from "@core/infra/http/base-controller";
 import { CreateCardUseCase } from "@modules/cards/app/use-cases/create-card/create-card";
 import { GetCompanyErrors } from "@shared/modules/companies/app/services/get-company/get-company-errors/errors";

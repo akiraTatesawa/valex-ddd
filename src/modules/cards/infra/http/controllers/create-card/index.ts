@@ -1,7 +1,7 @@
-import { prisma } from "@infra/database/prisma/config/prisma.database";
+import { prisma } from "@infra/data/databases/prisma/config/prisma.database";
 import { PrismaCompanyRepository } from "@shared/modules/companies/infra/database/prisma/prisma-company-repository";
-import { PrismaEmployeeRepository } from "@shared/modules/employees/infra/database/prisma/prisma-employee-repository";
-import { GetEmployeeImpl } from "@shared/modules/employees/app/services/get-employee/get-employee.service";
+import { PrismaEmployeeRepository } from "@infra/data/repositories/prisma/prisma-employee-repository";
+import { GetEmployeeImpl } from "app/services/get-employee/get-employee.service";
 import { GetCompanyImpl } from "@shared/modules/companies/app/services/get-company/get-company.service";
 import { CreateCardImpl } from "@modules/cards/app/use-cases/create-card/create-card";
 import { PrismaCardRepository } from "@modules/cards/infra/database/prisma/prisma-card-repository";

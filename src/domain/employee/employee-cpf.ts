@@ -1,7 +1,7 @@
 import { ValueObject } from "@core/domain/value-object";
 import { Either, left, right } from "@core/logic/either";
 import { Result } from "@core/logic/result";
-import { DomainErrors } from "@core/domain/domain-error";
+import { DomainErrors } from "@domain/errors/domain-error";
 
 interface EmployeeCpfProps {
   value: string;

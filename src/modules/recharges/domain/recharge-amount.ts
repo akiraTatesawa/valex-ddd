@@ -1,4 +1,4 @@
-import { DomainErrors } from "@core/domain/domain-error";
+import { DomainErrors } from "@domain/errors/domain-error";
 import { ValueObject } from "@core/domain/value-object";
 import { Either, right, left } from "@core/logic/either";
 import { Guard } from "@core/logic/guard";

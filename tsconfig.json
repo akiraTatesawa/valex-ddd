@@ -18,19 +18,28 @@
     "forceConsistentCasingInFileNames": true,
     "strict": true,
     "skipLibCheck": true,
-    "baseUrl": "./src",
+    "baseUrl": ".",
     "paths": {
       "@modules/*": [
-        "modules/*"
+        "./src/modules/*"
       ],
       "@core/*": [
-        "core/*"
+        "./src/core/*"
       ],
       "@infra/*": [
-        "infra/*"
+        "./src/infra/*"
       ],
       "@shared/*": [
-        "shared/*"
+        "./src/shared/*"
+      ],
+      "@domain/*": [
+        "./src/domain/*"
+      ],
+      "@app/*": [
+        "./src/app/*"
+      ],
+      "@tests/*": [
+        "tests/*"
       ]
     },
     "plugins": [

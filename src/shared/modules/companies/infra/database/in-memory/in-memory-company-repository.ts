@@ -1,4 +1,4 @@
-import { InMemoryDatabase } from "@infra/database/in-memory/in-memory.database";
+import { InMemoryDatabase } from "@infra/data/in-memory/in-memory.database";
 import {
   CompanyRepository,
   CompanyUniqueArgs,

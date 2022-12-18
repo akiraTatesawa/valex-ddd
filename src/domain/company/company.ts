@@ -1,6 +1,6 @@
 import { randomUUID } from "crypto";
 import { Either, right, left } from "@core/logic/either";
-import { DomainErrors } from "@core/domain/domain-error";
+import { DomainErrors } from "@domain/errors/domain-error";
 import { Result } from "@core/logic/result";
 import { Entity } from "@core/domain/entity";
 import { Guard } from "@core/logic/guard";

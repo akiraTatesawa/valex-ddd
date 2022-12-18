@@ -1,4 +1,4 @@
-import { InMemoryDatabase } from "@infra/database/in-memory/in-memory.database";
+import { InMemoryDatabase } from "@infra/data/in-memory/in-memory.database";
 
 import { CompanyRepository } from "@shared/modules/companies/app/ports/company-repository";
 import { Company } from "@shared/modules/companies/domain/company";

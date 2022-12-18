@@ -1,4 +1,4 @@
-import { PrismaDatabase } from "@infra/database/prisma/config/prisma.database";
+import { PrismaDatabase } from "@infra/data/databases/prisma/config/prisma.database";
 import {
   CompanyRepository,
   CompanyUniqueArgs,
