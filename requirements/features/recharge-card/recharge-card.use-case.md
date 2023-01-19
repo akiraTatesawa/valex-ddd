@@ -32,4 +32,4 @@ Uma empresa com uma `api key` válida pode recarregar um cartão de benefícios 
 
 ### Valor de recarga inválido
 
-- [ ] Sistema retorna um erro caso o `amount` não seja um número inteiro maior que zero;
+- [x] Sistema retorna um erro caso o `amount` não seja um número inteiro maior que zero;
