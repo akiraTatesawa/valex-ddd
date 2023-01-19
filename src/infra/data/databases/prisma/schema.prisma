@@ -34,8 +34,8 @@ model PrismaEmployee {
 }
 
 model PrismaCard {
-  id             String         @id @default(uuid())
-  employee       PrismaEmployee @relation(fields: [employeeId], references: [id])
+  id             String           @id @default(uuid())
+  employee       PrismaEmployee   @relation(fields: [employeeId], references: [id])
   employeeId     String
   cardholderName String
   type           VoucherType
@@ -45,12 +45,23 @@ model PrismaCard {
   password       String?
   isVirtual      Boolean
   isBlocked      Boolean
-  originalCard   PrismaCard?    @relation("VirtualCards", fields: [originalCardId], references: [id])
+  originalCard   PrismaCard?      @relation("VirtualCards", fields: [originalCardId], references: [id])
   originalCardId String?
-  virtualCards   PrismaCard[]   @relation("VirtualCards")
+  virtualCards   PrismaCard[]     @relation("VirtualCards")
+  Recharge       PrismaRecharge[]
 
   @@unique(fields: [employeeId, type], name: "employeeId_type")
   @@map("cards")
+}
+
+model PrismaRecharge {
+  id        String     @id @default(uuid())
+  amount    Int
+  card      PrismaCard @relation(fields: [cardId], references: [id])
+  cardId    String
+  createdAt DateTime
+
+  @@map("recharges")
 }
 
 enum VoucherType {

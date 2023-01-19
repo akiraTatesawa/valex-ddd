@@ -3,6 +3,7 @@ import { cardController } from "../controllers/controller-factory";
 import { APIKeyValidator } from "../middlewares/api-key-validator";
 import { SchemaValidator } from "../middlewares/schema-validator";
 import { CardSchemas } from "../schemas/card-schemas";
+import { RechargeSchemas } from "../schemas/recharge-schemas";
 
 export class CardRouter extends ExpressRouter {
   protected configRouter(): void {
@@ -33,6 +34,13 @@ export class CardRouter extends ExpressRouter {
       "/:cardId/unblock",
       SchemaValidator.validateBody(CardSchemas.blockUnblockCardSchema),
       cardController.unblock
+    );
+
+    this._expressRouter.post(
+      "/:cardId/recharge",
+      APIKeyValidator.validateHeader,
+      SchemaValidator.validateBody(RechargeSchemas.rechargeCardSchema),
+      cardController.recharge
     );
   }
 }
