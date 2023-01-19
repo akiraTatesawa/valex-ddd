@@ -5,10 +5,10 @@ import { left, right } from "@core/logic/either";
 import { CreateCardDTO } from "@app/dtos/create-card.dto";
 import { GetCompanyService } from "@app/services/get-company/get-company.interface";
 import { GetEmployeeService } from "@app/services/get-employee/get-employee.interface";
-import { CardRepository } from "@app/ports/card-repository";
 import { CreateCardErrors } from "@app/errors/create-card-errors";
 import { CardAppMapper } from "@app/mappers/card-app-mapper";
 import { CardDTO } from "@app/dtos/card.dto";
+import { CardRepository } from "@app/ports/repositories/card-repository";
 import { CreateCardResponse } from "./create-card.response";
 
 export interface CreateCardUseCase extends UseCase<CreateCardDTO, CreateCardResponse> {}

@@ -1,4 +1,4 @@
-import { CardRepository } from "@app/ports/card-repository";
+import { CardRepository } from "@app/ports/repositories/card-repository";
 import { right, left } from "@core/logic/either";
 import { Guard } from "@core/logic/guard";
 import { Result } from "@core/logic/result";

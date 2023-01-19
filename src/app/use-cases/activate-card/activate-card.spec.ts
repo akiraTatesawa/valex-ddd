@@ -3,7 +3,7 @@ import { Result } from "@core/logic/result";
 
 import { Card } from "@domain/card/card";
 import { Left, Right } from "@core/logic/either";
-import { CardRepository } from "@app/ports/card-repository";
+import { CardRepository } from "@app/ports/repositories/card-repository";
 import { ActivateCardImpl, ActivateCardUseCase } from "./activate-card";
 import { InMemoryDatabase } from "@infra/data/databases/in-memory/in-memory.database";
 import { InMemoryCardRepository } from "@infra/data/repositories/in-memory/in-memory-card-repository";

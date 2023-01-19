@@ -1,4 +1,4 @@
-import { CardRepository } from "@app/ports/card-repository";
+import { CardRepository } from "@app/ports/repositories/card-repository";
 import { InMemoryCardRepository } from "@infra/data/repositories/in-memory/in-memory-card-repository";
 import { InMemoryDatabase } from "@infra/data/databases/in-memory/in-memory.database";
 import { randUuid } from "@ngneat/falso";

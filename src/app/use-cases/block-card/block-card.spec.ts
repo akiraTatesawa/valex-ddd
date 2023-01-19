@@ -3,7 +3,7 @@ import { Card } from "@domain/card/card";
 
 import { Left, Right } from "@core/logic/either";
 import { Result } from "@core/logic/result";
-import { CardRepository } from "@app/ports/card-repository";
+import { CardRepository } from "@app/ports/repositories/card-repository";
 import { BlockCardUseCase, BlockCardImpl } from "./block-card";
 import { BlockCardErrors } from "../../errors/block-card-errors";
 import { InMemoryDatabase } from "@infra/data/databases/in-memory/in-memory.database";
