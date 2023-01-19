@@ -9,7 +9,6 @@ import { CompanyRepository } from "@app/ports/repositories/company-repository";
 import { EmployeeRepository } from "@app/ports/repositories/employee-repository";
 import { GetCompanyService } from "@app/services/get-company/get-company.interface";
 import { GetEmployeeService } from "@app/services/get-employee/get-employee.interface";
-import { CardRepository } from "@app/ports/card-repository";
 import { InMemoryDatabase } from "@infra/data/databases/in-memory/in-memory.database";
 import { InMemoryCompanyRepository } from "@infra/data/repositories/in-memory/in-memory-company-repository";
 import { InMemoryEmployeeRepository } from "@infra/data/repositories/in-memory/in-memory-employee-repository";
@@ -21,6 +20,7 @@ import { GetCompanyErrors } from "@app/services/get-company/get-company-errors/e
 import { GetEmployeeErrors } from "@app/services/get-employee/get-employee-errors/errors";
 import { CreateCardErrors } from "@app/errors/create-card-errors";
 import { CreateCardImpl, CreateCardUseCase } from "./create-card";
+import { CardRepository } from "@app/ports/repositories/card-repository";
 
 describe("Create Card Use Case", () => {
   const company = new CompanyFactory().generate();

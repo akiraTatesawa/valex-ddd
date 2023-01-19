@@ -8,22 +8,28 @@ import { prisma } from "@infra/data/databases/prisma/config/prisma.database";
 import { PrismaCardRepository } from "@infra/data/repositories/prisma/prisma-card-repository";
 import { PrismaCompanyRepository } from "@infra/data/repositories/prisma/prisma-company-repository";
 import { PrismaEmployeeRepository } from "@infra/data/repositories/prisma/prisma-employee-repository";
+import { GetCardService } from "@app/services/get-card/get-card.service";
+import { RechargeCardImpl } from "@app/use-cases/recharge-card/recharge-card";
+import { PrismaRechargeRepository } from "@infra/data/repositories/prisma/prisma-recharge-repository";
 import { CardController } from "./card.controller";
 
 function cardControllerFactory(): CardController {
   const cardRepository = new PrismaCardRepository(prisma);
   const companyRepository = new PrismaCompanyRepository(prisma);
   const employeeRepository = new PrismaEmployeeRepository(prisma);
+  const rechargeRepository = new PrismaRechargeRepository(prisma);
 
   const getCompany = new GetCompanyImpl(companyRepository);
   const getEmployee = new GetEmployeeImpl(employeeRepository);
+  const getCard = new GetCardService(cardRepository);
 
   const createCard = new CreateCardImpl(getCompany, getEmployee, cardRepository);
   const activateCard = new ActivateCardImpl(cardRepository);
   const blockCard = new BlockCardImpl(cardRepository);
   const unblockCard = new UnblockCardImpl(cardRepository);
+  const rechargeCard = new RechargeCardImpl(rechargeRepository, getCompany, getCard);
 
-  return new CardController(createCard, activateCard, blockCard, unblockCard);
+  return new CardController(createCard, activateCard, blockCard, unblockCard, rechargeCard);
 }
 
 export const cardController = cardControllerFactory();

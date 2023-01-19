@@ -1,7 +1,7 @@
 import { BlockCardDTO, UnblockCardDTO } from "@app/dtos/block-unblock-card.dto";
 import { CardUseCaseErrors } from "@app/errors/card-shared-errors";
 import { UnblockCardErrors } from "@app/errors/unblock-card-errors";
-import { CardRepository } from "@app/ports/card-repository";
+import { CardRepository } from "@app/ports/repositories/card-repository";
 import { UseCase } from "@core/app/use-case";
 import { right, left } from "@core/logic/either";
 import { Result } from "@core/logic/result";

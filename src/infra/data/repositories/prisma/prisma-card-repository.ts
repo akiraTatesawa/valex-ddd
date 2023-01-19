@@ -1,7 +1,7 @@
 import { PrismaDatabase } from "@infra/data/databases/prisma/config/prisma.database";
 import { Card } from "@domain/card/card";
 import { CardPersistence } from "@infra/data/persistence-model/card-persistence";
-import { CardFindByTypeArgs, CardRepository } from "@app/ports/card-repository";
+import { CardFindByTypeArgs, CardRepository } from "@app/ports/repositories/card-repository";
 import { CardDataMapper } from "@infra/data/mappers/card-data-mapper";
 
 export class PrismaCardRepository implements CardRepository {

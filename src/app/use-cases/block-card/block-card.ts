@@ -2,7 +2,7 @@ import { UseCase } from "@core/app/use-case";
 import { Result } from "@core/logic/result";
 import { left, right } from "@core/logic/either";
 import { BlockCardDTO } from "@app/dtos/block-unblock-card.dto";
-import { CardRepository } from "@app/ports/card-repository";
+import { CardRepository } from "@app/ports/repositories/card-repository";
 import { CardUseCaseErrors } from "@app/errors/card-shared-errors";
 import { BlockCardResponse } from "./block-card.response";
 import { BlockCardErrors } from "../../errors/block-card-errors";

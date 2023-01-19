@@ -1,4 +1,4 @@
-import { CardFindByTypeArgs, CardRepository } from "@app/ports/card-repository";
+import { CardFindByTypeArgs, CardRepository } from "@app/ports/repositories/card-repository";
 import { Card } from "@domain/card/card";
 import { InMemoryDatabase } from "@infra/data/databases/in-memory/in-memory.database";
 import { CardDataMapper } from "@infra/data/mappers/card-data-mapper";

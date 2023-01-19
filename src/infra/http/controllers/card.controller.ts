@@ -13,22 +13,28 @@ import { CardUseCaseErrors } from "@app/errors/card-shared-errors";
 import { ActivateCardErrors } from "@app/errors/activate-card-errors";
 import { BlockCardErrors } from "@app/errors/block-card-errors";
 import { UnblockCardErrors } from "@app/errors/unblock-card-errors";
+import { RechargeCardUseCase } from "@app/use-cases/recharge-card/recharge-card";
+import { GetCardErrors } from "@app/services/get-card/get-card-errors/errors";
+import { RechargeDTO } from "@app/dtos/recharge.dto";
 import { CreateCardRequest } from "./requests/create-card-request";
 import { ActivateCardRequest } from "./requests/activate-card-request";
 import { BlockCardRequest, UnblockCardRequest } from "./requests/block-unblock-card-request";
+import { RechargeCardRequest } from "./requests/recharge-card-request";
 
 export class CardController extends BaseController {
   constructor(
     private readonly createCard: CreateCardUseCase,
     private readonly activateCard: ActivateCardUseCase,
     private readonly blockCard: BlockCardUseCase,
-    private readonly unblockCard: UnblockCardUseCase
+    private readonly unblockCard: UnblockCardUseCase,
+    private readonly rechargeCard: RechargeCardUseCase
   ) {
     super();
     this.create = this.create.bind(this);
     this.activate = this.activate.bind(this);
     this.block = this.block.bind(this);
     this.unblock = this.unblock.bind(this);
+    this.recharge = this.recharge.bind(this);
   }
 
   public async create(req: express.Request, res: express.Response) {
@@ -152,5 +158,40 @@ export class CardController extends BaseController {
     }
 
     return this.ok(res);
+  }
+
+  public async recharge(req: express.Request, res: express.Response) {
+    const reqBody: RechargeCardRequest = req.body;
+    const { cardId } = req.params;
+    const apiKey = req.headers["x-api-key"] as string;
+
+    const rechargeCardResult = await this.rechargeCard.execute({
+      cardId,
+      amount: reqBody.amount,
+      apiKey,
+    });
+
+    if (rechargeCardResult.isLeft()) {
+      const rechargeCardError = rechargeCardResult.value;
+      const errorMessage = rechargeCardResult.value.getError().message;
+
+      switch (rechargeCardError.constructor) {
+        case GetCompanyErrors.InvalidApiKeyError:
+        case DomainErrors.InvalidPropsError:
+          return this.badRequest(res, errorMessage);
+        case CardUseCaseErrors.ExpiredCardError:
+        case CardUseCaseErrors.InactiveCardError:
+          return this.unprocessableEntity(res, errorMessage);
+        case GetCompanyErrors.NotFoundError:
+        case GetCardErrors.NotFoundError:
+          return this.notFound(res, errorMessage);
+        default:
+          return this.fail(res, errorMessage);
+      }
+    }
+
+    const rechargeDTO = rechargeCardResult.value.getValue();
+
+    return this.created<RechargeDTO>(res, rechargeDTO);
   }
 }

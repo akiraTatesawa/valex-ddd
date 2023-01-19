@@ -19,6 +19,10 @@ export class PrismaDatabase {
     return this._prisma.prismaCard;
   }
 
+  public get recharge() {
+    return this._prisma.prismaRecharge;
+  }
+
   public async connect(): Promise<void> {
     await this._prisma.$connect();
 
@@ -29,6 +33,7 @@ export class PrismaDatabase {
     await this._prisma.$queryRaw`TRUNCATE TABLE companies CASCADE`;
     await this._prisma.$queryRaw`TRUNCATE TABLE employees CASCADE`;
     await this._prisma.$queryRaw`TRUNCATE TABLE cards CASCADE`;
+    await this._prisma.$queryRaw`TRUNCATE TABLE recharges CASCADE`;
   }
 }
 
