@@ -163,7 +163,7 @@ export class CardController extends BaseController {
   public async recharge(req: express.Request, res: express.Response) {
     const reqBody: RechargeCardRequest = req.body;
     const { cardId } = req.params;
-    const apiKey = req.headers["api-key"] as string;
+    const apiKey = req.headers["x-api-key"] as string;
 
     const rechargeCardResult = await this.rechargeCard.execute({
       cardId,
