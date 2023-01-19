@@ -1,0 +1,263 @@
+{
+    "_type": "export",
+    "__export_format": 4,
+    "__export_date": "2023-01-19T20:04:47.625Z",
+    "__export_source": "insomnia.desktop.app:v2022.4.0",
+    "resources": [
+        {
+            "_id": "req_b035f14715a340959a1a9587e021779d",
+            "parentId": "fld_f79cb0c77e02471e828113b93553c650",
+            "modified": 1674158585752,
+            "created": 1674154392228,
+            "url": "{{ _.URL }}/{{ _.resource }}",
+            "name": "Create",
+            "description": "",
+            "method": "POST",
+            "body": {
+                "mimeType": "application/json",
+                "text": "{\n\t\"employeeId\": \"{{ _.default_employee_id }}\",\n\t\"type\": \"transport\"\n}"
+            },
+            "parameters": [],
+            "headers": [
+                {
+                    "name": "Content-Type",
+                    "value": "application/json",
+                    "id": "pair_0e2e675b30b545228b7311bc811a81fe"
+                },
+                {
+                    "id": "pair_1156b30f8c8e4d08a02f2a652571265c",
+                    "name": "x-api-key",
+                    "value": "{{ _.default_api_key }}",
+                    "description": ""
+                }
+            ],
+            "authentication": {},
+            "metaSortKey": -1674154529441,
+            "isPrivate": false,
+            "settingStoreCookies": true,
+            "settingSendCookies": true,
+            "settingDisableRenderRequestBody": false,
+            "settingEncodeUrl": true,
+            "settingRebuildPath": true,
+            "settingFollowRedirects": "global",
+            "_type": "request"
+        },
+        {
+            "_id": "fld_f79cb0c77e02471e828113b93553c650",
+            "parentId": "wrk_e17b2cbf798d4fa5b61dbc1da866d476",
+            "modified": 1674154410757,
+            "created": 1674154390053,
+            "name": "Cards",
+            "description": "",
+            "environment": {
+                "resource": "cards"
+            },
+            "environmentPropertyOrder": {
+                "&": [
+                    "resource"
+                ]
+            },
+            "metaSortKey": -1674154390053,
+            "_type": "request_group"
+        },
+        {
+            "_id": "wrk_e17b2cbf798d4fa5b61dbc1da866d476",
+            "parentId": null,
+            "modified": 1674158651882,
+            "created": 1674154341813,
+            "name": "Valex API",
+            "description": "",
+            "scope": "collection",
+            "_type": "workspace"
+        },
+        {
+            "_id": "req_6f7080d9d627443d9f047fb76cf8feb6",
+            "parentId": "fld_f79cb0c77e02471e828113b93553c650",
+            "modified": 1674158583562,
+            "created": 1674154767954,
+            "url": "{{ _.URL }}/{{ _.resource }}/{% response 'body', 'req_b035f14715a340959a1a9587e021779d', 'b64::JC5pZA==::46b', 'no-history', 60 %}/recharge",
+            "name": "Recharge",
+            "description": "",
+            "method": "POST",
+            "body": {
+                "mimeType": "application/json",
+                "text": "{\n\t\"amount\": 100\n}"
+            },
+            "parameters": [],
+            "headers": [
+                {
+                    "name": "Content-Type",
+                    "value": "application/json",
+                    "id": "pair_bf0617731f8848d7afa4d3d9136d3c10"
+                },
+                {
+                    "id": "pair_6aebb4b12d814d5ba91349ec438be997",
+                    "name": "x-api-key",
+                    "value": "{{ _.default_api_key }}",
+                    "description": ""
+                }
+            ],
+            "authentication": {},
+            "metaSortKey": -1674154529416,
+            "isPrivate": false,
+            "settingStoreCookies": true,
+            "settingSendCookies": true,
+            "settingDisableRenderRequestBody": false,
+            "settingEncodeUrl": true,
+            "settingRebuildPath": true,
+            "settingFollowRedirects": "global",
+            "_type": "request"
+        },
+        {
+            "_id": "req_08ca77f89c9944bb8f8f23731e9d9800",
+            "parentId": "fld_f79cb0c77e02471e828113b93553c650",
+            "modified": 1674158573333,
+            "created": 1674154529391,
+            "url": "{{ _.URL }}/{{ _.resource }}/{% response 'body', 'req_b035f14715a340959a1a9587e021779d', 'b64::JC5pZA==::46b', 'no-history', 60 %}/activate",
+            "name": "Activate",
+            "description": "",
+            "method": "PATCH",
+            "body": {
+                "mimeType": "application/json",
+                "text": "{\n\t\"cvv\": \"{% response 'body', 'req_b035f14715a340959a1a9587e021779d', 'b64::JC5zZWN1cml0eUNvZGU=::46b', 'never', 60 %}\",\n\t\"password\": \"1234\"\n}"
+            },
+            "parameters": [],
+            "headers": [
+                {
+                    "name": "Content-Type",
+                    "value": "application/json",
+                    "id": "pair_efa088a3358140c3bfa8529dc027d2b0"
+                }
+            ],
+            "authentication": {},
+            "metaSortKey": -1674154529391,
+            "isPrivate": false,
+            "settingStoreCookies": true,
+            "settingSendCookies": true,
+            "settingDisableRenderRequestBody": false,
+            "settingEncodeUrl": true,
+            "settingRebuildPath": true,
+            "settingFollowRedirects": "global",
+            "_type": "request"
+        },
+        {
+            "_id": "req_e7a0bcb829d44785ab74dee2e80a9a9c",
+            "parentId": "fld_f79cb0c77e02471e828113b93553c650",
+            "modified": 1674158568596,
+            "created": 1674154707886,
+            "url": "{{ _.URL }}/{{ _.resource }}/{% response 'body', 'req_b035f14715a340959a1a9587e021779d', 'b64::JC5pZA==::46b', 'no-history', 60 %}/block",
+            "name": "Block",
+            "description": "",
+            "method": "PATCH",
+            "body": {
+                "mimeType": "application/json",
+                "text": "{\n\t\"password\": \"1234\"\n}"
+            },
+            "parameters": [],
+            "headers": [
+                {
+                    "name": "Content-Type",
+                    "value": "application/json",
+                    "id": "pair_efa088a3358140c3bfa8529dc027d2b0"
+                }
+            ],
+            "authentication": {},
+            "metaSortKey": -1672637901424,
+            "isPrivate": false,
+            "settingStoreCookies": true,
+            "settingSendCookies": true,
+            "settingDisableRenderRequestBody": false,
+            "settingEncodeUrl": true,
+            "settingRebuildPath": true,
+            "settingFollowRedirects": "global",
+            "_type": "request"
+        },
+        {
+            "_id": "req_621825e1d11d489cb29e526f45a8c3e9",
+            "parentId": "fld_f79cb0c77e02471e828113b93553c650",
+            "modified": 1674158570518,
+            "created": 1674154749006,
+            "url": "{{ _.URL }}/{{ _.resource }}/{% response 'body', 'req_b035f14715a340959a1a9587e021779d', 'b64::JC5pZA==::46b', 'no-history', 60 %}/unblock",
+            "name": "Unblock",
+            "description": "",
+            "method": "PATCH",
+            "body": {
+                "mimeType": "application/json",
+                "text": "{\n\t\"password\": \"1234\"\n}"
+            },
+            "parameters": [],
+            "headers": [
+                {
+                    "name": "Content-Type",
+                    "value": "application/json",
+                    "id": "pair_efa088a3358140c3bfa8529dc027d2b0"
+                }
+            ],
+            "authentication": {},
+            "metaSortKey": -1671879587440.5,
+            "isPrivate": false,
+            "settingStoreCookies": true,
+            "settingSendCookies": true,
+            "settingDisableRenderRequestBody": false,
+            "settingEncodeUrl": true,
+            "settingRebuildPath": true,
+            "settingFollowRedirects": "global",
+            "_type": "request"
+        },
+        {
+            "_id": "env_e13fe43e688171490cda970b9fa1138b7d4cc346",
+            "parentId": "wrk_e17b2cbf798d4fa5b61dbc1da866d476",
+            "modified": 1674154346470,
+            "created": 1674154341815,
+            "name": "Base Environment",
+            "data": {},
+            "dataPropertyOrder": {},
+            "color": null,
+            "isPrivate": false,
+            "metaSortKey": 1674154341815,
+            "_type": "environment"
+        },
+        {
+            "_id": "jar_e13fe43e688171490cda970b9fa1138b7d4cc346",
+            "parentId": "wrk_e17b2cbf798d4fa5b61dbc1da866d476",
+            "modified": 1674154341815,
+            "created": 1674154341815,
+            "name": "Default Jar",
+            "cookies": [],
+            "_type": "cookie_jar"
+        },
+        {
+            "_id": "spc_89ecf8e41b0d4f1ebdf4d81d28c6643f",
+            "parentId": "wrk_e17b2cbf798d4fa5b61dbc1da866d476",
+            "modified": 1674154341814,
+            "created": 1674154341814,
+            "fileName": "Valex DDD",
+            "contents": "",
+            "contentType": "yaml",
+            "_type": "api_spec"
+        },
+        {
+            "_id": "env_686852e9e96147a3b3ece371fe96eca3",
+            "parentId": "env_e13fe43e688171490cda970b9fa1138b7d4cc346",
+            "modified": 1674157828424,
+            "created": 1674154350036,
+            "name": "dev",
+            "data": {
+                "URL": "http://localhost:4000",
+                "default_employee_id": "75c9524a-9843-4c5e-91de-8e3e239e17af",
+                "default_api_key": "dca4afcc-e623-4f11-a0cc-27733410d86b"
+            },
+            "dataPropertyOrder": {
+                "&": [
+                    "URL",
+                    "default_employee_id",
+                    "default_api_key"
+                ]
+            },
+            "color": "#6865e6",
+            "isPrivate": false,
+            "metaSortKey": 1674154350036,
+            "_type": "environment"
+        }
+    ]
+}
