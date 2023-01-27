@@ -4,14 +4,14 @@ import { Either, right, left } from "@core/logic/either";
 import { Guard } from "@core/logic/guard";
 import { Result } from "@core/logic/result";
 
-interface RechargeAmountProps {
+interface AmountProps {
   value: number;
 }
 
-type RechargeAmountCreate = Either<DomainErrors.InvalidPropsError, Result<RechargeAmount, null>>;
+type AmountCreate = Either<DomainErrors.InvalidPropsError, Result<Amount, null>>;
 
-export class RechargeAmount extends ValueObject<RechargeAmountProps> {
-  private constructor(props: RechargeAmountProps) {
+export class Amount extends ValueObject<AmountProps> {
+  private constructor(props: AmountProps) {
     super(props);
   }
 
@@ -19,21 +19,21 @@ export class RechargeAmount extends ValueObject<RechargeAmountProps> {
     return this.props.value;
   }
 
-  public static create(amount: number): RechargeAmountCreate {
-    const guardResult = Guard.againstNonInteger(amount, "Recharge Amount");
+  public static create(amount: number): AmountCreate {
+    const guardResult = Guard.againstNonInteger(amount, "Amount");
 
     if (!guardResult.succeeded) {
       return left(DomainErrors.InvalidPropsError.create(guardResult.message));
     }
 
     if (amount <= 0) {
-      const lowerThanZeroErrorMessage = "Recharge Amount must greater than zero";
+      const lowerThanZeroErrorMessage = "Amount must greater than zero";
 
       return left(DomainErrors.InvalidPropsError.create(lowerThanZeroErrorMessage));
     }
 
-    const rechargeAmount = new RechargeAmount({ value: amount });
+    const rechargeAmount = new Amount({ value: amount });
 
-    return right(Result.ok<RechargeAmount>(rechargeAmount));
+    return right(Result.ok<Amount>(rechargeAmount));
   }
 }

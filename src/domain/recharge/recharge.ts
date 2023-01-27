@@ -3,10 +3,10 @@ import { Either, left, right } from "@core/logic/either";
 import { Guard, GuardResult } from "@core/logic/guard";
 import { Result } from "@core/logic/result";
 import { DomainErrors } from "@domain/errors/domain-error";
-import { RechargeAmount } from "./recharge-amount";
+import { Amount } from "@shared/domain/amount";
 
 interface RechargeProps {
-  amount: RechargeAmount;
+  amount: Amount;
   cardId: string;
   createdAt: Date;
 }
@@ -27,7 +27,7 @@ export class Recharge extends Entity<RechargeProps> {
     super(props, id);
   }
 
-  public get amount(): RechargeAmount {
+  public get amount(): Amount {
     return this.props.amount;
   }
 
@@ -71,7 +71,7 @@ export class Recharge extends Entity<RechargeProps> {
 
     const { id, amount, cardId, createdAt } = rechargeProps;
 
-    const rechargeAmountOrError = RechargeAmount.create(amount);
+    const rechargeAmountOrError = Amount.create(amount);
 
     if (rechargeAmountOrError.isLeft()) {
       const rechargeAmountError = rechargeAmountOrError.value;
@@ -79,10 +79,10 @@ export class Recharge extends Entity<RechargeProps> {
       return left(rechargeAmountError);
     }
 
-    const rechargeAmountEntity: RechargeAmount = rechargeAmountOrError.value.getValue();
+    const rechargeAmount: Amount = rechargeAmountOrError.value.getValue();
     const recharge = new Recharge(
       {
-        amount: rechargeAmountEntity,
+        amount: rechargeAmount,
         cardId,
         createdAt: createdAt ?? new Date(),
       },
