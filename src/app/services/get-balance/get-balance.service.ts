@@ -5,10 +5,6 @@ import { PaymentAppMapper } from "@app/mappers/payment-app-mapper";
 import { RechargeAppMapper } from "@app/mappers/recharge-app-mapper";
 import { PaymentRepository } from "@app/ports/repositories/payment-repository";
 import { RechargeRepository } from "@app/ports/repositories/recharge-repository";
-import { Either, right } from "@core/logic/either";
-import { Result } from "@core/logic/result";
-
-type GetBalanceResponse = Either<null, Result<BalanceDTO, null>>;
 
 export class GetBalanceService {
   private readonly paymentRepository: PaymentRepository;
@@ -27,7 +23,7 @@ export class GetBalanceService {
     return sumRecharges - sumPayments;
   }
 
-  public async getBalance(cardId: string): Promise<GetBalanceResponse> {
+  public async getBalance(cardId: string): Promise<BalanceDTO> {
     const recharges = await this.rechargeRepository.findAll(cardId);
     const rechargesDTO = RechargeAppMapper.bulkToDTO(recharges);
 
@@ -40,6 +36,6 @@ export class GetBalanceService {
       recharges: rechargesDTO,
     };
 
-    return right(Result.ok<BalanceDTO>(balance));
+    return balance;
   }
 }

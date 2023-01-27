@@ -8,8 +8,6 @@ import { InMemoryPaymentRepository } from "@infra/data/repositories/in-memory/in
 import { InMemoryRechargeRepository } from "@infra/data/repositories/in-memory/in-memory-recharge-repository";
 import { RechargeFactory } from "@tests/factories/recharge-factory";
 import { PaymentFactory } from "@tests/factories/payment-factory";
-import { Right } from "@core/logic/either";
-import { Result } from "@core/logic/result";
 import { GetBalanceService } from "./get-balance.service";
 
 describe("Get Balance Service", () => {
@@ -44,10 +42,16 @@ describe("Get Balance Service", () => {
   it("Should be able to get the balance", async () => {
     const result = await sut.getBalance(cardId);
 
-    expect(result).toBeInstanceOf(Right);
-    expect(result.value).toBeInstanceOf(Result);
-    expect(result.value?.getValue().balance).toEqual(rechargeAmount - paymentAmount);
-    expect(result.value?.getValue().payments).toHaveLength(1);
-    expect(result.value?.getValue().recharges).toHaveLength(1);
+    expect(result.balance).toEqual(rechargeAmount - paymentAmount);
+    expect(result.payments).toHaveLength(1);
+    expect(result.recharges).toHaveLength(1);
+  });
+
+  it("Should be able to get the balance even if there are no transactions", async () => {
+    const result = await sut.getBalance(randUuid());
+
+    expect(result.balance).toEqual(0);
+    expect(result.payments).toHaveLength(0);
+    expect(result.recharges).toHaveLength(0);
   });
 });
