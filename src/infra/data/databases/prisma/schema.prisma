@@ -64,6 +64,14 @@ model PrismaRecharge {
   @@map("recharges")
 }
 
+model PrismaBusiness {
+  id   String      @id @default(uuid())
+  name String      @unique
+  type VoucherType
+
+  @@map("businesses")
+}
+
 enum VoucherType {
   restaurant
   health
