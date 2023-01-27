@@ -47,7 +47,39 @@ A API é responsável pela criação, ativação e recarga de cartões, assim co
 
 ### Rodando Localmente
 
-*Em andamento...*
+**Pré-requisitos**: Node e Postgres.
+
+1. Clone o repositório:
+
+    ```bash
+    git clone https://github.com/akiraTatesawa/valex-ddd
+    ```
+
+2. Navegue até o diretório do projeto:
+
+    ```bash
+    cd valex-ddd/
+    ```
+
+3. Instale as dependências do projeto:
+
+    ```bash
+    npm i
+    ```
+
+4. Crie um arquivo `.env.development` na raiz do projeto seguindo o modelo fornecido em `.env.sample`;
+
+5. Rode as migrações e a seed:
+
+    ```bash
+    npm run dev:migrate && npm run dev:seed
+    ```
+
+6. Rode a aplicação:
+
+    ```bash
+    npm run dev
+    ```
 
 ### Rodando com Docker
 
