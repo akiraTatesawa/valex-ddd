@@ -123,4 +123,26 @@ export class Guard {
       message: "OK",
     };
   }
+
+  public static againstNonVoucherType(arg: string, argName: string): GuardResult {
+    const againstNonStringResult = Guard.againstNonString(arg, argName);
+
+    if (!againstNonStringResult.succeeded) {
+      return againstNonStringResult;
+    }
+
+    const validTypes = ["education", "groceries", "health", "transport", "restaurant"];
+
+    if (!validTypes.includes(arg)) {
+      return {
+        succeeded: false,
+        message: `${argName} can only assume the values: 'restaurant' | 'health' | 'transport' | 'groceries' | 'education'`,
+      };
+    }
+
+    return {
+      succeeded: true,
+      message: "OK",
+    };
+  }
 }
