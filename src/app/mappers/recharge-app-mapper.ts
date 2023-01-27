@@ -10,4 +10,8 @@ export class RechargeAppMapper {
       timestamp: domain.createdAt,
     };
   }
+
+  public static bulkToDTO(domainArray: Recharge[]): RechargeDTO[] {
+    return domainArray.map((domain) => RechargeAppMapper.toDTO(domain));
+  }
 }

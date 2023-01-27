@@ -11,4 +11,20 @@ export class PaymentDataMapper {
       createdAt: domain.createdAt,
     };
   }
+
+  public static toDomain(persistence: PaymentPersistence): Payment {
+    const paymentOrError = Payment.create({
+      id: persistence.id,
+      amount: persistence.amount,
+      businessId: persistence.businessId,
+      cardId: persistence.cardId,
+      createdAt: persistence.createdAt,
+    });
+
+    return paymentOrError.value.getValue()!;
+  }
+
+  public static bulkToDomain(persistenceArray: PaymentPersistence[]): Payment[] {
+    return persistenceArray.map((persistence) => PaymentDataMapper.toDomain(persistence));
+  }
 }

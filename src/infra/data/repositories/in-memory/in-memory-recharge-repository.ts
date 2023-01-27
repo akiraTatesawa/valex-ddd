@@ -4,11 +4,17 @@ import { InMemoryDatabase } from "@infra/data/databases/in-memory/in-memory.data
 import { RechargeDataMapper } from "@infra/data/mappers/recharge-data-mapper";
 
 export class InMemoryRechargeRepository implements RechargeRepository {
-  constructor(private readonly inMemoryDatabase: InMemoryDatabase) {}
+  constructor(private readonly database: InMemoryDatabase) {}
 
   public async save(rechargeDomain: Recharge): Promise<void> {
     const rawRecharge = RechargeDataMapper.toPersistence(rechargeDomain);
 
-    this.inMemoryDatabase.recharges.push(rawRecharge);
+    this.database.recharges.push(rawRecharge);
+  }
+
+  public async findAll(cardId: string): Promise<Recharge[]> {
+    const rawRecharges = this.database.recharges.filter((raw) => raw.cardId === cardId);
+
+    return RechargeDataMapper.bulkToDomain(rawRecharges);
   }
 }

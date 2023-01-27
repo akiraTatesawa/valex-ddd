@@ -15,4 +15,10 @@ export class InMemoryPaymentRepository implements PaymentRepository {
 
     this.database.payments.push(rawPayment);
   }
+
+  public async findAll(cardId: string): Promise<Payment[]> {
+    const rawPayments = this.database.payments.filter((raw) => raw.cardId === cardId);
+
+    return PaymentDataMapper.bulkToDomain(rawPayments);
+  }
 }
