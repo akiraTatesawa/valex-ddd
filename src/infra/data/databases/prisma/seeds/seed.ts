@@ -1,8 +1,10 @@
+import { PrismaClient } from "@prisma/client";
+import { Business } from "@domain/business/business";
 import { Company } from "@domain/company/company";
 import { Employee } from "@domain/employee/employee";
 import { CompanyDataMapper } from "@infra/data/mappers/company-data-mapper";
 import { EmployeeDataMapper } from "@infra/data/mappers/employee-data-mapper";
-import { PrismaClient } from "@prisma/client";
+import { BusinessDataMapper } from "@infra/data/mappers/business-data-mapper";
 
 class Seed {
   private static readonly prisma = new PrismaClient();
@@ -11,6 +13,7 @@ class Seed {
     console.log("\nTruncating tables...");
     await this.prisma.$queryRaw`TRUNCATE TABLE companies CASCADE`;
     await this.prisma.$queryRaw`TRUNCATE TABLE employees CASCADE`;
+    await this.prisma.$queryRaw`TRUNCATE TABLE businesses CASCADE`;
     await this.prisma.$queryRaw`TRUNCATE TABLE cards CASCADE`;
     await this.prisma.$queryRaw`TRUNCATE TABLE recharges CASCADE`;
   }
@@ -20,6 +23,16 @@ class Seed {
     console.log("\nRunning seed 🌱");
 
     await this.clean();
+
+    const business = Business.create({
+      name: "Fake Business",
+      type: "health",
+      id: "ca7432c6-660c-48be-b146-900b62c127f2",
+    }).value.getValue()!;
+
+    await this.prisma.prismaBusiness.create({
+      data: BusinessDataMapper.toPersistence(business),
+    });
 
     const company = Company.create({
       name: "Fake Company",
