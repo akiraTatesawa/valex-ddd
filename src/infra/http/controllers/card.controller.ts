@@ -16,6 +16,8 @@ import { UnblockCardErrors } from "@app/errors/unblock-card-errors";
 import { RechargeCardUseCase } from "@app/use-cases/recharge-card/recharge-card";
 import { GetCardErrors } from "@app/services/get-card/get-card-errors/errors";
 import { RechargeDTO } from "@app/dtos/recharge.dto";
+import { GetCardBalanceUseCase } from "@app/use-cases/get-card-balance/get-card-balance";
+import { BalanceDTO } from "@app/dtos/balance.dto";
 import { CreateCardRequest } from "./requests/create-card-request";
 import { ActivateCardRequest } from "./requests/activate-card-request";
 import { BlockCardRequest, UnblockCardRequest } from "./requests/block-unblock-card-request";
@@ -27,7 +29,8 @@ export class CardController extends BaseController {
     private readonly activateCard: ActivateCardUseCase,
     private readonly blockCard: BlockCardUseCase,
     private readonly unblockCard: UnblockCardUseCase,
-    private readonly rechargeCard: RechargeCardUseCase
+    private readonly rechargeCard: RechargeCardUseCase,
+    private readonly getBalanceUseCase: GetCardBalanceUseCase
   ) {
     super();
     this.create = this.create.bind(this);
@@ -35,6 +38,7 @@ export class CardController extends BaseController {
     this.block = this.block.bind(this);
     this.unblock = this.unblock.bind(this);
     this.recharge = this.recharge.bind(this);
+    this.getBalance = this.getBalance.bind(this);
   }
 
   public async create(req: express.Request, res: express.Response) {
@@ -193,5 +197,27 @@ export class CardController extends BaseController {
     const rechargeDTO = rechargeCardResult.value.getValue();
 
     return this.created<RechargeDTO>(res, rechargeDTO);
+  }
+
+  public async getBalance(req: express.Request, res: express.Response) {
+    const cardId = req.params.cardId as string;
+
+    const getBalanceResult = await this.getBalanceUseCase.execute({ cardId });
+
+    if (getBalanceResult.isLeft()) {
+      const getBalanceError = getBalanceResult.value;
+      const errorMessage = getBalanceResult.value.getError().message;
+
+      switch (getBalanceError.constructor) {
+        case GetCardErrors.NotFoundError:
+          return this.notFound(res, errorMessage);
+        default:
+          return this.fail(res, errorMessage);
+      }
+    }
+
+    const balanceDTO = getBalanceResult.value.getValue();
+
+    return this.ok<BalanceDTO>(res, balanceDTO);
   }
 }
