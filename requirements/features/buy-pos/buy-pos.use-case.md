@@ -4,48 +4,48 @@ Funcionários podem realizar compras em maquininhas POS (Points of Sale). Para u
 
 > ## Funcionamento
 
-- [ ] Sistema recebe o `cardId`, `cardPassword`, `businessId` e `amount`;
-- [ ] Sistema verifica se o cartão existe, utilizando o `cardId`;
-- [ ] Sistema verifica se o cartão está ativo;
-- [ ] Sistema verifica se o cartão está expirado;
-- [ ] Sistema verifica se o cartão está bloqueado;
-- [ ] Sistema verifica se a senha do cartão `cardPassword` está correta;
-- [ ] Sistema verifica se o estabelecimento existe, utilizando o `businessId`;
-- [ ] Sistema verifica se o tipo de estabelecimento é igual ao tipo do cartão utilizado na compra;
-- [ ] Sistema verifica se o cartão possui saldo suficiente para realizar a compra;
-- [ ] Sistema persiste a compra;
-- [ ] Sistema retorna o recibo da compra;
+- [x] Sistema recebe o `cardId`, `cardPassword`, `businessId` e `amount`;
+- [x] Sistema verifica se o cartão existe, utilizando o `cardId`;
+- [x] Sistema verifica se o cartão está ativo;
+- [x] Sistema verifica se o cartão está expirado;
+- [x] Sistema verifica se o cartão está bloqueado;
+- [x] Sistema verifica se a senha do cartão `cardPassword` está correta;
+- [x] Sistema verifica se o estabelecimento existe, utilizando o `businessId`;
+- [x] Sistema verifica se o tipo de estabelecimento é igual ao tipo do cartão utilizado na compra;
+- [x] Sistema verifica se o cartão possui saldo suficiente para realizar a compra;
+- [x] Sistema persiste a compra;
+- [x] Sistema retorna o recibo da compra;
 
 > ## Exceções
 
 > ### Cartão não encontrado
 
-- [ ] Sistema envia um erro informando que o `cardId` fornecido não pertence a um cartão cadastrado;
+- [x] Sistema envia um erro informando que o `cardId` fornecido não pertence a um cartão cadastrado;
 
 > ### Cartão inativo
 
-- [ ] Sistema envia um erro informando que o cartão está inativo e apenas cartões ativos podem realizar compras;
+- [x] Sistema envia um erro informando que o cartão está inativo e apenas cartões ativos podem realizar compras;
 
 > ### Cartão expirado
 
-- [ ] Sistema envia um erro informando que o cartão está expirado e apenas cartões não-expirados podem realizar compras;
+- [x] Sistema envia um erro informando que o cartão está expirado e apenas cartões não-expirados podem realizar compras;
 
 > ### Cartão bloqueado
 
-- [ ] Sistema envia um erro informando que o cartão está bloqueado e apenas cartões desbloqueados podem realizar compras;
+- [x] Sistema envia um erro informando que o cartão está bloqueado e apenas cartões desbloqueados podem realizar compras;
 
 > ### Senha incorreta
 
-- [ ] Sistema envia um erro informando que a senha `cardPassword` está incorreta;
+- [x] Sistema envia um erro informando que a senha `cardPassword` está incorreta;
 
 > ### Estabelecimento não encontrado
 
-- [ ] Sistema envia um erro informando que o `businessId` fornecido não pertence a um estabelecimento cadastrado;
+- [x] Sistema envia um erro informando que o `businessId` fornecido não pertence a um estabelecimento cadastrado;
 
 > ### Incompatibilidade de tipos entre o cartão e o estabelecimento
 
-- [ ] Sistema envia um erro informando que o tipo do estabelecimento não é compatível com o tipo do cartão;
+- [x] Sistema envia um erro informando que o tipo do estabelecimento não é compatível com o tipo do cartão;
 
 > ### Saldo insuficiente
 
-- [ ] Sistema envia um erro informando que o saldo do cartão é insuficiente para cobrir a compra;
+- [x] Sistema envia um erro informando que o saldo do cartão é insuficiente para cobrir a compra;
