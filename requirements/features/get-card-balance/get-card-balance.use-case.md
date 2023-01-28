@@ -5,14 +5,14 @@ Para visualizar o saldo, é necessário fornecer o identificador do cartão `car
 
 > ## Funcionamento
 
-- [ ] Sistema recebe o `cardId`;
-- [ ] Sistema verifica se o cartão existe, utilizando o `cardId`;
-- [ ] Sistema busca os pagamentos e recargas referentes ao cartão;
-- [ ] Sistema calcula o saldo do cartão;
-- [ ] Sistema retorna o saldo e o extrato do cartão.
+- [x] Sistema recebe o `cardId`;
+- [x] Sistema verifica se o cartão existe, utilizando o `cardId`;
+- [x] Sistema busca os pagamentos e recargas referentes ao cartão;
+- [x] Sistema calcula o saldo do cartão;
+- [x] Sistema retorna o saldo e o extrato do cartão.
 
 > ## Exceções
 
 > ### Cartão não encontrado
 
-- [ ] Sistema envia um erro informando que o `cardId` fornecido não pertence a um cartão cadastrado;
+- [x] Sistema envia um erro informando que o `cardId` fornecido não pertence a um cartão cadastrado;
