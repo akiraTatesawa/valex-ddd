@@ -36,11 +36,15 @@ export class CardRouter extends ExpressRouter {
       cardController.unblock
     );
 
+    // Recharge Card
     this._expressRouter.post(
       "/:cardId/recharge",
       APIKeyValidator.validateHeader,
       SchemaValidator.validateBody(RechargeSchemas.rechargeCardSchema),
       cardController.recharge
     );
+
+    // Get Card Balance
+    this._expressRouter.get("/:cardId/balance", cardController.getBalance);
   }
 }

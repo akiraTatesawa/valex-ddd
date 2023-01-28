@@ -16,26 +16,37 @@ import { PrismaPaymentRepository } from "@infra/data/repositories/prisma/prisma-
 import { GetBusinessService } from "@app/services/get-business/get-business.service";
 import { PrismaBusinessRepository } from "@infra/data/repositories/prisma/prisma-business-repository";
 import { GetBalanceService } from "@app/services/get-balance/get-balance.service";
+import { GetCardBalanceUseCase } from "@app/use-cases/get-card-balance/get-card-balance";
 import { CardController } from "./card.controller";
 import { PaymentController } from "./payment.controller";
 
 function cardControllerFactory(): CardController {
+  const paymentRepository = new PrismaPaymentRepository(prisma);
+  const rechargeRepository = new PrismaRechargeRepository(prisma);
   const cardRepository = new PrismaCardRepository(prisma);
   const companyRepository = new PrismaCompanyRepository(prisma);
   const employeeRepository = new PrismaEmployeeRepository(prisma);
-  const rechargeRepository = new PrismaRechargeRepository(prisma);
 
   const getCompany = new GetCompanyImpl(companyRepository);
   const getEmployee = new GetEmployeeImpl(employeeRepository);
   const getCard = new GetCardService(cardRepository);
+  const getBalanceService = new GetBalanceService(paymentRepository, rechargeRepository);
 
   const createCard = new CreateCardImpl(getCompany, getEmployee, cardRepository);
   const activateCard = new ActivateCardImpl(cardRepository);
   const blockCard = new BlockCardImpl(cardRepository);
   const unblockCard = new UnblockCardImpl(cardRepository);
   const rechargeCard = new RechargeCardImpl(rechargeRepository, getCompany, getCard);
+  const getBalance = new GetCardBalanceUseCase(cardRepository, getBalanceService);
 
-  return new CardController(createCard, activateCard, blockCard, unblockCard, rechargeCard);
+  return new CardController(
+    createCard,
+    activateCard,
+    blockCard,
+    unblockCard,
+    rechargeCard,
+    getBalance
+  );
 }
 
 function paymentControllerFactory() {
