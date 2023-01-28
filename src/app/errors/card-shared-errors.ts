@@ -52,4 +52,14 @@ export namespace CardUseCaseErrors {
       return new InactiveCardError();
     }
   }
+
+  export class BlockedCardError extends Result<null, ErrorInterface> {
+    private constructor() {
+      super(false, { message: "The card is blocked" }, null);
+    }
+
+    public static create(): BlockedCardError {
+      return new BlockedCardError();
+    }
+  }
 }

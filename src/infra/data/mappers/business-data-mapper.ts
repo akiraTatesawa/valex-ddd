@@ -9,4 +9,14 @@ export class BusinessDataMapper {
       type: domain.type,
     };
   }
+
+  public static toDomain(raw: BusinessPersistence): Business {
+    const businessOrError = Business.create({
+      name: raw.name,
+      type: raw.type,
+      id: raw.id,
+    });
+
+    return businessOrError.value.getValue()!;
+  }
 }

@@ -58,7 +58,7 @@ describe("Recharge Entity", () => {
       expect(recharge.value).toBeInstanceOf(DomainErrors.InvalidPropsError);
       expect(recharge.value.getValue()).toBeNull();
       expect(recharge.value.getError()).not.toBeNull();
-      expect(recharge.value.getError()?.message).toEqual("Recharge Amount must be an integer");
+      expect(recharge.value.getError()?.message).toEqual("Amount must be an integer");
     });
 
     it("Should return an error if the card id is not an UUID", () => {

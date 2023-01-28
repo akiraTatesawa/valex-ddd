@@ -10,4 +10,19 @@ export class RechargeDataMapper {
       createdAt: domain.createdAt,
     };
   }
+
+  public static toDomain(persistence: RechargePersistence): Recharge {
+    const recharge = Recharge.create({
+      id: persistence.id,
+      amount: persistence.amount,
+      cardId: persistence.cardId,
+      createdAt: persistence.createdAt,
+    });
+
+    return recharge.value.getValue()!;
+  }
+
+  public static bulkToDomain(persistenceArray: RechargePersistence[]): Recharge[] {
+    return persistenceArray.map((persistence) => RechargeDataMapper.toDomain(persistence));
+  }
 }

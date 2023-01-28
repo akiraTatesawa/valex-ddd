@@ -49,6 +49,7 @@ model PrismaCard {
   originalCardId String?
   virtualCards   PrismaCard[]     @relation("VirtualCards")
   Recharge       PrismaRecharge[]
+  PrismaPayment  PrismaPayment[]
 
   @@unique(fields: [employeeId, type], name: "employeeId_type")
   @@map("cards")
@@ -65,11 +66,24 @@ model PrismaRecharge {
 }
 
 model PrismaBusiness {
-  id   String      @id @default(uuid())
-  name String      @unique
-  type VoucherType
+  id            String          @id @default(uuid())
+  name          String          @unique
+  type          VoucherType
+  PrismaPayment PrismaPayment[]
 
   @@map("businesses")
+}
+
+model PrismaPayment {
+  id         String         @id @default(uuid())
+  card       PrismaCard     @relation(fields: [cardId], references: [id])
+  cardId     String
+  business   PrismaBusiness @relation(fields: [businessId], references: [id])
+  businessId String
+  amount     Int
+  createdAt  DateTime
+
+  @@map("payments")
 }
 
 enum VoucherType {

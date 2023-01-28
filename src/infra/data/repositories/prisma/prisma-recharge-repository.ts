@@ -17,4 +17,17 @@ export class PrismaRechargeRepository implements RechargeRepository {
       data: rawRecharge,
     });
   }
+
+  public async findAll(cardId: string): Promise<Recharge[]> {
+    const rawRecharges = await this.prisma.recharge.findMany({
+      orderBy: {
+        createdAt: "desc",
+      },
+      where: {
+        cardId,
+      },
+    });
+
+    return RechargeDataMapper.bulkToDomain(rawRecharges);
+  }
 }

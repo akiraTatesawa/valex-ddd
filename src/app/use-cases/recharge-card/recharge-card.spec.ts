@@ -147,7 +147,7 @@ describe("Recharge Card Use Case", () => {
       expect(result).toBeInstanceOf(Left);
       expect(result.isLeft()).toEqual(true);
       expect(result.value).toBeInstanceOf(DomainErrors.InvalidPropsError);
-      expect(result.value.getError()?.message).toEqual("Recharge Amount must be an integer");
+      expect(result.value.getError()?.message).toEqual("Amount must be an integer");
     });
   });
 });

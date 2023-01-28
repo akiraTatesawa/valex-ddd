@@ -4,13 +4,13 @@ import { Card } from "@domain/card/card";
 import { Left, Right } from "@core/logic/either";
 import { Result } from "@core/logic/result";
 import { CardRepository } from "@app/ports/repositories/card-repository";
-import { BlockCardUseCase, BlockCardImpl } from "./block-card";
-import { BlockCardErrors } from "../../errors/block-card-errors";
 import { InMemoryDatabase } from "@infra/data/databases/in-memory/in-memory.database";
 import { InMemoryCardRepository } from "@infra/data/repositories/in-memory/in-memory-card-repository";
 import { CardFactory } from "@tests/factories/card-factory";
 import { BlockCardDTO } from "@app/dtos/block-unblock-card.dto";
 import { CardUseCaseErrors } from "@app/errors/card-shared-errors";
+import { BlockCardErrors } from "../../errors/block-card-errors";
+import { BlockCardUseCase, BlockCardImpl } from "./block-card";
 
 describe("Block Card Use Case", () => {
   let card: Card;
