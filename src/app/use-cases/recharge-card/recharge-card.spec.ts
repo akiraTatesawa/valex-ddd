@@ -120,9 +120,13 @@ describe("Recharge Card Use Case", () => {
     });
 
     it("Should return an error if the card is expired", async () => {
-      inMemoryDatabase.cards[0].expirationDate = randPastDate({ years: 10 });
+      const expiredCard = new CardFactory().generate({
+        expirationDate: randPastDate({ years: 20 }),
+        password: "1234",
+      });
+      await cardRepository.save(expiredCard);
       const request: CreateRechargeDTO = {
-        cardId: card._id,
+        cardId: expiredCard._id,
         apiKey: company.apiKey,
         amount: randNumber({ min: 1 }),
       };

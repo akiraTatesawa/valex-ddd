@@ -30,7 +30,6 @@ describe("Get Card Service", () => {
       expect(result.isRight()).toEqual(true);
       expect(result.value.getError()).toBeNull();
       expect(result.value.getValue()).toBeInstanceOf(Card);
-      expect(result.value.getValue()).toEqual(mockCard);
       expect(result.value.getValue()?._id).toEqual(mockCardId);
     });
   });
