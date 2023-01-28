@@ -8,7 +8,6 @@ import { GetCardErrors } from "./get-card-errors/errors";
 import { GetCardResponse } from "./get-card.response";
 
 export type GetCardByDetailsRequest = Omit<CardInfo, "cvv">;
-
 export class GetCardService {
   private readonly cardRepository: CardRepository;
 

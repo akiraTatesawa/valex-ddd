@@ -28,6 +28,11 @@ describe("Get Card Service", () => {
       await cardRepository.save(card);
     });
 
+    beforeEach(async () => {
+      card = new CardFactory().generate({ id: cardId });
+      await cardRepository.save(card);
+    });
+
     it("Should be able to get a card by id", async () => {
       const result = await sut.getCard(cardId);
 
