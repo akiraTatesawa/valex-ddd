@@ -3,7 +3,7 @@ import type { JestConfigWithTsJest } from "ts-jest";
 
 const jestConfig: JestConfigWithTsJest = {
   clearMocks: true,
-  collectCoverage: true,
+  collectCoverage: false,
   coverageDirectory: "coverage",
   preset: "ts-jest",
   testEnvironment: "node",

@@ -32,7 +32,7 @@ describe("Amount Value Object", () => {
     });
 
     it("Should return an error if the amount is not an integer", () => {
-      const amount: number = randNumber({ min: 1, fraction: 2 });
+      const amount: number = randNumber({ min: 1, fraction: 2 }) / 10;
 
       const result = Amount.create(amount);
 

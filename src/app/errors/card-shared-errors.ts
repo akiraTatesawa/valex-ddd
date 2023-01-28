@@ -43,6 +43,16 @@ export namespace CardUseCaseErrors {
     }
   }
 
+  export class WrongSecurityCodeError extends Result<null, ErrorInterface> {
+    private constructor() {
+      super(false, { message: "Wrong Security Code" }, null);
+    }
+
+    public static create(): WrongSecurityCodeError {
+      return new WrongSecurityCodeError();
+    }
+  }
+
   export class InactiveCardError extends Result<null, ErrorInterface> {
     private constructor() {
       super(false, { message: "The card must be active" }, null);

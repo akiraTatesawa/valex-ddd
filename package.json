@@ -8,6 +8,7 @@
     "test:migrate": "npm run test:load-env -- prisma generate && npm run test:load-env -- prisma migrate dev",
     "test:int": "npm run test:migrate && npm run test:load-env -- jest int -- --runInBand",
     "test": "npm run test:migrate && npm run test:load-env -- jest -- --runInBand",
+    "test:coverage": "npm run test -- --coverage=true",
     "ci:test": "npm run test:migrate && npm run test:load-env -- jest -- --runInBand --coverage=false",
     "dev:load-env": "dotenv -e .env.development",
     "dev:generate": "npm run dev:load-env -- prisma generate",
