@@ -16,6 +16,7 @@ class Seed {
     await this.prisma.$queryRaw`TRUNCATE TABLE businesses CASCADE`;
     await this.prisma.$queryRaw`TRUNCATE TABLE cards CASCADE`;
     await this.prisma.$queryRaw`TRUNCATE TABLE recharges CASCADE`;
+    await this.prisma.$queryRaw`TRUNCATE TABLE payments CASCADE`;
   }
 
   public static async main(): Promise<void> {
