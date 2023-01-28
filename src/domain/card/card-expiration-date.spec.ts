@@ -31,6 +31,32 @@ describe("Card Expiration Date Value Object", () => {
       expect(result.value.getValue()?.getDate()).toEqual(expirationDate);
     });
 
+    it("Should be able to create an expirationDate from a string", () => {
+      const expirationDate = `01/22`;
+
+      const result = CardExpirationDate.createFromString(expirationDate);
+
+      expect(result).toBeInstanceOf(Right);
+      expect(result.value.getError()).toBeNull();
+      expect(result.value.getValue()).toBeInstanceOf(CardExpirationDate);
+      expect(result.value?.getValue()?.getStringExpirationDate()).toEqual(expirationDate);
+      expect(result.value.getValue()?.getDate()).toBeInstanceOf(Date);
+      expect(result.value.getValue()?.getDate().getUTCDate()).toEqual(30);
+    });
+
+    it("Should be able to create an expirationDate from a string (february)", () => {
+      const expirationDate = `02/22`;
+
+      const result = CardExpirationDate.createFromString(expirationDate);
+
+      expect(result).toBeInstanceOf(Right);
+      expect(result.value.getError()).toBeNull();
+      expect(result.value.getValue()).toBeInstanceOf(CardExpirationDate);
+      expect(result.value?.getValue()?.getStringExpirationDate()).toEqual(expirationDate);
+      expect(result.value.getValue()?.getDate()).toBeInstanceOf(Date);
+      expect(result.value.getValue()?.getDate().getUTCDate()).toEqual(28);
+    });
+
     it("Should return 'true' if the card is expired", () => {
       const expirationDate = randPastDate();
       const cardExpirationDate = CardExpirationDate.create(expirationDate).value.getValue();
@@ -55,6 +81,16 @@ describe("Card Expiration Date Value Object", () => {
       expect(result.value).toBeInstanceOf(DomainErrors.InvalidPropsError);
       expect(result.value.getValue()).toBeNull();
       expect(result.value.getError()?.message).toEqual("Card Expiration Date must be a Date");
+    });
+
+    it("Should return an error if the provided string expiration Date has an invalid format", () => {
+      const result = CardExpirationDate.createFromString("invalid");
+
+      expect(result).toBeInstanceOf(Left);
+      expect(result.isLeft()).toEqual(true);
+      expect(result.value).toBeInstanceOf(DomainErrors.InvalidPropsError);
+      expect(result.value.getValue()).toBeNull();
+      expect(result.value.getError()?.message).toEqual("Invalid Card Expiration Date format");
     });
   });
 });
