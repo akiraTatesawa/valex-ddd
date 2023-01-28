@@ -31,10 +31,10 @@ Exemplo de entrada:
 
 - [ ] Sistema recebe os dados do cartão `cardInfo`, o identificador do estabelecimento `businessId` e o montante da compra `amount`;
 - [ ] Sistema valida os dados do cartão;
-  - [ ] Sistema valida se o CVV está correto;
 - [ ] Sistema verifica se o cartão está ativo;
 - [ ] Sistema verifica se o cartão está bloqueado;
 - [ ] Sistema verifica se o cartão está expirado;
+- [ ] Sistema valida se o CVV está correto;
 - [ ] Sistema verifica se o estabelecimento existe;
 - [ ] Sistema verifica se o tipo de cartão corresponde ao tipo do estabelecimento;
 - [ ] Sistema verifica se o cartão possui saldo suficiente;
@@ -58,6 +58,10 @@ Exemplo de entrada:
 > ### Cartão bloqueado
 
 - [ ] Sistema envia um erro informando que o cartão está bloqueado e apenas cartões desbloqueados podem realizar compras;
+
+> ### Código de segurança incorreto
+
+- [ ] Sistema envia um erro informando que o código de segurança `cardInfo.cvv` está incorreto;
 
 > ### Estabelecimento não encontrado
 
