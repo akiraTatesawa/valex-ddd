@@ -19,8 +19,16 @@ export class PrismaDatabase {
     return this._prisma.prismaCard;
   }
 
+  public get business() {
+    return this._prisma.prismaBusiness;
+  }
+
   public get recharge() {
     return this._prisma.prismaRecharge;
+  }
+
+  public get payment() {
+    return this._prisma.prismaPayment;
   }
 
   public async connect(): Promise<void> {
