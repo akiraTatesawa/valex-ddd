@@ -34,12 +34,9 @@ export class PrismaCardRepository implements CardRepository {
   }
 
   public async findByType({ employeeId, type }: CardFindByTypeArgs): Promise<Card | null> {
-    const rawCard = await this.prisma.card.findUnique({
+    const rawCard = await this.prisma.card.findFirst({
       where: {
-        employeeId_type: {
-          employeeId,
-          type,
-        },
+        AND: [{ employeeId, type }],
       },
     });
 
