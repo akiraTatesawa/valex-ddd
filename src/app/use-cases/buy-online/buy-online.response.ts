@@ -13,7 +13,7 @@ export type BuyOnlineResponse = Either<
   | CardUseCaseErrors.InactiveCardError
   | CardUseCaseErrors.ExpiredCardError
   | CardUseCaseErrors.BlockedCardError
-  | CardUseCaseErrors.WrongSecurityCodeError
+  | CardUseCaseErrors.IncorrectCVVError
   | GetBusinessErrors.NotFoundError
   | PaymentErrors.IncompatibleTypesError
   | PaymentErrors.InsufficientBalance,

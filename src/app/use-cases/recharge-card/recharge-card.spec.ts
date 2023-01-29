@@ -143,7 +143,7 @@ describe("Recharge Card Use Case", () => {
       const request: CreateRechargeDTO = {
         cardId: card._id,
         apiKey: company.apiKey,
-        amount: randNumber({ min: 1 }) / 10,
+        amount: randNumber({ min: 1, max: 9 }) / 10,
       };
 
       const result = await sut.execute(request);

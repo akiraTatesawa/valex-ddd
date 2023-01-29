@@ -20,6 +20,7 @@ import { GetCardErrors } from "@app/services/get-card/get-card-errors/errors";
 import { CardUseCaseErrors } from "@app/errors/card-shared-errors";
 import { GetBusinessErrors } from "@app/services/get-business/get-business-errors/errors";
 import { PaymentErrors } from "@app/errors/payment-errors";
+import { DomainErrors } from "@domain/errors/domain-error";
 import { BuyOnlineUseCase } from "./buy-online";
 
 describe("Buy Online Use Case", () => {
@@ -188,9 +189,9 @@ describe("Buy Online Use Case", () => {
       const result = await sut.execute(request);
 
       expect(result).toBeInstanceOf(Left);
-      expect(result.value).toBeInstanceOf(CardUseCaseErrors.WrongSecurityCodeError);
+      expect(result.value).toBeInstanceOf(CardUseCaseErrors.IncorrectCVVError);
       expect(result.value.getValue()).toBeNull();
-      expect(result.value.getError()).toHaveProperty("message", "Wrong Security Code");
+      expect(result.value.getError()).toHaveProperty("message", "Incorrect Card CVV");
     });
 
     it("Should return an error if the business does not exist", async () => {
@@ -255,6 +256,26 @@ describe("Buy Online Use Case", () => {
       expect(result.value).toBeInstanceOf(PaymentErrors.InsufficientBalance);
       expect(result.value.getValue()).toBeNull();
       expect(result.value.getError()).toHaveProperty("message", "Insufficient Card Balance");
+    });
+
+    it("Should return an error if the payment amount is invalid", async () => {
+      const request: CreateOnlinePaymentDTO = {
+        amount: randNumber({ min: 900 }) / 100,
+        businessId: business._id,
+        cardInfo: {
+          cardholderName: card.cardholderName.value,
+          cardNumber: card.number.value,
+          cvv: card.securityCode.decrypt(),
+          expirationDate: card.expirationDate.getStringExpirationDate(),
+        },
+      };
+
+      const result = await sut.execute(request);
+
+      expect(result).toBeInstanceOf(Left);
+      expect(result.value).toBeInstanceOf(DomainErrors.InvalidPropsError);
+      expect(result.value.getValue()).toBeNull();
+      expect(result.value.getError()).toHaveProperty("message", "Amount must be an integer");
     });
   });
 });

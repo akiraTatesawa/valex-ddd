@@ -47,7 +47,7 @@ export class BuyOnlineUseCase implements UseCase<CreateOnlinePaymentDTO, BuyOnli
       return left(CardUseCaseErrors.BlockedCardError.create());
     }
     if (!card.securityCode.compare(cvv)) {
-      return left(CardUseCaseErrors.WrongSecurityCodeError.create());
+      return left(CardUseCaseErrors.IncorrectCVVError.create());
     }
 
     const businessOrError = await this.getBusinessService.getBusiness(businessId);
@@ -63,19 +63,22 @@ export class BuyOnlineUseCase implements UseCase<CreateOnlinePaymentDTO, BuyOnli
       return left(PaymentErrors.IncompatibleTypesError.create());
     }
 
-    const balanceDTO = await this.getBalanceService.getBalance(card._id);
-
-    if (balanceDTO.balance - amount < 0) {
-      return left(PaymentErrors.InsufficientBalance.create());
-    }
-
     const onlinePaymentOrError = Payment.create({
       cardId: card._id,
       businessId,
       amount,
     });
 
-    if (onlinePaymentOrError.isLeft()) throw Error;
+    if (onlinePaymentOrError.isLeft()) {
+      const paymentEntityError = onlinePaymentOrError.value;
+      return left(paymentEntityError);
+    }
+
+    const balanceDTO = await this.getBalanceService.getBalance(card._id);
+
+    if (balanceDTO.balance - amount < 0) {
+      return left(PaymentErrors.InsufficientBalance.create());
+    }
 
     const onlinePayment = onlinePaymentOrError.value.getValue();
 
