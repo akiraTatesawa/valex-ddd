@@ -1,4 +1,4 @@
-# Compras em Points of Sale (POS)
+# Criação de Cartão Virtual
 
 Funcionários podem gerar cartões virtuais a partir de um cartão físico.
 
