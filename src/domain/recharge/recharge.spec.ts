@@ -48,7 +48,7 @@ describe("Recharge Entity", () => {
   describe("Fail", () => {
     it("Should return an error if the recharge amount is invalid", () => {
       const rechargeProps: CreateRechargeProps = {
-        amount: randNumber({ min: 1, fraction: 2 }),
+        amount: 0.9,
         cardId: randUuid(),
       };
 

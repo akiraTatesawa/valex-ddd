@@ -129,6 +129,7 @@ describe("Buy at Points of Sale Use Case", () => {
     it("Should return an error if the card is expired", async () => {
       const expiredCard = new CardFactory().generate({
         expirationDate: randPastDate({ years: 10 }),
+        type: "health",
       });
       expiredCard.activate("1234");
       await cardRepository.save(expiredCard);
