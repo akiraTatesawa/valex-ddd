@@ -7,7 +7,7 @@ export interface CardPersistence {
   type: VoucherType;
   number: string;
   securityCode: string;
-  expirationDate: Date;
+  expirationDate: string;
   password: string | undefined;
   isVirtual: boolean;
   originalCardId: string | undefined;

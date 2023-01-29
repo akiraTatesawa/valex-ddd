@@ -17,6 +17,7 @@ import { GetBusinessService } from "@app/services/get-business/get-business.serv
 import { PrismaBusinessRepository } from "@infra/data/repositories/prisma/prisma-business-repository";
 import { GetBalanceService } from "@app/services/get-balance/get-balance.service";
 import { GetCardBalanceUseCase } from "@app/use-cases/get-card-balance/get-card-balance";
+import { BuyOnlineUseCase } from "@app/use-cases/buy-online/buy-online";
 import { CardController } from "./card.controller";
 import { PaymentController } from "./payment.controller";
 
@@ -66,7 +67,14 @@ function paymentControllerFactory() {
     getBalanceService
   );
 
-  return new PaymentController(buyPosUseCase);
+  const buyOnlineUseCase = new BuyOnlineUseCase(
+    paymentRepository,
+    getCardService,
+    getBusinessService,
+    getBalanceService
+  );
+
+  return new PaymentController(buyPosUseCase, buyOnlineUseCase);
 }
 
 export const cardController = cardControllerFactory();

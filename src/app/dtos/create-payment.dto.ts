@@ -4,3 +4,16 @@ export interface CreatePoSPaymentDTO {
   businessId: string;
   amount: number;
 }
+
+export interface CardInfo {
+  cardNumber: string;
+  cardholderName: string;
+  expirationDate: string;
+  cvv: string;
+}
+
+export interface CreateOnlinePaymentDTO {
+  cardInfo: CardInfo;
+  businessId: string;
+  amount: number;
+}

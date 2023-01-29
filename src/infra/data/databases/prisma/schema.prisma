@@ -41,7 +41,7 @@ model PrismaCard {
   type           VoucherType
   number         String
   securityCode   String
-  expirationDate DateTime
+  expirationDate String
   password       String?
   isVirtual      Boolean
   isBlocked      Boolean

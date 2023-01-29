@@ -1,4 +1,8 @@
-import { CardFindByTypeArgs, CardRepository } from "@app/ports/repositories/card-repository";
+import {
+  CardFindByTypeArgs,
+  CardRepository,
+  FindCardByDetailsArgs,
+} from "@app/ports/repositories/card-repository";
 import { Card } from "@domain/card/card";
 import { InMemoryDatabase } from "@infra/data/databases/in-memory/in-memory.database";
 import { CardDataMapper } from "@infra/data/mappers/card-data-mapper";
@@ -29,6 +33,21 @@ export class InMemoryCardRepository implements CardRepository {
   public async findByType({ employeeId, type }: CardFindByTypeArgs): Promise<Card | null> {
     const rawCard = this.database.cards.find(
       (card) => card.employeeId === employeeId && card.type === type
+    );
+
+    if (!rawCard) return null;
+
+    return CardDataMapper.toDomain(rawCard);
+  }
+
+  public async findByDetails(args: FindCardByDetailsArgs): Promise<Card | null> {
+    const { cardNumber, cardholderName, expirationDate } = args;
+
+    const rawCard = this.database.cards.find(
+      (raw) =>
+        raw.cardholderName === cardholderName &&
+        raw.expirationDate === expirationDate &&
+        raw.number === cardNumber
     );
 
     if (!rawCard) return null;

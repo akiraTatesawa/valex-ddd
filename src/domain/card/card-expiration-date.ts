@@ -84,4 +84,25 @@ export class CardExpirationDate extends ValueObject<CardExpirationDateProps> {
 
     return right(Result.ok<CardExpirationDate>(expirationDateEntity));
   }
+
+  public static createFromString(expirationDate: string): CreateExpirationDateResult {
+    const regex = /^(0[1-9]|1[0-2])\/?([0-9]{4}|[0-9]{2})$/;
+
+    if (!regex.test(expirationDate)) {
+      return left(DomainErrors.InvalidPropsError.create("Invalid Card Expiration Date format"));
+    }
+
+    const month = parseInt(expirationDate.slice(0, 2), 10) - 1;
+    const year = parseInt(`20${expirationDate.slice(3)}`, 10);
+    const day = month === 1 ? 28 : 30;
+
+    const date = new Date(year, month, day);
+
+    const cardExpirationDate = new CardExpirationDate({
+      value: expirationDate,
+      timestamp: date,
+    });
+
+    return right(Result.ok<CardExpirationDate>(cardExpirationDate));
+  }
 }

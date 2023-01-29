@@ -11,5 +11,12 @@ export class PaymentRouter extends ExpressRouter {
       SchemaValidator.validateBody(PaymentSchemas.buyPOSSchema),
       paymentController.buyPOS
     );
+
+    // Online Payment
+    this._expressRouter.post(
+      "/online",
+      SchemaValidator.validateBody(PaymentSchemas.buyOnlineSchema),
+      paymentController.buyOnline
+    );
   }
 }
