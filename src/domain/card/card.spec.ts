@@ -150,6 +150,34 @@ describe("Card Entity", () => {
       expect(card.password).toBeDefined();
       expect(card.password?.compare(password)).toEqual(true);
     });
+
+    it("Should be able to generate a virtual card", () => {
+      const cardProps: CreateCardProps = {
+        employeeId: employee._id,
+        cardholderName: employee.fullName.value,
+        type: "groceries",
+      };
+      const card = Card.create(cardProps).value.getValue()!;
+      card.activate("1234");
+
+      const result = card.generateVirtualCard();
+
+      expect(result).toBeInstanceOf(Right);
+      expect(result.value).toBeInstanceOf(Result);
+      expect(result.value.getError()).toBeNull();
+      expect(result.value.getValue()).toBeInstanceOf(Card);
+      expect(result.value.getValue()?._id).not.toEqual(card._id);
+      expect(result.value.getValue()?.number.value).not.toEqual(card.number.value);
+      expect(result.value.getValue()?.securityCode.decrypt()).not.toEqual(
+        card.securityCode.decrypt()
+      );
+      expect(result.value.getValue()?.cardholderName.value).toEqual(card.cardholderName.value);
+      expect(result.value.getValue()?.employeeId).toEqual(card.employeeId);
+      expect(result.value.getValue()?.password?.value).toEqual(card.password?.value);
+      expect(result.value.getValue()?.type).toEqual(card.type);
+      expect(result.value.getValue()?.isVirtual).toEqual(true);
+      expect(result.value.getValue()).toHaveProperty("originalCardId", card._id);
+    });
   });
 
   describe("Fail", () => {
@@ -294,6 +322,44 @@ describe("Card Entity", () => {
       expect(result.value.getValue()).toBeNull();
       expect(result.value.getError()?.message).toEqual(
         "Card Password must be a 4 numeric digits string"
+      );
+    });
+
+    it("Should return an error when trying to generate a virtual card from an inactive card", () => {
+      const cardProps: CreateCardProps = {
+        employeeId: employee._id,
+        cardholderName: employee.fullName.value,
+        type: "groceries",
+      };
+      const card = Card.create(cardProps).value.getValue()!;
+
+      const result = card.generateVirtualCard();
+
+      expect(result).toBeInstanceOf(Left);
+      expect(result.value).toBeInstanceOf(DomainErrors.InvalidPropsError);
+      expect(result.value.getValue()).toBeNull();
+      expect(result.value.getError()?.message).toEqual(
+        "Cannot create a Virtual Card from an inactive card"
+      );
+    });
+
+    it("Should return an error when trying to generate a virtual card from another virtual card", () => {
+      const cardProps: CreateCardProps = {
+        employeeId: employee._id,
+        cardholderName: employee.fullName.value,
+        type: "groceries",
+      };
+      const card = Card.create(cardProps).value.getValue()!;
+      card.activate("1234");
+      const virtualCard = card.generateVirtualCard().value.getValue()!;
+
+      const result = virtualCard.generateVirtualCard();
+
+      expect(result).toBeInstanceOf(Left);
+      expect(result.value).toBeInstanceOf(DomainErrors.InvalidPropsError);
+      expect(result.value.getValue()).toBeNull();
+      expect(result.value.getError()?.message).toEqual(
+        "Cannot create a Virtual Card from another virtual card"
       );
     });
   });

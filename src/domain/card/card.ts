@@ -206,4 +206,37 @@ export class Card extends Entity<CardProps> {
 
     return right(Result.ok<Card>(card));
   }
+
+  public generateVirtualCard(): CreateCardResult {
+    if (this.password === undefined) {
+      return left(
+        DomainErrors.InvalidPropsError.create("Cannot create a Virtual Card from an inactive card")
+      );
+    }
+
+    if (this.isVirtual) {
+      return left(
+        DomainErrors.InvalidPropsError.create(
+          "Cannot create a Virtual Card from another virtual card"
+        )
+      );
+    }
+
+    const virtualCardOrError = Card.create({
+      cardholderName: this.cardholderName.value,
+      password: this.password?.value,
+      employeeId: this.employeeId,
+      type: this.type,
+      originalCardId: this._id,
+      isVirtual: true,
+    });
+
+    if (virtualCardOrError.isLeft()) {
+      return left(virtualCardOrError.value);
+    }
+
+    const virtualCard = virtualCardOrError.value.getValue();
+
+    return right(Result.ok<Card>(virtualCard));
+  }
 }
