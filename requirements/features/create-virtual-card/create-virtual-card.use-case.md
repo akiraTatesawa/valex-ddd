@@ -13,23 +13,23 @@ Para criar um cartão virtual, é necessário fornecer o identificador do cartã
 
 > ## Funcionamento
 
-- [ ] Sistema recebe o `cardId` e a `password`;
-- [ ] Sistema verifica se o cartão existe, utilizando o `cardId`;
-- [ ] Sistema verifica se o cartão está ativo;
-- [ ] Sistema verifica se a senha do cartão `password` está correta;
-- [ ] Sistema persiste o cartão;
-- [ ] Sistema retorna os dados do cartão virtual gerado para o funcionário;
+- [x] Sistema recebe o `cardId` e a `password`;
+- [x] Sistema verifica se o cartão existe, utilizando o `cardId`;
+- [x] Sistema verifica se o cartão está ativo;
+- [x] Sistema verifica se a senha do cartão `password` está correta;
+- [x] Sistema persiste o cartão;
+- [x] Sistema retorna os dados do cartão virtual gerado para o funcionário;
 
 > ## Exceções
 
 > ### Cartão não encontrado
 
-- [ ] Sistema envia um erro informando que o `cardId` fornecido não pertence a um cartão cadastrado;
+- [x] Sistema envia um erro informando que o `cardId` fornecido não pertence a um cartão cadastrado;
 
 > ### Cartão inativo
 
-- [ ] Sistema envia um erro informando que o cartão está inativo;
+- [x] Sistema envia um erro informando que o cartão está inativo;
 
 > ### Senha incorreta
 
-- [ ] Sistema envia um erro informando que a senha `password` está incorreta;
+- [x] Sistema envia um erro informando que a senha `password` está incorreta;
