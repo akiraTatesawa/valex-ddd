@@ -29,48 +29,48 @@ Exemplo de entrada:
 
 > ## Funcionamento
 
-- [ ] Sistema recebe os dados do cartão `cardInfo`, o identificador do estabelecimento `businessId` e o montante da compra `amount`;
-- [ ] Sistema valida os dados do cartão;
-- [ ] Sistema verifica se o cartão está ativo;
-- [ ] Sistema verifica se o cartão está bloqueado;
-- [ ] Sistema verifica se o cartão está expirado;
-- [ ] Sistema valida se o CVV está correto;
-- [ ] Sistema verifica se o estabelecimento existe;
-- [ ] Sistema verifica se o tipo de cartão corresponde ao tipo do estabelecimento;
-- [ ] Sistema verifica se o cartão possui saldo suficiente;
-- [ ] Sistema persiste a compra;
-- [ ] Sistema retorna o recibo da compra;
+- [x] Sistema recebe os dados do cartão `cardInfo`, o identificador do estabelecimento `businessId` e o montante da compra `amount`;
+- [x] Sistema valida os dados do cartão;
+- [x] Sistema verifica se o cartão está ativo;
+- [x] Sistema verifica se o cartão está bloqueado;
+- [x] Sistema verifica se o cartão está expirado;
+- [x] Sistema valida se o CVV está correto;
+- [x] Sistema verifica se o estabelecimento existe;
+- [x] Sistema verifica se o tipo de cartão corresponde ao tipo do estabelecimento;
+- [x] Sistema verifica se o cartão possui saldo suficiente;
+- [x] Sistema persiste a compra;
+- [x] Sistema retorna o recibo da compra;
 
 > ## Exceções
 
 > ### Cartão não encontrado
 
-- [ ] Sistema envia um erro informando que o `cardInfo` fornecido não pertence a um cartão cadastrado;
+- [x] Sistema envia um erro informando que o `cardInfo` fornecido não pertence a um cartão cadastrado;
 
 > ### Cartão inativo
 
-- [ ] Sistema envia um erro informando que o cartão está inativo e apenas cartões ativos podem realizar compras;
+- [x] Sistema envia um erro informando que o cartão está inativo e apenas cartões ativos podem realizar compras;
 
 > ### Cartão expirado
 
-- [ ] Sistema envia um erro informando que o cartão está expirado e apenas cartões não-expirados podem realizar compras;
+- [x] Sistema envia um erro informando que o cartão está expirado e apenas cartões não-expirados podem realizar compras;
 
 > ### Cartão bloqueado
 
-- [ ] Sistema envia um erro informando que o cartão está bloqueado e apenas cartões desbloqueados podem realizar compras;
+- [x] Sistema envia um erro informando que o cartão está bloqueado e apenas cartões desbloqueados podem realizar compras;
 
 > ### Código de segurança incorreto
 
-- [ ] Sistema envia um erro informando que o código de segurança `cardInfo.cvv` está incorreto;
+- [x] Sistema envia um erro informando que o código de segurança `cardInfo.cvv` está incorreto;
 
 > ### Estabelecimento não encontrado
 
-- [ ] Sistema envia um erro informando que o `businessId` fornecido não pertence a um estabelecimento cadastrado;
+- [x] Sistema envia um erro informando que o `businessId` fornecido não pertence a um estabelecimento cadastrado;
 
 > ### Incompatibilidade de tipos entre o cartão e o estabelecimento
 
-- [ ] Sistema envia um erro informando que o tipo do estabelecimento não é compatível com o tipo do cartão;
+- [x] Sistema envia um erro informando que o tipo do estabelecimento não é compatível com o tipo do cartão;
 
 > ### Saldo insuficiente
 
-- [ ] Sistema envia um erro informando que o saldo do cartão é insuficiente para cobrir a compra;
+- [x] Sistema envia um erro informando que o saldo do cartão é insuficiente para cobrir a compra;

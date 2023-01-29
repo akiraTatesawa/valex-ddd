@@ -17,5 +17,4 @@ export interface CardRepository extends Repository<Card> {
   findByType(args: CardFindByTypeArgs): Promise<Card | null>;
   findById(id: string): Promise<Card | null>;
   findByDetails(args: FindCardByDetailsArgs): Promise<Card | null>;
-  findByDetails(args: FindCardByDetailsArgs): Promise<Card | null>;
 }
