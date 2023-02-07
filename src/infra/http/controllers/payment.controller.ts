@@ -55,6 +55,7 @@ export class PaymentController extends BaseController {
         case CardUseCaseErrors.BlockedCardError:
         case PaymentErrors.IncompatibleTypesError:
         case PaymentErrors.InsufficientBalance:
+        case CardUseCaseErrors.VirtualCardError:
           return this.unprocessableEntity(res, errorMessage);
 
         default:

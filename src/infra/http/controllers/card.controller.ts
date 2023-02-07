@@ -185,6 +185,7 @@ export class CardController extends BaseController {
           return this.badRequest(res, errorMessage);
         case CardUseCaseErrors.ExpiredCardError:
         case CardUseCaseErrors.InactiveCardError:
+        case CardUseCaseErrors.VirtualCardError:
           return this.unprocessableEntity(res, errorMessage);
         case GetCompanyErrors.NotFoundError:
         case GetCardErrors.NotFoundError:
