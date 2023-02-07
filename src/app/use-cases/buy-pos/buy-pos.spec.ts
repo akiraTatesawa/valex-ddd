@@ -107,6 +107,26 @@ describe("Buy at Points of Sale Use Case", () => {
       expect(result.value.getError()).toHaveProperty("message", "Card not found");
     });
 
+    it("Should return an error if the card is virtual", async () => {
+      inMemoryDatabase.cards[0].isVirtual = true;
+      const request: CreatePoSPaymentDTO = {
+        cardId: card._id,
+        businessId: business._id,
+        amount: randNumber({ min: 1, max: 90 }),
+        cardPassword: "1234",
+      };
+
+      const result = await sut.execute(request);
+
+      expect(result).toBeInstanceOf(Left);
+      expect(result.value).toBeInstanceOf(CardUseCaseErrors.VirtualCardError);
+      expect(result.value.getValue()).toBeNull();
+      expect(result.value.getError()).toHaveProperty(
+        "message",
+        "Cannot use a virtual card on a POS payment"
+      );
+    });
+
     it("Should return an error if the card is not active", async () => {
       const inactiveCard = new CardFactory().generate();
       await cardRepository.save(inactiveCard);

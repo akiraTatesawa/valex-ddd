@@ -8,6 +8,7 @@ Funcionalidade: Compra em Points of Sale
     Cenario: Funcionário realiza a compra com sucesso
      Dado que o funcionário opte por pagar através de POS utilizando seu cartão de benefício
      E o cartão esteja cadastrado
+     E o cartão não seja virtual
      E o cartão esteja ativo
      E o cartão não esteja expirado
      E o cartão não esteja bloqueado
@@ -25,9 +26,17 @@ Funcionalidade: Compra em Points of Sale
       Entao o funcionário não deve ser capaz de realizar uma compra
       E o funcionário recebe uma mensagem de erro informando que o cartão não está cadastrado
 
+    Cenario: Funcionário falha ao realizar compra com cartão virtual
+     Dado que o funcionário opte por pagar através de POS utilizando seu cartão de benefício
+     E o cartão esteja cadastrado
+     Mas o cartão seja virtual
+      Entao o funcionário não deve ser capaz de realizar uma compra
+      E o funcionário recebe uma mensagem de erro informando que cartões virtuais não podem utilizar o sistema POS
+
     Cenario: Funcionário falha ao realizar compra com cartão inativo
      Dado que o funcionário opte por pagar através de POS utilizando seu cartão de benefício
      E o cartão esteja cadastrado
+     E o cartão não seja virtual
      Mas o cartão não esteja ativo
       Entao o funcionário não deve ser capaz de realizar uma compra
       E o funcionário recebe uma mensagem de erro informando que o cartão está inativo
@@ -35,6 +44,7 @@ Funcionalidade: Compra em Points of Sale
     Cenario: Funcionário falha ao realizar compra com cartão expirado
      Dado que o funcionário opte por pagar através de POS utilizando seu cartão de benefício
      E o cartão esteja cadastrado
+     E o cartão não seja virtual
      E o cartão esteja ativo
      Mas o cartão esteja expirado
       Entao o funcionário não deve ser capaz de realizar uma compra
@@ -43,6 +53,7 @@ Funcionalidade: Compra em Points of Sale
     Cenario: Funcionário falha ao realizar compra com cartão bloqueado
      Dado que o funcionário opte por pagar através de POS utilizando seu cartão de benefício
      E o cartão esteja cadastrado
+     E o cartão não seja virtual
      E o cartão esteja ativo
      E o cartão não esteja expirado
      Mas o cartão esteja bloqueado
@@ -52,6 +63,7 @@ Funcionalidade: Compra em Points of Sale
     Cenario: Funcionário falha ao realizar compra com a senha errada do cartão
      Dado que o funcionário opte por pagar através de POS utilizando seu cartão de benefício
      E o cartão esteja cadastrado
+     E o cartão não seja virtual
      E o cartão esteja ativo
      E o cartão não esteja expirado
      E o cartão não esteja bloqueado
@@ -62,6 +74,7 @@ Funcionalidade: Compra em Points of Sale
     Cenario: Funcionário falha ao realizar compra num estabelecimento não cadastrado
      Dado que o funcionário opte por pagar através de POS utilizando seu cartão de benefício
      E o cartão esteja cadastrado
+     E o cartão não seja virtual
      E o cartão esteja ativo
      E o cartão não esteja expirado
      E o cartão não esteja bloqueado
@@ -73,6 +86,7 @@ Funcionalidade: Compra em Points of Sale
     Cenario: Funcionário falha ao realizar compra num estabelecimento com tipo diferente do cartão
      Dado que o funcionário opte por pagar através de POS utilizando seu cartão de benefício
      E o cartão esteja cadastrado
+     E o cartão não seja virtual
      E o cartão esteja ativo
      E o cartão não esteja expirado
      E o cartão não esteja bloqueado
@@ -85,6 +99,7 @@ Funcionalidade: Compra em Points of Sale
     Cenario: Funcionário falha ao realizar compra com saldo insuficiente
      Dado que o funcionário opte por pagar através de POS utilizando seu cartão de benefício
      E o cartão esteja cadastrado
+     E o cartão não seja virtual
      E o cartão esteja ativo
      E o cartão não esteja expirado
      E o cartão não esteja bloqueado
@@ -98,6 +113,7 @@ Funcionalidade: Compra em Points of Sale
     Cenario: Funcionário falha ao realizar compra com montante igual ou menor que zero
      Dado que o funcionário opte por pagar através de POS utilizando seu cartão de benefício
      E o cartão esteja cadastrado
+     E o cartão não seja virtual
      E o cartão esteja ativo
      E o cartão não esteja expirado
      E o cartão não esteja bloqueado
