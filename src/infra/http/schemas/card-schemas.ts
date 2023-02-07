@@ -22,6 +22,8 @@ export namespace CardSchemas {
   });
 
   export const createVirtualCardSchema = Joi.object<CreateVirtualCardRequest>({
-    password: Joi.string().required(),
+    password: Joi.string().length(4).required(),
   });
+
+  export const deleteVirtualCardSchema = createVirtualCardSchema;
 }

@@ -88,4 +88,12 @@ export class PrismaCardRepository implements CardRepository {
       update: rawCard,
     });
   }
+
+  public async delete(id: string): Promise<void> {
+    await this.prisma.card.delete({
+      where: {
+        id,
+      },
+    });
+  }
 }

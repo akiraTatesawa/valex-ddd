@@ -15,13 +15,6 @@ export class CardRouter extends ExpressRouter {
       cardController.create
     );
 
-    // Create Virtual Card
-    this._expressRouter.post(
-      "/:cardId/virtual",
-      SchemaValidator.validateBody(CardSchemas.createVirtualCardSchema),
-      virtualCardController.createVirtualCard
-    );
-
     // Activate Voucher Card
     this._expressRouter.patch(
       "/:cardId/activate",
@@ -53,5 +46,19 @@ export class CardRouter extends ExpressRouter {
 
     // Get Card Balance
     this._expressRouter.get("/:cardId/balance", cardController.getBalance);
+
+    // Create Virtual Card
+    this._expressRouter.post(
+      "/:cardId/virtual",
+      SchemaValidator.validateBody(CardSchemas.createVirtualCardSchema),
+      virtualCardController.createVirtualCard
+    );
+
+    // Delete Virtual Card
+    this._expressRouter.delete(
+      "/:cardId/virtual/delete",
+      SchemaValidator.validateBody(CardSchemas.deleteVirtualCardSchema),
+      virtualCardController.deleteVirtualCard
+    );
   }
 }
