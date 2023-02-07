@@ -90,7 +90,7 @@ describe("POST /cards", () => {
       expect(result.status).toEqual(httpStatus.BAD_REQUEST);
       expect(result.body).not.toHaveProperty("id");
       expect(result.body).toHaveProperty("type", httpStatus[400]);
-      expect(result.body).toHaveProperty("message", '"Company API KEY" must be a valid GUID');
+      expect(result.body).toHaveProperty("message", "Company API KEY must be a valid UUID");
     });
 
     it("[404::NOT_FOUND]: Should return an error if the company does not exist", async () => {
