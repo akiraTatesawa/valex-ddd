@@ -68,4 +68,10 @@ export class InMemoryCardRepository implements CardRepository {
       this.database.cards.push(rawCard);
     }
   }
+
+  public async delete(id: string): Promise<void> {
+    const cardIndex = this.database.cards.findIndex((rawCard) => rawCard.id === id);
+
+    this.database.cards.splice(cardIndex);
+  }
 }
