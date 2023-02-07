@@ -10,6 +10,7 @@ Cenario: Empresa recarrega o cartão
  Dado que a empresa esteja cadastrada no sistema
  E a empresa forneça uma chave de api válida
  E o cartão exista
+ E o cartão não seja virtual
  E o cartão esteja ativo
  E o cartão não esteja expirado
  E o valor da recarga seja um inteiro maior que zero
@@ -35,10 +36,19 @@ Cenario: Empresa falha ao recarregar cartão que não existe
   Quando a empresa solicitar a recarga do cartão
   Entao a empresa recebe uma mensagem de erro informando que o cartão não existe
 
+Cenario: Empresa falha ao recarregar cartão virtual
+ Dado que a empresa esteja cadastrada no sistema
+ E a empresa forneça uma chave de api válida
+ E o cartão exista
+ Mas o cartão seja virtual
+  Quando a empresa solicitar a recarga do cartão
+  Entao a empresa recebe uma mensagem de erro informando que cartões virtuais não podem ser recarregados
+
 Cenario: Empresa falha ao recarregar cartão que não está ativo
  Dado que a empresa esteja cadastrada no sistema
  E a empresa forneça uma chave de api válida
  E o cartão exista
+ E o cartão não seja virtual
  Mas o cartão não esteja ativo
   Quando a empresa solicitar a recarga do cartão
   Entao a empresa recebe uma mensagem de erro informando que o cartão não está ativo
@@ -47,6 +57,7 @@ Cenario: Empresa falha ao recarregar cartão expirado
  Dado que a empresa esteja cadastrada no sistema
  E a empresa forneça uma chave de api válida
  E o cartão exista
+ E o cartão não seja virtual
  E o cartão esteja ativo
  Mas o cartão esteja expirado
   Quando a empresa solicitar a recarga do cartão
@@ -56,6 +67,7 @@ Cenario: Empresa falha ao recarregar cartão com um valor de recarga inválido
  Dado que a empresa esteja cadastrada no sistema
  E a empresa forneça uma chave de api válida
  E o cartão exista
+ E o cartão não seja virtual
  E o cartão esteja ativo
  E o cartão não esteja expirado
  Mas o valor da recarga não seja um inteiro maior que zero
