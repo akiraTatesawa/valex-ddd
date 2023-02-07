@@ -127,7 +127,7 @@ describe("POST /cards", () => {
       expect(result.body).toHaveProperty("message", "Employee not found");
     });
 
-    it("[422]::UNPROCESSABLE_ENTITY]: Should return an error if the employee does not belong to the company", async () => {
+    it("[422::UNPROCESSABLE_ENTITY]: Should return an error if the employee does not belong to the company", async () => {
       const fakeCompany = new CompanyFactory().generate();
       await companyRepo.save(fakeCompany);
       const fakeEmployee = new EmployeeFactory().generate({
@@ -151,7 +151,7 @@ describe("POST /cards", () => {
       expect(result.body).toHaveProperty("message", "Employee does not belong to the company");
     });
 
-    it("[409]::CONFLICT]: Should return an error if the employee already has a card with the same type", async () => {
+    it("[409::CONFLICT]: Should return an error if the employee already has a card with the same type", async () => {
       const card = new CardFactory().generate({ employeeId: employee._id, type: "education" });
       await cardRepo.save(card);
       const createCardRequest: CreateCardRequest = {
