@@ -1,4 +1,4 @@
-import { randCompanyName, randText } from "@ngneat/falso";
+import { randText } from "@ngneat/falso";
 import { DomainErrors } from "@domain/errors/domain-error";
 import { Left, Right } from "@core/logic/either";
 import { Result } from "@core/logic/result";
@@ -7,7 +7,7 @@ import { CompanyName } from "./company-name";
 describe("Company Name Value Object", () => {
   describe("Success", () => {
     it("Should be able to create a company name value object", () => {
-      const name = randCompanyName();
+      const name = randText({ charCount: 20 });
 
       const result = CompanyName.create(name);
 

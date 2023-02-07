@@ -7,6 +7,7 @@ Uma empresa com uma `api key` válida pode recarregar um cartão de benefícios 
 - [x] Sistema recebe a `api key`, o `cardId` e o valor de recarga `amount`;
 - [x] Sistema valida se a empresa está cadastrada;
 - [x] Sistema valida se o cartão existe;
+- [x] Sistema valida se o cartão não é virtual;
 - [x] Sistema valida se o cartão está ativo;
 - [x] Sistema valida se o cartão não está expirado;
 - [x] Sistema valida o valor de `amount`;
@@ -21,6 +22,10 @@ Uma empresa com uma `api key` válida pode recarregar um cartão de benefícios 
 ### Cartão não encontrado
 
 - [x] Sistema retorna um erro caso não haja algum cartão com o `cardId` fornecido;
+
+### Cartão virtual
+
+- [x] Sistema retorna um erro caso o cartão seja virtual;
 
 ### Cartão inativo
 

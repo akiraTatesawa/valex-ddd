@@ -34,12 +34,9 @@ export class PrismaCardRepository implements CardRepository {
   }
 
   public async findByType({ employeeId, type }: CardFindByTypeArgs): Promise<Card | null> {
-    const rawCard = await this.prisma.card.findUnique({
+    const rawCard = await this.prisma.card.findFirst({
       where: {
-        employeeId_type: {
-          employeeId,
-          type,
-        },
+        AND: [{ employeeId, type }],
       },
     });
 
@@ -89,6 +86,14 @@ export class PrismaCardRepository implements CardRepository {
       },
       create: rawCard,
       update: rawCard,
+    });
+  }
+
+  public async delete(id: string): Promise<void> {
+    await this.prisma.card.delete({
+      where: {
+        id,
+      },
     });
   }
 }

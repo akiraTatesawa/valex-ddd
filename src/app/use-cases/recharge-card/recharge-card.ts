@@ -52,6 +52,10 @@ export class RechargeCardImpl implements RechargeCardUseCase {
 
     const card: Card = cardOrError.value.getValue();
 
+    if (card.isVirtual) {
+      return left(CardUseCaseErrors.VirtualCardError.create("Cannot recharge a virtual card"));
+    }
+
     if (!card.isActive) {
       return left(CardUseCaseErrors.InactiveCardError.create());
     }

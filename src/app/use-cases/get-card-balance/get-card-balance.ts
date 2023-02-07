@@ -29,7 +29,9 @@ export class GetCardBalanceUseCase implements UseCase<GetBalanceRequest, GetBala
       return left(CardUseCaseErrors.NotFoundError.create());
     }
 
-    const balance = await this.getBalanceService.getBalance(cardId);
+    const rootCardId = card.originalCardId ?? card._id;
+
+    const balance = await this.getBalanceService.getBalance(rootCardId);
 
     return right(Result.ok<BalanceDTO>(balance));
   }

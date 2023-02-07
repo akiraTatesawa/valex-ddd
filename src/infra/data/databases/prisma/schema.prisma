@@ -51,7 +51,6 @@ model PrismaCard {
   Recharge       PrismaRecharge[]
   PrismaPayment  PrismaPayment[]
 
-  @@unique(fields: [employeeId, type], name: "employeeId_type")
   @@map("cards")
 }
 

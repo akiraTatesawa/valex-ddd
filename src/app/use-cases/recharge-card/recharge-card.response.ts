@@ -10,6 +10,7 @@ export type RechargeCardResponse = Either<
   | GetCompanyErrors.InvalidApiKeyError
   | GetCompanyErrors.NotFoundError
   | GetCardErrors.NotFoundError
+  | CardUseCaseErrors.VirtualCardError
   | CardUseCaseErrors.InactiveCardError
   | CardUseCaseErrors.ExpiredCardError
   | DomainErrors.InvalidPropsError,

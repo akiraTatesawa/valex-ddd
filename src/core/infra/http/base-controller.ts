@@ -66,7 +66,7 @@ export abstract class BaseController {
 
   protected fail(res: express.Response, message: string) {
     const error: APIError = {
-      type: httpStatus[409],
+      type: httpStatus[500],
       message,
     };
 

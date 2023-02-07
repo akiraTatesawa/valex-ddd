@@ -1,5 +1,5 @@
 import { ExpressRouter } from "@core/infra/http/router";
-import { cardController } from "../controllers/controller-factory";
+import { cardController, virtualCardController } from "../controllers/controller-factory";
 import { APIKeyValidator } from "../middlewares/api-key-validator";
 import { SchemaValidator } from "../middlewares/schema-validator";
 import { CardSchemas } from "../schemas/card-schemas";
@@ -46,5 +46,19 @@ export class CardRouter extends ExpressRouter {
 
     // Get Card Balance
     this._expressRouter.get("/:cardId/balance", cardController.getBalance);
+
+    // Create Virtual Card
+    this._expressRouter.post(
+      "/:cardId/virtual",
+      SchemaValidator.validateBody(CardSchemas.createVirtualCardSchema),
+      virtualCardController.createVirtualCard
+    );
+
+    // Delete Virtual Card
+    this._expressRouter.delete(
+      "/:cardId/virtual/delete",
+      SchemaValidator.validateBody(CardSchemas.deleteVirtualCardSchema),
+      virtualCardController.deleteVirtualCard
+    );
   }
 }

@@ -18,8 +18,11 @@ import { PrismaBusinessRepository } from "@infra/data/repositories/prisma/prisma
 import { GetBalanceService } from "@app/services/get-balance/get-balance.service";
 import { GetCardBalanceUseCase } from "@app/use-cases/get-card-balance/get-card-balance";
 import { BuyOnlineUseCase } from "@app/use-cases/buy-online/buy-online";
+import { CreateVirtualCardUseCase } from "@app/use-cases/create-virtual-card/create-virtual-card";
+import { DeleteVirtualCardUseCase } from "@app/use-cases/delete-virtual-card/delete-virtual-card";
 import { CardController } from "./card.controller";
 import { PaymentController } from "./payment.controller";
+import { VirtualCardController } from "./virtual-card.controller";
 
 function cardControllerFactory(): CardController {
   const paymentRepository = new PrismaPaymentRepository(prisma);
@@ -50,6 +53,17 @@ function cardControllerFactory(): CardController {
   );
 }
 
+function virtualCardControllerFactory() {
+  const cardRepository = new PrismaCardRepository(prisma);
+
+  const getCardService = new GetCardService(cardRepository);
+
+  const createVirtualCardUseCase = new CreateVirtualCardUseCase(cardRepository, getCardService);
+  const deleteVirtualCardUseCase = new DeleteVirtualCardUseCase(cardRepository, getCardService);
+
+  return new VirtualCardController(createVirtualCardUseCase, deleteVirtualCardUseCase);
+}
+
 function paymentControllerFactory() {
   const paymentRepository = new PrismaPaymentRepository(prisma);
   const rechargeRepository = new PrismaRechargeRepository(prisma);
@@ -78,4 +92,5 @@ function paymentControllerFactory() {
 }
 
 export const cardController = cardControllerFactory();
+export const virtualCardController = virtualCardControllerFactory();
 export const paymentController = paymentControllerFactory();

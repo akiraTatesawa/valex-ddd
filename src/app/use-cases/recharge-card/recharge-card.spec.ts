@@ -103,6 +103,22 @@ describe("Recharge Card Use Case", () => {
       expect(result.value.getError()?.message).toEqual("Card not found");
     });
 
+    it("Should return an error if the card is virtual", async () => {
+      inMemoryDatabase.cards[0].isVirtual = true;
+      const request: CreateRechargeDTO = {
+        cardId: card._id,
+        apiKey: company.apiKey,
+        amount: randNumber({ min: 1 }),
+      };
+
+      const result = await sut.execute(request);
+
+      expect(result).toBeInstanceOf(Left);
+      expect(result.value).toBeInstanceOf(CardUseCaseErrors.VirtualCardError);
+      expect(result.value.getValue()).toBeNull();
+      expect(result.value.getError()).toHaveProperty("message", "Cannot recharge a virtual card");
+    });
+
     it("Should return an error if the card is inactive", async () => {
       inMemoryDatabase.cards[0].password = undefined;
       const request: CreateRechargeDTO = {

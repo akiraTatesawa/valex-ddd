@@ -25,6 +25,7 @@ describe("Get Card Balance Use Case", () => {
   let sut: GetCardBalanceUseCase;
 
   const card = new CardFactory().generate();
+  card.activate("1234");
   const recharge = new RechargeFactory().generate({
     cardId: card._id,
     amount: randNumber({ min: 90 }),
@@ -51,6 +52,23 @@ describe("Get Card Balance Use Case", () => {
   describe("Success", () => {
     it("Should be able to get the balance", async () => {
       const result = await sut.execute({ cardId: card._id });
+
+      expect(result).toBeInstanceOf(Right);
+      expect(result.value.getValue()).toHaveProperty("balance");
+      expect(result.value.getValue()).toHaveProperty("payments");
+      expect(result.value.getValue()).toHaveProperty("recharges");
+      expect(result.value.getValue()?.recharges).toHaveLength(1);
+      expect(result.value.getValue()?.payments).toHaveLength(1);
+      expect(result.value.getValue()?.balance).toEqual(
+        recharge.amount.value - payment.amount.value
+      );
+    });
+
+    it("Should be able to get the balance if the card is virtual", async () => {
+      const virtualCard = card.generateVirtualCard().value.getValue()!;
+      await cardRepository.save(virtualCard);
+
+      const result = await sut.execute({ cardId: virtualCard._id });
 
       expect(result).toBeInstanceOf(Right);
       expect(result.value.getValue()).toHaveProperty("balance");

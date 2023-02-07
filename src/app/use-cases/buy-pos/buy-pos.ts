@@ -45,6 +45,11 @@ export class BuyPosUseCase implements UseCase<CreatePoSPaymentDTO, BuyPosUseCase
 
     const card = cardOrError.value.getValue();
 
+    if (card.isVirtual) {
+      return left(
+        CardUseCaseErrors.VirtualCardError.create("Cannot use a virtual card on a POS payment")
+      );
+    }
     if (!card.isActive) {
       return left(CardUseCaseErrors.InactiveCardError.create());
     }

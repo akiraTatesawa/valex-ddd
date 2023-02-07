@@ -6,6 +6,7 @@ Funcionários podem realizar compras em maquininhas POS (Points of Sale). Para u
 
 - [x] Sistema recebe o `cardId`, `cardPassword`, `businessId` e `amount`;
 - [x] Sistema verifica se o cartão existe, utilizando o `cardId`;
+- [x] Sistema verifica se o cartão não é virtual;
 - [x] Sistema verifica se o cartão está ativo;
 - [x] Sistema verifica se o cartão está expirado;
 - [x] Sistema verifica se o cartão está bloqueado;
@@ -21,6 +22,10 @@ Funcionários podem realizar compras em maquininhas POS (Points of Sale). Para u
 > ### Cartão não encontrado
 
 - [x] Sistema envia um erro informando que o `cardId` fornecido não pertence a um cartão cadastrado;
+
+> ### Cartão virtual
+
+- [x] Sistema envia um erro informando que cartões virtuais não podem ser utilizados na compra POS;
 
 > ### Cartão inativo
 

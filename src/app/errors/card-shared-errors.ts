@@ -62,4 +62,14 @@ export namespace CardUseCaseErrors {
       return new BlockedCardError();
     }
   }
+
+  export class VirtualCardError extends Result<null, ErrorInterface> {
+    private constructor(message: string) {
+      super(false, { message }, null);
+    }
+
+    public static create(message: string): VirtualCardError {
+      return new VirtualCardError(message);
+    }
+  }
 }
