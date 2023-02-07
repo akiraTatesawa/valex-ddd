@@ -36,6 +36,7 @@ export class BuyOnlineUseCase implements UseCase<CreateOnlinePaymentDTO, BuyOnli
     }
 
     const card = cardOrError.value.getValue();
+    const cardId = card.originalCardId ?? card._id;
 
     if (!card.isActive) {
       return left(CardUseCaseErrors.InactiveCardError.create());
@@ -64,7 +65,7 @@ export class BuyOnlineUseCase implements UseCase<CreateOnlinePaymentDTO, BuyOnli
     }
 
     const onlinePaymentOrError = Payment.create({
-      cardId: card._id,
+      cardId,
       businessId,
       amount,
     });
@@ -74,7 +75,7 @@ export class BuyOnlineUseCase implements UseCase<CreateOnlinePaymentDTO, BuyOnli
       return left(paymentEntityError);
     }
 
-    const balanceDTO = await this.getBalanceService.getBalance(card._id);
+    const balanceDTO = await this.getBalanceService.getBalance(cardId);
 
     if (balanceDTO.balance - amount < 0) {
       return left(PaymentErrors.InsufficientBalance.create());
