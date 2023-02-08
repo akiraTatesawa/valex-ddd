@@ -45,8 +45,13 @@ export class CardHelper {
     });
   }
 
-  public static async expireCard(card: Card): Promise<void> {
-    const expiredDate = CardExpirationDate.create(randPastDate({ years: 10 })).value.getValue()!;
+  public static async expireCard(card: Card, expirationDateString?: string): Promise<void> {
+    let expiredDate = CardExpirationDate.create(randPastDate({ years: 10 })).value.getValue()!;
+
+    if (expirationDateString) {
+      expiredDate = CardExpirationDate.createFromString(expirationDateString).value.getValue()!;
+    }
+
     const expiredStringDate = expiredDate.getStringExpirationDate();
 
     await prisma.card.update({
