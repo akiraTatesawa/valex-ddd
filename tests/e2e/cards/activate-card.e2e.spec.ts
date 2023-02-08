@@ -66,7 +66,7 @@ describe("PATCH /cards/:cardId/activate", () => {
       expect(result.body).toHaveProperty("message", "Card not found");
     });
 
-    it("[400:BAD_REQUEST] Should return an error if the card is already active", async () => {
+    it("[400::BAD_REQUEST] Should return an error if the card is already active", async () => {
       card.activate("1234");
       await cardRepo.save(card);
       const activateCardReq: ActivateCardRequest = {
@@ -80,7 +80,7 @@ describe("PATCH /cards/:cardId/activate", () => {
       expect(result.body).toHaveProperty("message", "The card is already active");
     });
 
-    it("[400:BAD_REQUEST] Should return an error if the card is already active", async () => {
+    it("[400::BAD_REQUEST] Should return an error if the card is expired", async () => {
       card = new CardFactory().generate({
         id: card._id,
         employeeId: employee._id,
@@ -98,7 +98,7 @@ describe("PATCH /cards/:cardId/activate", () => {
       expect(result.body).toHaveProperty("message", "The card is expired");
     });
 
-    it("[400:BAD_REQUEST]", async () => {
+    it("[400::BAD_REQUEST] Should return an error if the password format is invalid", async () => {
       const activateCardReq: ActivateCardRequest = {
         cvv: card.securityCode.decrypt(),
         password: "12345",
@@ -113,7 +113,7 @@ describe("PATCH /cards/:cardId/activate", () => {
       );
     });
 
-    it("[401:UNAUTHORIZED] Should return an error if the CVV is wrong", async () => {
+    it("[401::UNAUTHORIZED] Should return an error if the CVV is wrong", async () => {
       const activateCardReq: ActivateCardRequest = {
         cvv: "123",
         password: "1234",

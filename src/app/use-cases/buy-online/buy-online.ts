@@ -1,4 +1,5 @@
 import { CreateOnlinePaymentDTO } from "@app/dtos/create-payment.dto";
+import { PaymentDTO } from "@app/dtos/payment.dto";
 import { CardUseCaseErrors } from "@app/errors/card-shared-errors";
 import { PaymentErrors } from "@app/errors/payment-errors";
 import { PaymentAppMapper } from "@app/mappers/payment-app-mapper";
@@ -87,6 +88,6 @@ export class BuyOnlineUseCase implements UseCase<CreateOnlinePaymentDTO, BuyOnli
 
     const paymentDTO = PaymentAppMapper.toDTO(onlinePayment);
 
-    return right(Result.ok(paymentDTO));
+    return right(Result.ok<PaymentDTO>(paymentDTO));
   }
 }

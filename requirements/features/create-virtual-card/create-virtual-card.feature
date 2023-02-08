@@ -17,7 +17,7 @@ Funcionalidade: Criação de Cartão Virtual
             Entao o funcionário não deve ser capaz de gerar um cartão virtual
             E o funcionário recebe uma mensagem de erro informando que o cartão físico não está registrado no sistema
     
-    Cenario: Funcionário falha ao criar cartão virtual a partir de um cartão que não existe
+    Cenario: Funcionário falha ao criar cartão virtual a partir de um cartão que não está ativado
         Dado que o funcionário queira criar um cartão virtual a partir de um cartão físico
         E o cartão físico esteja cadastrado no sistema
         Mas o cartão não esteja ativado
@@ -31,4 +31,10 @@ Funcionalidade: Criação de Cartão Virtual
         Mas a senha do cartão esteja incorreta
             Entao o funcionário não deve ser capaz de gerar um cartão virtual
             E o funcionário recebe uma mensagem de erro informando que a senha fornecida está incorreta
+
+    Cenario: Funcionário falha ao criar cartão virtual com a senha errada
+        Dado que o funcionário queira criar um cartão virtual a partir de um cartão virtual
+            Entao o funcionário não deve ser capaz de gerar um cartão virtual
+            E o funcionário recebe uma mensagem de erro informando que não é possível criar um
+              cartão virtual a partir de outro cartão virtual
  

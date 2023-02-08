@@ -260,7 +260,7 @@ describe("Buy Online Use Case", () => {
 
     it("Should return an error if the payment amount is invalid", async () => {
       const request: CreateOnlinePaymentDTO = {
-        amount: randNumber({ min: 900 }) / 100,
+        amount: randNumber({ min: 900 }) / 90,
         businessId: business._id,
         cardInfo: {
           cardholderName: card.cardholderName.value,

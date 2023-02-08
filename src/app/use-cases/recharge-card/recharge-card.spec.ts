@@ -137,7 +137,7 @@ describe("Recharge Card Use Case", () => {
 
     it("Should return an error if the card is expired", async () => {
       const expiredCard = new CardFactory().generate({
-        expirationDate: randPastDate({ years: 20 }),
+        expirationDate: randPastDate({ years: 10 }),
         password: "1234",
       });
       await cardRepository.save(expiredCard);

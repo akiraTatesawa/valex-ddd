@@ -210,7 +210,7 @@ export class CardController extends BaseController {
       const errorMessage = getBalanceResult.value.getError().message;
 
       switch (getBalanceError.constructor) {
-        case GetCardErrors.NotFoundError:
+        case CardUseCaseErrors.NotFoundError:
           return this.notFound(res, errorMessage);
         default:
           return this.fail(res, errorMessage);

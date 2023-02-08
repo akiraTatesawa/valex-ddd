@@ -42,6 +42,8 @@ export class PrismaDatabase {
     await this._prisma.$queryRaw`TRUNCATE TABLE employees CASCADE`;
     await this._prisma.$queryRaw`TRUNCATE TABLE cards CASCADE`;
     await this._prisma.$queryRaw`TRUNCATE TABLE recharges CASCADE`;
+    await this._prisma.$queryRaw`TRUNCATE TABLE payments CASCADE`;
+    await this._prisma.$queryRaw`TRUNCATE TABLE businesses CASCADE`;
   }
 }
 
